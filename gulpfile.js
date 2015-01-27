@@ -2,10 +2,21 @@
 
 var gulp       = require('gulp');
 var less       = require('gulp-less');
+var mocha      = require('gulp-mocha');
 var server     = require('gulp-webserver');
 var source     = require('vinyl-source-stream');
 var reactify   = require('reactify');
 var browserify = require('browserify');
+
+gulp.task('test', function() {
+	return gulp.src('./test/**/*.js')
+		.pipe(mocha({
+			globals: {
+				should: require('should'),
+			},
+			reporter: 'spec',
+		}))
+});
 
 gulp.task('less', function() {
 	return gulp.src('./src/styles/**/*.less')
@@ -39,6 +50,6 @@ gulp.task('serve', ['build'], function() {
 });
 
 gulp.task('default', ['serve'], function() {
-	gulp.watch('./src/scripts/**/*.js',  ['browserify']);
-	gulp.watch('./src/scripts/**/*.jsx', ['browserify']);
+	gulp.watch('./src/scripts/**/*.js',  ['browserify', 'test']);
+	gulp.watch('./src/scripts/**/*.jsx', ['browserify', 'test']);
 });
