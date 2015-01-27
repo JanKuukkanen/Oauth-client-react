@@ -18,6 +18,8 @@
 @turquoise:      #72BDBB;
 @turquoise-dark: #619B98;
 
+@UILayerZIndex: 10;
+
 html {
 	width:    100%;
 	height:   100%;
@@ -64,11 +66,31 @@ html {
 	}
 }
 
-
-.scrollable-wrapper {
-	background-color: @gray-light;
-
-	.scrollable-scroller {
-		background-color: @white;
+.scrollable {
+	.wrapper {
+		background-color: @gray-light;
 	}
+
+	.minimap {
+		width:  192px;
+		height: 108px;
+
+		top:      8;
+		right:    8;
+		position: absolute;
+
+		border: 2px solid @gray;
+
+		z-index:          @UILayerZIndex;
+		background-color: @gray-light;
+
+		.cursor {
+			z-index:          @UILayerZIndex + 1;
+			background-color: @white;
+		}
+	}
+}
+
+.board {
+	background-color: @white;
 }

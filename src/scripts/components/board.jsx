@@ -4,18 +4,15 @@ var React = require('react');
 
 var Board = React.createClass({
 	propTypes: {
-		width:  React.PropTypes.number.isRequired,
-		height: React.PropTypes.number.isRequired,
+		size: React.PropTypes.shape({
+			width:  React.PropTypes.number,
+			height: React.PropTypes.number,
+		}).isRequired,
 	},
 
 	render: function() {
-		var style = {
-			width:  this.props.width,
-			height: this.props.height,
-		}
-
 		return (
-			<div className="scrollable-scroller" style={style}>
+			<div className="board" style={this.props.size}>
 				{this.props.children}
 			</div>
 		);

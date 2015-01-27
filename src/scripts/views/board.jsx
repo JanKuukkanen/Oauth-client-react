@@ -3,7 +3,7 @@
 var React = require('react/addons');
 
 var Board      = require('../components/board.jsx');
-var SideBar    = require('../components/side-bar.jsx');
+var SideBar    = require('../components/sidebar.jsx');
 var Scrollable = require('../components/scrollable.jsx');
 
 /**
@@ -32,11 +32,15 @@ var BoardView = React.createClass({
 	},
 
 	render: function() {
+		var dimensions = {
+			width:  this.state.width,
+			height: this.state.height,
+		}
 		return (
 			<div className="board-view">
 				<SideBar />
-				<Scrollable position={this.linkState('position')}>
-					<Board width={this.state.width} height={this.state.height}>
+				<Scrollable size={dimensions}>
+					<Board size={dimensions}>
 
 					</Board>
 				</Scrollable>

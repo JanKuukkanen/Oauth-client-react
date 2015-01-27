@@ -17,65 +17,29 @@ var Scrollable = React.createClass({
 		children: React.PropTypes.element.isRequired,
 
 		/**
-		 * The 'position' property is a React ValueLink, which is used to
-		 * determine the position of the 'scroller' element. Because we are
-		 * using a ValueLink here, we can modify the scroller's state from the
-		 * outside.
+		 * The 'size' property determines the width and height of the element
+		 * which Scrollable wraps.
 		 */
-		position: React.PropTypes.shape({
-			value: React.PropTypes.shape({
-				x: React.PropTypes.number,
-				y: React.PropTypes.number,
-			}),
-			requestChange: React.PropTypes.func,
-		}),
-	},
-
-	getDefaultProps: function() {
-		// NOTE Since we have no use for ValueLink right now, we actually
-		//      manage the scroller's state internally for now.
-		//
-		//      Consider this WIP not final at all.
-		var position = { x: 0, y: 0 }
-
-		return {
-			position: {
-				value: position,
-				requestChange: function(pos) {
-					position.x = pos.x;
-					position.y = pos.y;
-				}
-			}
-		}
+		size: React.PropTypes.shape({
+			width:  React.PropTypes.number,
+			height: React.PropTypes.number,
+		}).isRequired,
 	},
 
 	componentDidMount: function() {
-		// Attach a new IScroll instance to the component's DOM node. Note that
-		// IScroll uses negative values to indicate offset from the origin.
-		this.scroller = new IScroll(this.getDOMNode(), {
-			startX:     (-1) * this.props.position.value.x,
-			startY:     (-1) * this.props.position.value.y,
+		this.scroller = new IScroll(this.refs.wrapper.getDOMNode(), {
 			scrollX:    true,
 			scrollY:    true,
 			freeScroll: true,
+			indicators: {
+				el:          this.refs.minimap.getDOMNode(),
+				shrink:      false,
+				resize:      false,
+				interactive: true,
+			},
 		});
 
-		this.scroller.on('scrollEnd', function() {
-			this.props.position.requestChange({
-				x: (-1) * this.scroller.x,
-				y: (-1) * this.scroller.y,
-			});
-		}.bind(this));
-	},
-
-	componentWillReceiveProps: function(next) {
-		var nextX = (-1) * next.position.value.x;
-		var nextY = (-1) * next.position.value.y;
-
-		// Scroll to the new position if there is going to be a change in it
-		if(nextX !== this.scroller.x || nextY !== this.scroller.y) {
-			this.scroller.scrollTo(nextX, nextY, 500);
-		}
+		this.resizeCursor();
 	},
 
 	componentWillUnmount: function() {
@@ -84,16 +48,39 @@ var Scrollable = React.createClass({
 	},
 
 	render: function() {
-		var style = {
+		var style =  {
 			height:   '100%',
 			overflow: 'hidden',
 			position: 'relative',
 		}
 		return (
-			<div className="scrollable-wrapper" style={style}>
-				{this.props.children}
+			<div className="scrollable">
+				<div ref="wrapper" className="wrapper" style={style}>
+					{this.props.children}
+				</div>
+				<div ref="minimap" className="minimap">
+					<div ref="cursor" className="cursor" />
+				</div>
 			</div>
 		);
+	},
+
+	/**
+	 * Calculates the width and height for the 'cursor' element so that it
+	 * matches the window size and orientation.
+	 */
+	resizeCursor: function() {
+		var $cursor  = this.refs.cursor.getDOMNode();
+		var $wrapper = this.refs.wrapper.getDOMNode();
+		var $minimap = this.refs.minimap.getDOMNode();
+
+		var scaleX = $wrapper.clientWidth  / this.props.size.width;
+		var scaleY = $wrapper.clientHeight / this.props.size.height;
+
+		$cursor.style.width  = Math.round(scaleX * $minimap.clientWidth);
+		$cursor.style.height = Math.round(scaleY * $minimap.clientHeight);
+
+		this.scroller.refresh();
 	},
 });
 
