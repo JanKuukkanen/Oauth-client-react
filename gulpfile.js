@@ -52,4 +52,6 @@ gulp.task('serve', ['build'], function() {
 gulp.task('default', ['serve'], function() {
 	gulp.watch('./src/scripts/**/*.js',  ['browserify', 'test']);
 	gulp.watch('./src/scripts/**/*.jsx', ['browserify', 'test']);
+
+	gulp.watch('./src/styles/**/*.less', ['less']);
 });

@@ -35,7 +35,7 @@ var Scrollable = React.createClass({
 		// NOTE Since we have no use for ValueLink right now, we actually
 		//      manage the scroller's state internally for now.
 		//
-		//      Consider this WIP.
+		//      Consider this WIP not final at all.
 		var position = { x: 0, y: 0 }
 
 		return {
@@ -85,7 +85,6 @@ var Scrollable = React.createClass({
 
 	render: function() {
 		var style = {
-			width:    '100%',
 			height:   '100%',
 			overflow: 'hidden',
 			position: 'relative',
