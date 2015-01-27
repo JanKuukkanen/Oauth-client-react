@@ -1,0 +1,23 @@
+{
+  "name": "contriboard-client",
+  "version": "0.0.0",
+  "dependencies": {
+    "draggabilly": "1.1.1",
+    "flux": "2.0.1",
+    "immutable": "3.6.2",
+    "iscroll": "5.1.3",
+    "object-assign": "2.0.0",
+    "react": "0.12.2",
+    "react-tween-state": "0.0.4"
+  },
+  "devDependencies": {
+    "browserify": "8.1.1",
+    "gulp": "3.8.10",
+    "gulp-less": "2.0.1",
+    "gulp-webserver": "0.9.0",
+    "reactify": "1.0.0",
+    "vinyl-source-stream": "1.0.0"
+  },
+  "author": "taneli.hartikainen@jamk.fi",
+  "license": "MIT"
+}
