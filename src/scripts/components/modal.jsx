@@ -71,6 +71,13 @@ var Modal = React.createClass({
 		this.hammer = null;
 	},
 
+	componentDidUpdate: function() {
+		// Force updates on the child components.
+		if(this.isMounted() && this.target) {
+			React.render(this._render(), this.target);
+		}
+	},
+
 	render: function() {
 		return (
 			<span className="modal-placeholder" />

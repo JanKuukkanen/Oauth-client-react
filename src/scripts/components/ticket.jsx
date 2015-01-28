@@ -68,6 +68,12 @@ var Ticket = React.createClass({
 		// Setup a listener for Draggable mixin's 'dragEnd' events, so we can
 		// create actions that update the ticket's position.
 		this.draggable.on('dragEnd', function() {
+			// Don't do anything if we didn't actually move the ticket.
+			var endpos = this.draggable.position;
+			if(this.state.x === endpos.x && this.state.y === endpos.y) {
+				return;
+			}
+
 			this.setState({
 				x: this.draggable.position.x,
 				y: this.draggable.position.y,
@@ -91,6 +97,12 @@ var Ticket = React.createClass({
 	componentWillReceiveProps: function (next) {
 		if(this.state.isDragging) return;
 
+		// Don't wanna tween if there ain't nothing to tween...
+		var curr = { x: this.state.x, y: this.state.y }
+		if(curr.x === next.position.x && curr.y === next.position.y) {
+			return;
+		}
+
 		this.tweenState('x', {
 			duration: 500,
 			endValue: next.position.x,
@@ -102,6 +114,8 @@ var Ticket = React.createClass({
 	},
 
 	render: function() {
+		console.log('Ticket:render', this._currentElement.key);
+
 		var style = {
 			top:      this.getTweeningValue('y'),
 			left:     this.getTweeningValue('x'),

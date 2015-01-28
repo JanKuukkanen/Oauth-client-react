@@ -24,7 +24,7 @@ for(var i = 0; i < NUM_TICKETS; i++) {
 	mockTickets.push({
 		id:      '' + i + '',
 		color:   TicketColor.BLUE,
-		content: '#' + i + ' content!',
+		content: '#' + i + ' content! Long long long sentences... With really longansdajsjdkjajsdjajdkasjkdajsdkkaskdajdskakdasd',
 		position: {
 			x: Math.round(Math.random() * 1000),
 			y: Math.round(Math.random() * 1000),
