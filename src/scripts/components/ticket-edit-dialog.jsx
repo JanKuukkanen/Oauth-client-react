@@ -45,13 +45,32 @@ var TicketEditDialog = React.createClass({
 	render: function() {
 		return (
 			<Modal onDismiss={this.props.onDismiss}>
-				<ColorSelect color={this.linkState('color')} />
-				<div className="dialog-content">
-					{this.props.content}
+				<div className="dialog">
+					<div className="dialog-header">
+						<ColorSelect color={this.linkState('color')} />
+					</div>
+					<div className="dialog-content">
+						<textarea valueLink={this.linkState('content')} />
+					</div>
+					<div className="dialog-footer">
+						<button className="btn btn-submit"
+								onClick={this._onSubmit}>
+							Done
+						</button>
+					</div>
 				</div>
 			</Modal>
 		);
-	}
+	},
+
+	_onSubmit: function() {
+		TicketActions.editTicket({
+			id:      this.props.id,
+			color:   this.state.color,
+			content: this.state.content,
+		});
+		return this.props.onDismiss();
+	},
 });
 
 module.exports = TicketEditDialog;

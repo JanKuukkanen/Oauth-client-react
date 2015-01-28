@@ -20,7 +20,7 @@ gulp.task('test', function() {
 
 gulp.task('less', function() {
 	return gulp.src('./src/styles/**/*.less')
-		.pipe(less())
+		.pipe(less().on('error', console.error))
 		.pipe(gulp.dest('./dist/styles/'))
 
 });

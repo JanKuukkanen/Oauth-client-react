@@ -28,6 +28,8 @@ module.exports = createStore(TicketStoreAPI, function(action) {
 			break;
 
 		case Action.EDIT_TICKET:
+			console.log('hep');
+
 			var index = _tickets.findIndex(function(ticket) {
 				return ticket.id === action.payload.id;
 			});

@@ -20,6 +20,35 @@
 
 @UILayerZIndex: 10;
 
+/**
+ * MIXINS
+ */
+
+.flexbox() {
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: -o-flex;
+	display: flex;
+}
+
+.flex-direction(@direction) {
+	-webkit-flex-direction: @direction;
+	-moz-flex-direction:    @direction;
+	-ms-flex-direction:     @direction;
+	-o-flex-direction:      @direction;
+	flex-direction:         @direction;
+}
+
+.flex(@growshrink) {
+    -webkit-flex: @growshrink auto;
+    -moz-flex:    @growshrink auto;
+    -ms-flex:     @growshrink auto;
+    -o-flex:      @growshrink auto;
+    flex:         @growshrink auto;
+}
+
+
 html {
 	width:    100%;
 	height:   100%;
@@ -99,7 +128,7 @@ html {
 
 	.modal-content {
 		z-index:          @UILayerZIndex + 3;
-		border-radius:    4px;
+		border-radius:    5px;
 		background-color: @white;
 	}
 }
@@ -119,6 +148,8 @@ html {
 		}
 
 		.content {
+			font-size: 13px;
+
 			margin:   8px;
 			overflow: hidden;
 		}
@@ -126,11 +157,12 @@ html {
 }
 
 .color-select {
+
 	.selected {
 		height: 24px;
 
-		border-top-left-radius:  4px;
-		border-top-right-radius: 4px;
+		border-top-left-radius:  5px;
+		border-top-right-radius: 5px;
 	}
 
 	.selector {
@@ -145,7 +177,73 @@ html {
 	}
 }
 
-.dialog-content {
-	margin:   8px;
-	overflow: hidden;
+.dialog {
+	height: 100%;
+
+	.flexbox();
+	.flex-direction(column);
+
+	.dialog-header {
+		.flex(0 1);
+	}
+
+	.dialog-content {
+		/**
+		 * NOTE We have to declare the '.dialog-content', which is contained in
+		 *      a flex container, a flex container itself. This is so that the
+		 *      children, such as the textarea in this case can fill the height
+		 *      100%;
+		 */
+
+		.flex(1 1);
+		.flexbox();
+
+		padding: 16px;
+
+		textarea {
+			.flex(1 0);
+		}
+	}
+
+	.dialog-footer {
+		.flex(0 1);
+
+		.flexbox();
+		.flex-direction(row-reverse);
+	}
+}
+
+textarea {
+	font-size:   14px;
+	font-family: 'Lato', sans-serif;
+
+	border: none;
+	resize: none;
+}
+
+.btn {
+	width:  128px;
+	height: 36px;
+	margin: 16px;
+
+	color:          @white;
+	font-size:      12px;
+	font-family:    'Lato', sans-serif;
+	letter-spacing: 1px;
+
+	border-top:    0px;
+	border-left:   0px;
+	border-right:  2px;
+	border-bottom: 2px;
+
+	border-radius: 5px;
+
+	&.btn-submit {
+		background:   @turquoise;
+		border-color: @turquoise-dark;
+
+		&:hover {
+			background: @turquoise-dark;
+		}
+	}
 }

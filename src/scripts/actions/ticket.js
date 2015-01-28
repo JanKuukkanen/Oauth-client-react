@@ -8,7 +8,7 @@ var TicketColor = require('../constants/enums').TicketColor;
  * The methods exported by TicketActions
  */
 module.exports = {
-	moveTicket:  moveTicket,
+	editTicket:  editTicket,
 	loadTickets: loadTickets,
 }
 
@@ -39,7 +39,7 @@ for(var i = 0; i < NUM_TICKETS; i++) {
 /**
  *
  */
-function moveTicket(ticket) {
+function editTicket(ticket) {
 	Dispatcher.dispatch({
 		type:    Action.EDIT_TICKET,
 		payload: ticket,

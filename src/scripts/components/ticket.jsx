@@ -79,7 +79,7 @@ var Ticket = React.createClass({
 				y: this.draggable.position.y,
 			});
 
-			TicketActions.moveTicket({
+			TicketActions.editTicket({
 				id: this._currentElement.key,
 				position: {
 					x: this.draggable.position.x,
