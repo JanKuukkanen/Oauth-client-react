@@ -39,7 +39,12 @@ var Scrollable = React.createClass({
 			},
 		});
 
-		this.resizeCursor();
+		// Force the refresh when the component is first mounted
+		this._resizeMinimapCursor();
+
+		// If we want to support IE8 and below, we have to use 'attachEvent'
+		// instead of 'addEventListener' so let's not...
+		window.addEventListener('resize', this._resizeMinimapCursor);
 	},
 
 	componentWillUnmount: function() {
@@ -66,10 +71,10 @@ var Scrollable = React.createClass({
 	},
 
 	/**
-	 * Calculates the width and height for the 'cursor' element so that it
-	 * matches the window size and orientation.
+	 * Resizes the width and height for the 'cursor' element so that it matches
+	 * the window size and orientation.
 	 */
-	resizeCursor: function() {
+	_resizeMinimapCursor: function() {
 		var $cursor  = this.refs.cursor.getDOMNode();
 		var $wrapper = this.refs.wrapper.getDOMNode();
 		var $minimap = this.refs.minimap.getDOMNode();
