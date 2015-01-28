@@ -1,6 +1,7 @@
 'use strict';
 
-var React = require('react');
+var React  = require('react');
+var Hammer = require('hammerjs');
 
 /**
  * Modal can be used to wrap and display content above other stuff in a
@@ -43,29 +44,37 @@ var Modal = React.createClass({
 	},
 
 	componentDidMount: function() {
+		// Create a container for the actual modal content from 'this._render'
+		// and render it into the DOM tree.
 		this.target = document.createElement('div');
 		this.props.container.appendChild(this.target);
 
 		React.render(this._render(), this.target);
+
+		// Make sure any clicks, taps and whatever on the 'overlay' trigger the
+		// 'onDismiss' handler. Pointer events on the 'content' should not
+		// trigger the 'onDismiss' handler.
+		this.hammer = new Hammer(this.target.firstChild);
+
+		this.hammer.on('tap', function(ev) {
+			if(ev.target.className == 'modal-overlay') {
+				return this.props.onDismiss();
+			}
+		}.bind(this));
 	},
 
 	componentWillUnmount: function () {
 		React.unmountComponentAtNode(this.target);
 		this.props.container.removeChild(this.target);
+
+		this.hammer.destroy();
+		this.hammer = null;
 	},
 
 	render: function() {
 		return (
 			<span className="modal-placeholder" />
 		);
-	},
-
-	/**
-	 * Makes sure the event from clicking the content does not also trigger the
-	 * event for clicking the overlay.
-	 */
-	_stopPropagation: function(event) {
-		return event.stopPropagation();
 	},
 
 	/**
@@ -90,10 +99,8 @@ var Modal = React.createClass({
 			}
 		}
 		return (
-			<div className="modal-overlay" style={style.overlay}
-					onClick={this.props.onDismiss}>
-				<div className="modal-content" style={style.content}
-						onClick={this._stopPropagation}>
+			<div className="modal-overlay" style={style.overlay}>
+				<div className="modal-content" style={style.content}>
 					{this.props.children}
 				</div>
 			</div>

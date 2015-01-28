@@ -4,6 +4,7 @@
   "dependencies": {
     "draggabilly": "1.1.1",
     "flux": "2.0.1",
+    "hammerjs": "2.0.4",
     "immutable": "3.6.2",
     "iscroll": "5.1.3",
     "lodash": "3.0.0",

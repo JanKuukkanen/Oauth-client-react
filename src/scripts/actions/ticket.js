@@ -22,7 +22,7 @@ var NUM_TICKETS = 10;
 
 for(var i = 0; i < NUM_TICKETS; i++) {
 	mockTickets.push({
-		id:      i,
+		id:      '' + i + '',
 		color:   TicketColor.BLUE,
 		content: '#' + i + ' content!',
 		position: {

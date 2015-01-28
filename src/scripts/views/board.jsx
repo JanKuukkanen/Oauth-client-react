@@ -3,32 +3,38 @@
 var React = require('react/addons');
 
 var Board      = require('../components/board.jsx');
+var Ticket     = require('../components/ticket.jsx');
 var SideBar    = require('../components/sidebar.jsx');
 var Scrollable = require('../components/scrollable.jsx');
+
+var TicketStore   = require('../stores/ticket');
+var TicketActions = require('../actions/ticket');
 
 /**
  *
  */
 var BoardView = React.createClass({
-	mixins: [
-		React.addons.LinkedStateMixin
-	],
+	propTypes: {
+		id: React.PropTypes.string.isRequired,
+	},
 
 	getInitialState: function() {
 		return {
 			width:  1920,
 			height: 1080,
 
-			position: {
-				x: 0,
-				y: 0,
-			},
+			tickets: [ ],
 		}
 	},
 
 	componentDidMount: function() {
-		// BoardActions.loadBoard(board_id)
-		// TicketActions.loadTickets(board_id)
+		TicketActions.loadTickets(this.props.id)
+
+		TicketStore.addChangeListener(function() {
+			this.setState({
+				tickets: TicketStore.getTickets(),
+			});
+		}.bind(this));
 	},
 
 	render: function() {
@@ -41,12 +47,21 @@ var BoardView = React.createClass({
 				<SideBar />
 				<Scrollable size={dimensions}>
 					<Board size={dimensions}>
-
+						{this.renderTickets()}
 					</Board>
 				</Scrollable>
 			</div>
 		);
-	}
+	},
+
+	renderTickets: function() {
+		return this.state.tickets.map(function(t) {
+			return (
+				<Ticket key={t.id} id={t.id} color={t.color}
+						content={t.content} position={t.position} />
+			);
+		});
+	},
 });
 
 module.exports = BoardView;

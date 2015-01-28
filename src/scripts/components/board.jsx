@@ -4,6 +4,9 @@ var React = require('react');
 
 var Board = React.createClass({
 	propTypes: {
+		/**
+		 * The 'size' property indicates the pixel size of the board.
+		 */
 		size: React.PropTypes.shape({
 			width:  React.PropTypes.number,
 			height: React.PropTypes.number,

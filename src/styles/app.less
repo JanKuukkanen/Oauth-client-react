@@ -25,6 +25,8 @@ html {
 	height:   100%;
 	position: fixed;
 
+	font-family: 'Lato', sans-serif;
+
 	img {
 		display: block;
 	}
@@ -91,6 +93,31 @@ html {
 	}
 }
 
+.modal-overlay {
+	z-index:          @UILayerZIndex + 2;
+	background-color: fade(@black, 80%);
+
+	.modal-content {
+		z-index:          @UILayerZIndex + 3;
+		background-color: @white;
+
+		padding:       8px;
+		border-radius: 4px;
+	}
+}
+
 .board {
 	background-color: @white;
+
+	.ticket {
+		width:  192px;
+		height: 108px;
+
+		border:           1px solid @gray-light;
+		background-color: @white;
+
+		.stripe {
+			height: 12px;
+		}
+	}
 }
