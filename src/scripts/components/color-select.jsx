@@ -1,10 +1,34 @@
 'use strict';
 
-var _     = require('lodash');
-var React = require('react');
+var _      = require('lodash');
+var React  = require('react');
+var Hammer = require('hammerjs');
 
 var TicketColor  = require('../constants/enums').TicketColor;
 var ticketColors = _.values(TicketColor);
+
+var ColorButton = React.createClass({
+	propTypes: {
+		color:    React.PropTypes.oneOf(ticketColors).isRequired,
+		onSelect: React.PropTypes.func.isRequired,
+	},
+
+	componentDidMount: function() {
+		this.hammer = new Hammer(this.getDOMNode());
+		this.hammer.on('tap', function onTap() {
+			this.props.onSelect(this.props.color);
+		}.bind(this));
+	},
+
+	render: function() {
+		var style = {
+			backgroundColor: this.props.color,
+		}
+		return (
+			<div className="color-button" style={style} />
+		);
+	},
+});
 
 var ColorSelect = React.createClass({
 
@@ -18,6 +42,10 @@ var ColorSelect = React.createClass({
 		}).isRequired,
 	},
 
+	componentDidMount: function() {
+		new Hammer(this.refs.selector.getDOMNode());
+	},
+
 	render: function() {
 		var selectedColor = {
 			backgroundColor: this.props.color.value,
@@ -25,15 +53,11 @@ var ColorSelect = React.createClass({
 		return (
 			<div className="color-select">
 				<div className="selected" style={selectedColor} />
-				<div className="selector">
+				<div ref="selector" className="selector">
 				{ticketColors.map(function(color) {
-					var selectorColor = {
-						backgroundColor: color,
-					}
 					return (
-						<div key={color} className="color"
-							style={selectorColor}
-							onClick={this._selectColor.bind(null, color)} />
+						<ColorButton key={color} color={color}
+							onSelect={this._selectColor} />
 					);
 				}.bind(this))}
 				</div>

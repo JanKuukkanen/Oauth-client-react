@@ -114,8 +114,6 @@ var Ticket = React.createClass({
 	},
 
 	render: function() {
-		console.log('Ticket:render', this._currentElement.key);
-
 		var style = {
 			top:      this.getTweeningValue('y'),
 			left:     this.getTweeningValue('x'),
