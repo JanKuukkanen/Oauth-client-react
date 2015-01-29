@@ -1,8 +1,10 @@
 'use strict';
 
-var React = require('react');
+var React     = require('react');
+var FastClick = require('fastclick')(document.body);
 
 var BoardView = require('./views/board.jsx');
+
 
 var boardView = React.createElement(BoardView, {
 	id: '123',

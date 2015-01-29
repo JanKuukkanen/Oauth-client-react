@@ -53,7 +53,10 @@ var Board = React.createClass({
 			// the pointer position.
 			ev.center.x = ev.center.x - this.props.sideBarWidth;
 
-			// Calculate the position to be at the center of the ticket.
+			// Calculate the position to be at the center of the ticket. Note
+			// that since 'board' is actually embedded inside a scrollable, we
+			// receive an undocumented 'offset' property, which tells us where
+			// we have scrolled on the board.
 			var pos = {
 				x: (ev.center.x - this.props.offset.x) - (TICKET_WIDTH / 2),
 				y: (ev.center.y - this.props.offset.y) - (TICKET_HEIGHT / 2),
