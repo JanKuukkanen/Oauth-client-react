@@ -1,0 +1,41 @@
+@import "variables.less";
+
+/**
+ *
+ */
+.sidebar {
+	height: 100%;
+
+	float:    left;
+	position: relative;
+
+	background-color: @black;
+
+	.sidebar-logo {
+		top:      0;
+		position: absolute;
+
+		width:  50px;
+		margin: 15px;
+	}
+
+	.sidebar-avatar-wrapper {
+		bottom:   0;
+		position: absolute;
+
+		width:  56px;
+		height: 56px;
+		margin: 10px;
+
+		border:        2px solid @black-light;
+		border-radius: 50%;
+
+		.sidebar-avatar {
+			width:  52px;
+			height: 52px;
+			margin: 2px;
+
+			border-radius: 50%;
+		}
+	}
+}

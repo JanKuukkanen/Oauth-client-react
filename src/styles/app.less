@@ -1,54 +1,15 @@
-@red:      #EB584A;
-@red-dark: #9B3934;
+@import "dialog.less";
+@import "custom-dialogs.less";
 
-@blue:        #4F819A;
-@white:       #FFFFFF;
-@yellow:      #DCC75B;
+@import "sidebar.less";
+@import "buttons.less";
 
-@black:       #190C21;
-@black-light: #221A26;
-
-@violet:      #724A7F;
-@violet-dark: #5A3866;
-
-@gray:       #B2B2B2;
-@gray-dark:  #656565;
-@gray-light: #EDEDED;
-
-@turquoise:      #72BDBB;
-@turquoise-dark: #619B98;
-
-@UILayerZIndex: 10;
+@import "board.less";
+@import "ticket.less";
 
 /**
- * MIXINS
+ * Core stuff.
  */
-
-.flexbox() {
-	display: -webkit-flex;
-	display: -moz-flex;
-	display: -ms-flex;
-	display: -o-flex;
-	display: flex;
-}
-
-.flex-direction(@direction) {
-	-webkit-flex-direction: @direction;
-	-moz-flex-direction:    @direction;
-	-ms-flex-direction:     @direction;
-	-o-flex-direction:      @direction;
-	flex-direction:         @direction;
-}
-
-.flex(@growshrink) {
-    -webkit-flex: @growshrink auto;
-    -moz-flex:    @growshrink auto;
-    -ms-flex:     @growshrink auto;
-    -o-flex:      @growshrink auto;
-    flex:         @growshrink auto;
-}
-
-
 html {
 	width:    100%;
 	height:   100%;
@@ -60,210 +21,17 @@ html {
 		display: block;
 	}
 
+	textarea {
+		font-size:   14px;
+		font-family: 'Lato', sans-serif;
+
+		border: none;
+		resize: none;
+	}
+
 	body {
 		border:  0;
 		margin:  0;
 		padding: 0;
-	}
-}
-
-.sidebar {
-	float:            left;
-	background-color: @black;
-
-	.sidebar-logo {
-		top:      0;
-		position: absolute;
-
-		width:  50px;
-		margin: 15px;
-	}
-
-	.sidebar-avatar-wrapper {
-		width:  56px;
-		height: 56px;
-		margin: 10px;
-
-		border:        2px solid @black-light;
-		border-radius: 50%;
-
-		.sidebar-avatar {
-			width:  52px;
-			height: 52px;
-			margin: 2px;
-
-			border-radius: 50%;
-		}
-	}
-}
-
-.scrollable {
-	.wrapper {
-		background-color: @gray-light;
-	}
-
-	.minimap {
-		width:  192px;
-		height: 108px;
-
-		top:      8;
-		right:    8;
-		position: absolute;
-
-		border: 2px solid @gray;
-
-		z-index:          @UILayerZIndex;
-		background-color: @gray-light;
-
-		.cursor {
-			z-index:          @UILayerZIndex + 1;
-			background-color: @white;
-		}
-	}
-}
-
-.modal-overlay {
-	z-index:          @UILayerZIndex + 2;
-	background-color: fade(@black, 80%);
-
-	.modal-content {
-		z-index:          @UILayerZIndex + 3;
-		border-radius:    5px;
-		background-color: @white;
-	}
-}
-
-.board {
-	background-color: @white;
-
-	.ticket {
-		width:  192px;
-		height: 108px;
-
-		border:           1px solid @gray-light;
-		background-color: @white;
-
-		.stripe {
-			height: 12px;
-		}
-
-		.content {
-			font-size: 13px;
-
-			margin:   8px;
-			overflow: hidden;
-		}
-	}
-}
-
-.color-select {
-
-	.selected {
-		height: 24px;
-
-		/**
-		 * I think the 'selected' color looks better without the border radius?
-		 */
-		// border-top-left-radius:  5px;
-		// border-top-right-radius: 5px;
-	}
-
-	.selector {
-		width:  100%;
-		height: 24px;
-
-		.color-button {
-			width:   25%;
-			height:  100%;
-			display: inline-block;
-		}
-	}
-}
-
-.dialog {
-	height: 100%;
-
-	.flexbox();
-	.flex-direction(column);
-
-	.dialog-header {
-		.flex(0 1);
-	}
-
-	.dialog-content {
-		/**
-		 * NOTE We have to declare the '.dialog-content', which is contained in
-		 *      a flex container, a flex container itself. This is so that the
-		 *      children, such as the textarea in this case can fill the height
-		 *      100%;
-		 */
-
-		.flex(1 1);
-		.flexbox();
-
-		padding: 16px;
-
-		textarea {
-			.flex(1 0);
-		}
-	}
-
-	.dialog-footer {
-		.flex(0 1);
-
-		.flexbox();
-		.flex-direction(row-reverse);
-
-		.dialog-submit {
-			.flex(1 0);
-		}
-
-		.dialog-cancel {
-			.flex(0 1);
-		}
-	}
-}
-
-textarea {
-	font-size:   14px;
-	font-family: 'Lato', sans-serif;
-
-	border: none;
-	resize: none;
-}
-
-.btn {
-	width:  128px;
-	height: 36px;
-	margin: 16px;
-
-	color:          @white;
-	font-size:      12px;
-	font-family:    'Lato', sans-serif;
-	letter-spacing: 1px;
-
-	border-top:    0px solid;
-	border-left:   0px solid;
-	border-right:  2px solid;
-	border-bottom: 2px solid;
-
-	border-radius: 5px;
-
-	&.btn-submit {
-		border-color:     @turquoise-dark;
-		background-color: @turquoise;
-
-		&:hover {
-			background-color: @turquoise-dark;
-		}
-	}
-
-	&.btn-danger {
-		border-color:     @red-dark;
-		background-color: @red;
-
-		&:hover {
-			background-color: @red-dark;
-		}
 	}
 }

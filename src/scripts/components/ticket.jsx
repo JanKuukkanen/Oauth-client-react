@@ -11,6 +11,19 @@ var TicketActions    = require('../actions/ticket');
 var DraggableMixin   = require('../mixins/draggable');
 var TicketEditDialog = require('./ticket-edit-dialog.jsx');
 
+var TICKET_WIDTH  = require('../constants').TICKET_WIDTH;
+var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
+
+/**
+ * Simple helper function to snap a position to grid.
+ */
+function _gridify(position, grid) {
+	return {
+		x: Math.round(position.x / TICKET_WIDTH)  * TICKET_WIDTH,
+		y: Math.round(position.y / TICKET_HEIGHT) * TICKET_HEIGHT,
+	}
+}
+
 /**
  *
  */
@@ -19,6 +32,10 @@ var Ticket = React.createClass({
 	mixins: [DraggableMixin, TweenState.Mixin],
 
 	propTypes: {
+		/**
+		 *
+		 */
+		snap: React.PropTypes.bool,
 		/**
 		 *
 		 */
@@ -40,6 +57,7 @@ var Ticket = React.createClass({
 
 	getDefaultProps: function() {
 		return {
+			snap:     false,
 			color:    TicketColor.VIOLET,
 			content:  '',
 			position: { x: 0, y: 0 },
@@ -68,22 +86,33 @@ var Ticket = React.createClass({
 		// Setup a listener for Draggable mixin's 'dragEnd' events, so we can
 		// create actions that update the ticket's position.
 		this.draggable.on('dragEnd', function() {
+			// For some reason, the element 'key' is not directly accessible
+			// at 'this.key' as it should?
+			var id  = this._currentElement.key;
+			var pos = this.draggable.position;
+
 			// Don't do anything if we didn't actually move the ticket.
-			var endpos = this.draggable.position;
-			if(this.state.x === endpos.x && this.state.y === endpos.y) {
+			if(this.state.x === pos.x && this.state.y === pos.y) {
 				return;
 			}
 
-			this.setState({
-				x: this.draggable.position.x,
-				y: this.draggable.position.y,
-			});
+			// The position is just an illusion... If we have snap on...
+			var endpos = this.props.snap ? _gridify(pos) : pos;
+
+			// If we are snapping the ticket, we 'tween' the position to the
+			// end value, else we just set the state directly.
+			if(this.props.snap) {
+				this._tweenPositionTo(endpos, this.draggable.position, 100);
+			}
+			else {
+				this.setState({ x: endpos.x, y: endpos.y });
+			}
 
 			TicketActions.editTicket({
-				id: this._currentElement.key,
+				id: id,
 				position: {
-					x: this.draggable.position.x,
-					y: this.draggable.position.y,
+					x: this.state.x,
+					y: this.state.y,
 				}
 			});
 		}.bind(this));
@@ -103,14 +132,7 @@ var Ticket = React.createClass({
 			return;
 		}
 
-		this.tweenState('x', {
-			duration: 500,
-			endValue: next.position.x,
-		});
-		this.tweenState('y', {
-			duration: 500,
-			endValue: next.position.y,
-		});
+		return this._tweenPositionTo(next.position);
 	},
 
 	render: function() {
@@ -124,7 +146,7 @@ var Ticket = React.createClass({
 			var editDialog = (
 				<TicketEditDialog id={this._currentElement.key}
 					color={this.props.color} content={this.props.content}
-					onDismiss={this.dismissEditDialog} />
+					onDismiss={this._dismissEditDialog} />
 			);
 		}
 
@@ -142,8 +164,22 @@ var Ticket = React.createClass({
 	/**
 	 * Passed to the Modal as dismissal function.
 	 */
-	dismissEditDialog: function() {
+	_dismissEditDialog: function() {
 		this.setState({ isEditing: false });
+	},
+
+	/**
+	 * Uses 'tween-state' to tween the current position to the target.
+	 */
+	_tweenPositionTo: function(to, from, duration) {
+		['x', 'y'].map(function(coordinate) {
+			var tweeningOpts = {
+				duration:   duration || 500,
+				endValue:   to[coordinate],
+				beginValue: from ? from[coordinate] : null,
+			}
+			return this.tweenState(coordinate, tweeningOpts);
+		}.bind(this));
 	},
 });
 

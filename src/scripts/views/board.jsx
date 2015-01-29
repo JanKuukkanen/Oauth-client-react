@@ -10,6 +10,9 @@ var Scrollable = require('../components/scrollable.jsx');
 var TicketStore   = require('../stores/ticket');
 var TicketActions = require('../actions/ticket');
 
+var TICKET_WIDTH  = require('../constants').TICKET_WIDTH;
+var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
+
 /**
  *
  */
@@ -20,8 +23,8 @@ var BoardView = React.createClass({
 
 	getInitialState: function() {
 		return {
-			width:  1920,
-			height: 1080,
+			width:  10,
+			height: 10,
 
 			tickets: [ ],
 		}
@@ -39,8 +42,8 @@ var BoardView = React.createClass({
 
 	render: function() {
 		var dimensions = {
-			width:  this.state.width,
-			height: this.state.height,
+			width:  this.state.width  * TICKET_WIDTH,
+			height: this.state.height * TICKET_HEIGHT,
 		}
 		return (
 			<div className="board-view">

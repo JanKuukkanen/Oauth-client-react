@@ -33,29 +33,16 @@ var SideBar = React.createClass({
 
 	render: function() {
 		var style = {
-			logo: {
-				top:      0,
-				position: 'absolute',
-			},
-			avatar: {
-				bottom:   0,
-				position: 'absolute',
-			},
-			sidebar: {
-				width:    this.props.width,
-				height:   '100%',
-				position: 'relative',
-			},
+			width: this.props.width,
 		}
 
 		// TODO Gravatar or something?
 		var avatar = "http://www.placecage.com/c/128/128";
 
 		return (
-			<div className="sidebar" style={style.sidebar}>
-				<img className="sidebar-logo" src="dist/assets/logo.svg"
-						style={style.logo} />
-				<div className="sidebar-avatar-wrapper" style={style.avatar}>
+			<div className="sidebar" style={style}>
+				<img className="sidebar-logo" src="dist/assets/logo.svg" />
+				<div className="sidebar-avatar-wrapper">
 					<img className="sidebar-avatar" src={avatar} />
 				</div>
 			</div>

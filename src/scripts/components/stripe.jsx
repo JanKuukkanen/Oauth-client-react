@@ -9,7 +9,6 @@ var Stripe = React.createClass({
 
 	render: function() {
 		var style = {
-			width:      '100%',
 			background: this.props.color,
 		}
 

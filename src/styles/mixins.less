@@ -1,0 +1,46 @@
+/**
+ * The '.flex' mixin makes the element a flex element that can be placed inside
+ * a flex container.
+ */
+.flex(@grow: 0, @shrink: 0, @basis: auto) {
+    -webkit-flex: @grow @shrink @basis;
+    -moz-flex:    @grow @shrink @basis;
+    -ms-flex:     @grow @shrink @basis;
+    -o-flex:      @grow @shrink @basis;
+    flex:         @grow @shrink @basis;
+}
+
+
+/**
+ * The '.flexbox' mixin makes the element a flex container.
+ */
+.flexbox() {
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: -o-flex;
+	display: flex;
+}
+
+/**
+ * The '.flex-direction' mixin indicates the axis of the flex container. Note
+ * that 'row' here means x-axis and 'column' y-axis.
+ */
+.flex-direction(@direction) {
+	-webkit-flex-direction: @direction;
+	-moz-flex-direction:    @direction;
+	-ms-flex-direction:     @direction;
+	-o-flex-direction:      @direction;
+	flex-direction:         @direction;
+}
+
+/**
+ * The '.transition' mixin can be used to create a transition effect.
+ */
+.transition(@attribute: all, @duration: 0.5s, @easing: linear) {
+	-webkit-transition: @attribute @duration @easing;
+	-moz-transition:    @attribute @duration @easing;
+	-o-transition:      @attribute @duration @easing;
+	-ms-transition:     @attribute @duration @easing;
+	transition:         @attribute @duration @easing;
+}

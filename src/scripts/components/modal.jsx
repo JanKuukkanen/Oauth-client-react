@@ -88,26 +88,9 @@ var Modal = React.createClass({
 	 * Returns the actual Modal component DOM representation.
 	 */
 	_render: function() {
-		var style = {
-			overlay: {
-				top:      '0',
-				left:     '0',
-				width:    '100%',
-				height:   '100%',
-				position: 'fixed',
-			},
-			content: {
-				top:      '50%',
-				left:     '50%',
-				width:    '50%',
-				height:   '50%',
-				margin:   '-25% 0 0 -25%',
-				position: 'fixed',
-			}
-		}
 		return (
-			<div className="modal-overlay" style={style.overlay}>
-				<div className="modal-content" style={style.content}>
+			<div className="modal-overlay">
+				<div className="modal-content">
 					{this.props.children}
 				</div>
 			</div>

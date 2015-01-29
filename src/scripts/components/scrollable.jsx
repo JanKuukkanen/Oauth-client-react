@@ -53,14 +53,9 @@ var Scrollable = React.createClass({
 	},
 
 	render: function() {
-		var style =  {
-			height:   '100%',
-			overflow: 'hidden',
-			position: 'relative',
-		}
 		return (
 			<div className="scrollable">
-				<div ref="wrapper" className="wrapper" style={style}>
+				<div ref="wrapper" className="wrapper">
 					{this.props.children}
 				</div>
 				<div ref="minimap" className="minimap">

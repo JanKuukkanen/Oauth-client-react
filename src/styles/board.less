@@ -1,0 +1,41 @@
+@import "mixins.less";
+@import "variables.less";
+
+/**
+ * Scrollable is our basis for a board.
+ */
+.scrollable {
+	.wrapper {
+		height:   100%;
+		overflow: hidden;
+		position: relative;
+
+		background-color: @gray-light;
+	}
+
+	.minimap {
+		width:  @ticket-width;
+		height: @ticket-height;
+
+		top:      8;
+		right:    8;
+		position: absolute;
+
+		border: 2px solid @gray;
+
+		z-index:          @layer-ui;
+		background-color: @gray-light;
+
+		.cursor {
+			z-index:          @layer-ui + 1;
+			background-color: @white;
+		}
+	}
+}
+
+/**
+ * Board is a scrollable element.
+ */
+.board {
+	background-color: @white;
+}
