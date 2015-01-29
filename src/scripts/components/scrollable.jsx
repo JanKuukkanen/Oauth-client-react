@@ -26,6 +26,15 @@ var Scrollable = React.createClass({
 		}).isRequired,
 	},
 
+	getInitialState: function() {
+		return {
+			offset: {
+				x: 0,
+				y: 0,
+			}
+		}
+	},
+
 	componentDidMount: function() {
 		this.scroller = new IScroll(this.refs.wrapper.getDOMNode(), {
 			scrollX:    true,
@@ -45,6 +54,15 @@ var Scrollable = React.createClass({
 		// If we want to support IE8 and below, we have to use 'attachEvent'
 		// instead of 'addEventListener' so let's not...
 		window.addEventListener('resize', this._resizeMinimapCursor);
+
+		this.scroller.on('scrollEnd', function() {
+			this.setState({
+				offset: {
+					x: this.scroller.x,
+					y: this.scroller.y,
+				}
+			});
+		}.bind(this));
 	},
 
 	componentWillUnmount: function() {
@@ -56,13 +74,21 @@ var Scrollable = React.createClass({
 		return (
 			<div className="scrollable">
 				<div ref="wrapper" className="wrapper">
-					{this.props.children}
+					{this.renderChildren()}
 				</div>
 				<div ref="minimap" className="minimap">
 					<div ref="cursor" className="cursor" />
 				</div>
 			</div>
 		);
+	},
+
+	renderChildren: function() {
+		return React.Children.map(this.props.children, function(child) {
+			return React.addons.cloneWithProps(child, {
+				offset: this.state.offset,
+			});
+		}.bind(this));
 	},
 
 	/**

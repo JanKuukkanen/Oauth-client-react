@@ -9,6 +9,7 @@ var TicketColor = require('../constants/enums').TicketColor;
  * The methods exported by TicketActions
  */
 module.exports = {
+	addTicket:       addTicket,
 	editTicket:      editTicket,
 	loadTickets:     loadTickets,
 	removeTicket:    removeTicket,
@@ -36,9 +37,41 @@ for(var i = 0; i < NUM_TICKETS; i++) {
 	});
 }
 
+var mockID = 10;
+
 ////////////////
 // MOCKS //
 ////////////////
+
+function addTicket(ticket) {
+	// Generate a random identifier for the ticket.
+	// From: https://gist.github.com/gordonbrander/2230317
+	var generatedID = Math.random().toString(36).substr(2, 9);
+
+	// For our 'dirty' ticket we use the
+	ticket.id = generatedID;
+
+	Dispatcher.dispatch({
+		type:    Action.ADD_TICKET,
+		payload: ticket,
+	});
+
+	// Mock a server response by setting a timeout...
+	setTimeout(function() {
+		var response = {
+			id: '' + (mockID++) + '',
+		}
+		Dispatcher.dispatch({
+			payload: {
+				clean: {
+					id: response.id,
+				},
+				dirty: generatedID,
+			},
+			type: Action.ADD_TICKET_SUCCESS,
+		});
+	}, 100);
+}
 
 /**
  *
@@ -58,7 +91,7 @@ function editTicket(ticket) {
 		payload: ticket,
 	});
 
-	// Mock a server response by setting a timeout
+	// Mock a server response by setting a timeout...
 	setTimeout(function() {
 		Dispatcher.dispatch({
 			type:    Action.EDIT_TICKET_SUCCESS,
@@ -73,7 +106,7 @@ function editTicket(ticket) {
 function loadTickets() {
 	Dispatcher.dispatch({ type: Action.LOAD_TICKETS });
 
-	// Mock a server response by setting a timeout
+	// Mock a server response by setting a timeout...
 	setTimeout(function() {
 		Dispatcher.dispatch({
 			type:    Action.LOAD_TICKETS_SUCCESS,
@@ -100,7 +133,7 @@ function removeTicket(ticket) {
 		payload: ticket,
 	});
 
-	// Mock a server response by setting a timeout
+	// Mock a server response by setting a timeout...
 	setTimeout(function() {
 		// If we want to emit a failure message, we should emit something like
 		// > type: Action.REMOVE_TICKET_FAILURE, payload: inStore

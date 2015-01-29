@@ -11,18 +11,7 @@ var TicketActions    = require('../actions/ticket');
 var DraggableMixin   = require('../mixins/draggable');
 var TicketEditDialog = require('./ticket-edit-dialog.jsx');
 
-var TICKET_WIDTH  = require('../constants').TICKET_WIDTH;
-var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
-
-/**
- * Simple helper function to snap a position to grid.
- */
-function _gridify(position, grid) {
-	return {
-		x: Math.round(position.x / TICKET_WIDTH)  * TICKET_WIDTH,
-		y: Math.round(position.y / TICKET_HEIGHT) * TICKET_HEIGHT,
-	}
-}
+var gridify = require('../utils/gridify');
 
 /**
  *
@@ -36,19 +25,27 @@ var Ticket = React.createClass({
 		 *
 		 */
 		snap: React.PropTypes.bool,
-		/**
-		 *
-		 */
-		active: React.PropTypes.bool,
-		/**
-		 *
-		 */
-		color: React.PropTypes.oneOf(_.values(TicketColor)),
 
 		/**
 		 *
 		 */
-		content: React.PropTypes.string,
+		active: React.PropTypes.bool,
+
+		/**
+		 *
+		 */
+
+		id: React.PropTypes.string.isRequired,
+
+		/**
+		 *
+		 */
+		color: React.PropTypes.oneOf(_.values(TicketColor)).isRequired,
+
+		/**
+		 *
+		 */
+		content: React.PropTypes.string.isRequired,
 
 		/**
 		 *
@@ -61,10 +58,8 @@ var Ticket = React.createClass({
 
 	getDefaultProps: function() {
 		return {
-			snap:     false,
-			color:    TicketColor.VIOLET,
-			content:  '',
-			position: { x: 0, y: 0 },
+			snap:   false,
+			active: false,
 		}
 	},
 
@@ -77,10 +72,6 @@ var Ticket = React.createClass({
 	},
 
 	componentDidMount: function() {
-		// For some reason, the element 'key' is not directly accessible
-		// at 'this.key' as it should?
-		var id = this._currentElement.key;
-
 		// Setup HammerJS for our custom 'doubletap' event.
 		this.hammer = new Hammer.Manager(this.getDOMNode());
 		this.hammer.add(new Hammer.Tap({ event: 'doubletap', taps: 2 }));
@@ -94,7 +85,7 @@ var Ticket = React.createClass({
 		// Setup a listener for 'dragStart' events, so that when a ticket is
 		// tapped or dragged, it is moved to a '.last-active' layer.
 		this.draggable.on('dragStart', function setAsActive() {
-			TicketActions.setActiveTicket({ id: id });
+			TicketActions.setActiveTicket({ id: this.props.id });
 		}.bind(this));
 
 		// Setup a listener for Draggable mixin's 'dragEnd' events, so we can
@@ -107,7 +98,7 @@ var Ticket = React.createClass({
 			}
 
 			// The position is just an illusion... If we have snap on...
-			var endpos = this.props.snap ? _gridify(pos) : pos;
+			var endpos = this.props.snap ? gridify(pos) : pos;
 
 			// If we are snapping the ticket, we 'tween' the position to the
 			// end value, else we just set the state directly.
@@ -119,7 +110,7 @@ var Ticket = React.createClass({
 			}
 
 			TicketActions.editTicket({
-				id: id,
+				id: this.props.id,
 				position: {
 					x: this.state.x,
 					y: this.state.y,
@@ -158,7 +149,7 @@ var Ticket = React.createClass({
 
 		if(this.state.isEditing) {
 			var editDialog = (
-				<TicketEditDialog id={this._currentElement.key}
+				<TicketEditDialog id={this.props.id}
 					color={this.props.color} content={this.props.content}
 					onDismiss={this._dismissEditDialog} />
 			);

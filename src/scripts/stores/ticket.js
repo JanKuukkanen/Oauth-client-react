@@ -35,6 +35,15 @@ module.exports = createStore(TicketStoreAPI, function(action) {
 			_sortByDate();
 			break;
 
+		case Action.ADD_TICKET:
+			_addTicket(action.payload);
+			break;
+
+		case Action.ADD_TICKET_SUCCESS:
+			_update(_index(action.payload.dirty), action.payload.clean);
+			_sortByDate();
+			break;
+
 		case Action.EDIT_TICKET:
 			_update(_index(action.payload.id), action.payload);
 			_sortByDate();
@@ -52,7 +61,7 @@ module.exports = createStore(TicketStoreAPI, function(action) {
 });
 
 /**
- * Get the ticket specified by 'id'.
+ * Get the ticket with the same 'id.server' as 'id'.
  */
 function getTicket(id) {
 	return _tickets.find(function(t) {
@@ -81,6 +90,10 @@ function _initialize(tickets) {
 	_tickets = Immutable.List(tickets);
 }
 
+function _addTicket(ticket) {
+	_tickets = _tickets.push(ticket);
+}
+
 /**
  *
  */
@@ -104,6 +117,7 @@ function _index(id) {
  */
 function _update(index, ticket) {
 	_tickets = _tickets.update(index, function(t) {
+		t.id       = ticket.id       || t.id;
 		t.color    = ticket.color    || t.color;
 		t.content  = ticket.content  || t.content;
 		t.position = ticket.position || t.position;

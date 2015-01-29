@@ -36,6 +36,7 @@ var TicketEditDialog = React.createClass({
 	},
 
 	getInitialState: function() {
+		console.log(this.props.id);
 		return {
 			color:   this.props.color,
 			content: this.props.content,
@@ -71,6 +72,8 @@ var TicketEditDialog = React.createClass({
 	 *
 	 */
 	_onSubmit: function() {
+		console.log(this.props.id);
+
 		TicketActions.editTicket({
 			id:      this.props.id,
 			color:   this.state.color,
