@@ -1,7 +1,7 @@
 'use strict';
 
 var _          = require('lodash');
-var React      = require('react');
+var React      = require('react/addons');
 var Hammer     = require('hammerjs');
 var TweenState = require('react-tween-state');
 
@@ -39,6 +39,10 @@ var Ticket = React.createClass({
 		/**
 		 *
 		 */
+		active: React.PropTypes.bool,
+		/**
+		 *
+		 */
 		color: React.PropTypes.oneOf(_.values(TicketColor)),
 
 		/**
@@ -73,6 +77,10 @@ var Ticket = React.createClass({
 	},
 
 	componentDidMount: function() {
+		// For some reason, the element 'key' is not directly accessible
+		// at 'this.key' as it should?
+		var id = this._currentElement.key;
+
 		// Setup HammerJS for our custom 'doubletap' event.
 		this.hammer = new Hammer.Manager(this.getDOMNode());
 		this.hammer.add(new Hammer.Tap({ event: 'doubletap', taps: 2 }));
@@ -83,15 +91,17 @@ var Ticket = React.createClass({
 			this.setState({ isEditing: true });
 		}.bind(this));
 
+		// Setup a listener for 'dragStart' events, so that when a ticket is
+		// tapped or dragged, it is moved to a '.last-active' layer.
+		this.draggable.on('dragStart', function setAsActive() {
+			TicketActions.setActiveTicket({ id: id });
+		}.bind(this));
+
 		// Setup a listener for Draggable mixin's 'dragEnd' events, so we can
 		// create actions that update the ticket's position.
 		this.draggable.on('dragEnd', function() {
-			// For some reason, the element 'key' is not directly accessible
-			// at 'this.key' as it should?
-			var id  = this._currentElement.key;
-			var pos = this.draggable.position;
-
 			// Don't do anything if we didn't actually move the ticket.
+			var pos = this.draggable.position;
 			if(this.state.x === pos.x && this.state.y === pos.y) {
 				return;
 			}
@@ -141,6 +151,10 @@ var Ticket = React.createClass({
 			left:     this.getTweeningValue('x'),
 			position: 'absolute',
 		}
+		var classes = React.addons.classSet({
+			'ticket':      true,
+			'last-active': this.props.active,
+		});
 
 		if(this.state.isEditing) {
 			var editDialog = (
@@ -151,7 +165,7 @@ var Ticket = React.createClass({
 		}
 
 		return (
-			<div className="ticket" style={style}>
+			<div className={classes} style={style}>
 				<Stripe color={this.props.color} />
 				<div className="content">
 					{this.props.content}

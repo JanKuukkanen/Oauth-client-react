@@ -26,6 +26,7 @@ var BoardView = React.createClass({
 			width:  10,
 			height: 10,
 
+			active:  null,
 			tickets: [ ],
 		}
 	},
@@ -35,6 +36,7 @@ var BoardView = React.createClass({
 
 		TicketStore.addChangeListener(function() {
 			this.setState({
+				active:  TicketStore.getActiveTicket(),
 				tickets: TicketStore.getTickets(),
 			});
 		}.bind(this));
@@ -61,9 +63,10 @@ var BoardView = React.createClass({
 		return this.state.tickets.map(function(t) {
 			return (
 				<Ticket key={t.id} id={t.id} color={t.color}
-						content={t.content} position={t.position} />
+					active={t.id === this.state.active}
+					content={t.content} position={t.position} />
 			);
-		});
+		}.bind(this));
 	},
 });
 

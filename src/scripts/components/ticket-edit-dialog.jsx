@@ -67,11 +67,24 @@ var TicketEditDialog = React.createClass({
 		);
 	},
 
+	/**
+	 *
+	 */
 	_onSubmit: function() {
 		TicketActions.editTicket({
 			id:      this.props.id,
 			color:   this.state.color,
 			content: this.state.content,
+		});
+		return this.props.onDismiss();
+	},
+
+	/**
+	 *
+	 */
+	_onDelete: function() {
+		TicketActions.removeTicket({
+			id: this.props.id,
 		});
 		return this.props.onDismiss();
 	},

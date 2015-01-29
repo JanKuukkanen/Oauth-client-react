@@ -31,7 +31,6 @@ module.exports = {
 	},
 
 	componentWillUnmount: function() {
-		this.draggable.destroy()
 		this.draggable = null;
 	},
 }
