@@ -28,18 +28,24 @@
 
 		z-index: @layer-ui;
 
-		.marker {
-			z-index:  @layer-ui + 1;
+		.cursor {
 			position: absolute;
 
+			z-index:          (@layer-ui + 1);
+			background-color: fade(@gray-light, 40%);
+		}
+
+		.marker {
+			position: absolute;
+
+			border: 1px solid @white;
+			/**
+			 * Fixes issue with markers blocking the cursor, even though they
+			 * are at a lower z-index.
+			 */
 			pointer-events: none;
 
 			.transition(all, .2s);
-		}
-
-		.cursor {
-			z-index:          @layer-ui + 2;
-			background-color: fade(@gray-light, 40%);
 		}
 	}
 }

@@ -48,7 +48,7 @@ function addTicket(ticket) {
 	// From: https://gist.github.com/gordonbrander/2230317
 	var generatedID = Math.random().toString(36).substr(2, 9);
 
-	// For our 'dirty' ticket we use the
+	// For our 'dirty' ticket we use the id we just generated...
 	ticket.id = generatedID;
 
 	Dispatcher.dispatch({

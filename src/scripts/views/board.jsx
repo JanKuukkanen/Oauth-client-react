@@ -25,8 +25,8 @@ var BoardView = React.createClass({
 
 	getInitialState: function() {
 		return {
-			width:  10,
-			height: 10,
+			width:  12,
+			height: 15,
 
 			active:  null,
 			tickets: [ ],
