@@ -3,8 +3,6 @@
 var React   = require('react/addons');
 var IScroll = require('iscroll');
 
-var Marker = require('./marker.jsx');
-
 var TICKET_WIDTH  = require('../constants').TICKET_WIDTH;
 var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
 
