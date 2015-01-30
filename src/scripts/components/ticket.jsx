@@ -53,6 +53,7 @@ var Ticket = React.createClass({
 		position: React.PropTypes.shape({
 			x: React.PropTypes.number.isRequired,
 			y: React.PropTypes.number.isRequired,
+			z: React.PropTypes.number.isRequired,
 		}).isRequired,
 	},
 
@@ -125,22 +126,43 @@ var Ticket = React.createClass({
 	},
 
 	componentWillReceiveProps: function (next) {
+		// Don't tween if there is a drag going on...
 		if(this.state.isDragging) return;
 
-		// Don't wanna tween if there ain't nothing to tween...
-		var curr = { x: this.state.x, y: this.state.y }
-		if(curr.x === next.position.x && curr.y === next.position.y) {
+		// Don't wanna tween if there ain't nothing to tween to...
+		if(this.state.x === next.position.x
+		&& this.state.y === next.position.y) {
 			return;
 		}
-
 		return this._tweenPositionTo(next.position);
+	},
+
+	/**
+	 * Passed to the Modal as dismissal function.
+	 */
+	_dismissEditDialog: function() {
+		this.setState({ isEditing: false });
+	},
+
+	/**
+	 * Uses 'tween-state' to tween the current position to the target.
+	 */
+	_tweenPositionTo: function(to, from, duration) {
+		['x', 'y'].map(function(coordinate) {
+			var tweeningOpts = {
+				duration:   duration || 500,
+				endValue:   to[coordinate],
+				beginValue: from ? from[coordinate] : null,
+			}
+			return this.tweenState(coordinate, tweeningOpts);
+		}.bind(this));
 	},
 
 	render: function() {
 		var style = {
-			top:      this.getTweeningValue('y'),
-			left:     this.getTweeningValue('x'),
-			position: 'absolute',
+			top:    this.getTweeningValue('y'),
+			left:   this.getTweeningValue('x'),
+			zIndex: this.props.position.z,
 		}
 		var classes = React.addons.classSet({
 			'ticket':      true,
@@ -164,27 +186,6 @@ var Ticket = React.createClass({
 				{editDialog}
 			</div>
 		);
-	},
-
-	/**
-	 * Passed to the Modal as dismissal function.
-	 */
-	_dismissEditDialog: function() {
-		this.setState({ isEditing: false });
-	},
-
-	/**
-	 * Uses 'tween-state' to tween the current position to the target.
-	 */
-	_tweenPositionTo: function(to, from, duration) {
-		['x', 'y'].map(function(coordinate) {
-			var tweeningOpts = {
-				duration:   duration || 500,
-				endValue:   to[coordinate],
-				beginValue: from ? from[coordinate] : null,
-			}
-			return this.tweenState(coordinate, tweeningOpts);
-		}.bind(this));
 	},
 });
 

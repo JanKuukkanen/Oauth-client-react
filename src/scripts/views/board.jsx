@@ -65,9 +65,9 @@ var BoardView = React.createClass({
 				<div className="options">
 					{this.renderSettings()}
 				</div>
-				<Scrollable size={dimensions}
+				<Scrollable size={dimensions} markers={this.state.tickets}
 						showMinimap={this.state.showMinimap}>
-					<Board size={dimensions}>
+					<Board size={dimensions} snap={this.state.snapToGrid}>
 						{this.renderTickets()}
 					</Board>
 				</Scrollable>

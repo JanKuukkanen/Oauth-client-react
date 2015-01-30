@@ -5,6 +5,8 @@
  * Ticketz.
  */
 .ticket {
+	position: absolute;
+
 	width:  @ticket-width;
 	height: @ticket-height;
 
@@ -16,7 +18,7 @@
 	}
 
 	&.last-active {
-		z-index: @layer-active;
+		z-index: @layer-active !important;
 	}
 
 	.stripe {

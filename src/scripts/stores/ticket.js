@@ -32,7 +32,7 @@ module.exports = createStore(TicketStoreAPI, function(action) {
 
 		case Action.LOAD_TICKETS_SUCCESS:
 			_initialize(action.payload);
-			_sortByDate();
+			_calculateZLayers();
 			break;
 
 		case Action.ADD_TICKET:
@@ -41,12 +41,12 @@ module.exports = createStore(TicketStoreAPI, function(action) {
 
 		case Action.ADD_TICKET_SUCCESS:
 			_update(_index(action.payload.dirty), action.payload.clean);
-			_sortByDate();
+			_calculateZLayers();
 			break;
 
 		case Action.EDIT_TICKET:
 			_update(_index(action.payload.id), action.payload);
-			_sortByDate();
+			_calculateZLayers();
 			break;
 
 		case Action.REMOVE_TICKET:
@@ -90,6 +90,9 @@ function _initialize(tickets) {
 	_tickets = Immutable.List(tickets);
 }
 
+/**
+ *
+ */
 function _addTicket(ticket) {
 	_tickets = _tickets.push(ticket);
 }
@@ -124,6 +127,34 @@ function _update(index, ticket) {
 
 		t.updatedAt = Date.now();
 		return t;
+	});
+}
+
+/**
+ * Used to calculate the 'position.z' property for tickets, which only exists
+ * on the client. This is so that we don't constantly change the order of our
+ * tickets, because it can cause issues with rendering.
+ *
+ * TODO Can this be optimized?
+ */
+function _calculateZLayers() {
+	// First we sort the tickets by their 'updatedAt' property, since it tells
+	// us which order should the tickets have.
+	var sorted = _tickets.sortBy(function(ticket) {
+		return ticket.updatedAt;
+	}).toArray();
+
+	// Map IDs to their respective 'z-indices'.
+	var zLayer = { }
+	for(var i = 0; i < sorted.length; i++) {
+		zLayer[sorted[i].id] = i;
+	}
+
+	// Finally we perform a simple map, which adds a 'z' attribute to the
+	// position property of tickets.
+	_tickets = _tickets.map(function(ticket) {
+		ticket.position.z = zLayer[ticket.id];
+		return ticket;
 	});
 }
 

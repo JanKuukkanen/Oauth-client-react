@@ -3,6 +3,13 @@
 var React   = require('react/addons');
 var IScroll = require('iscroll');
 
+var Marker = require('./marker.jsx');
+
+var TICKET_WIDTH  = require('../constants').TICKET_WIDTH;
+var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
+
+var MINIMAP_MAX = require('../constants').MINIMAP_MAX;
+
 /**
  * Scrollable is a wrapper element which makes the child element scrollable in
  * both X and Y dimensions.
@@ -30,6 +37,17 @@ var Scrollable = React.createClass({
 		 * shown.
 		 */
 		showMinimap: React.PropTypes.bool.isRequired,
+
+		/**
+		 * The 'markers' property indicates the markers displayed on the map.
+		 */
+		markers: React.PropTypes.array,
+	},
+
+	getDefaultProps: function() {
+		return {
+			markers: [ ],
+		}
 	},
 
 	getInitialState: function() {
@@ -77,7 +95,29 @@ var Scrollable = React.createClass({
 	},
 
 	componentDidUpdate: function() {
+		// When the 'minimap' is actually hidden, it does not have a size. So
+		// when we set the minimap to show, we need to resize the cursor again.
 		this._resizeMinimapCursor();
+	},
+
+	/**
+	 * Resizes the width and height for the 'cursor' element so that it matches
+	 * the window size and orientation.
+	 */
+	_resizeMinimapCursor: function() {
+		var $cursor  = this.refs.cursor.getDOMNode();
+		var $wrapper = this.refs.wrapper.getDOMNode();
+		var $minimap = this.refs.minimap.getDOMNode();
+
+		var scale = {
+			x: $wrapper.clientWidth  / this.props.size.width,
+			y: $wrapper.clientHeight / this.props.size.height,
+		}
+
+		$cursor.style.width  = Math.round(scale.x * $minimap.clientWidth);
+		$cursor.style.height = Math.round(scale.y * $minimap.clientHeight);
+
+		this.scroller.refresh();
 	},
 
 	render: function() {
@@ -86,13 +126,32 @@ var Scrollable = React.createClass({
 			'minimap': true,
 		});
 
+		// Calculate the size of minimap, so that it reflects the size of the
+		// scrollable area, e.g. it has the same aspect ratio.
+		var size   = this.props.size;
+		var height = (size.height / size.width) * MINIMAP_MAX;
+		var width  = MINIMAP_MAX;
+
+		// Clamp the width and height of the minimap so that they won't exceed
+		// the max set in MINIMAP_MAX.
+		var scale = (height > MINIMAP_MAX) ? MINIMAP_MAX / height : 1;
+
+		var styles = {
+			minimap: {
+				width:  width  * scale,
+				height: height * scale,
+			},
+		}
+
 		return (
 			<div className="scrollable">
 				<div ref="wrapper" className="wrapper">
 					{this.renderChildren()}
 				</div>
-				<div ref="minimap" className={minimapClasses}>
+				<div ref="minimap" className={minimapClasses}
+						style={styles.minimap}>
 					<div ref="cursor" className="cursor" />
+					{this.renderMarkers(styles.minimap.width)}
 				</div>
 			</div>
 		);
@@ -106,22 +165,43 @@ var Scrollable = React.createClass({
 		}.bind(this));
 	},
 
-	/**
-	 * Resizes the width and height for the 'cursor' element so that it matches
-	 * the window size and orientation.
-	 */
-	_resizeMinimapCursor: function() {
-		var $cursor  = this.refs.cursor.getDOMNode();
-		var $wrapper = this.refs.wrapper.getDOMNode();
-		var $minimap = this.refs.minimap.getDOMNode();
+	renderMarkers: function(minimapWidth) {
+		// We need to calculate the correct size and position for the markers,
+		// when minimap is basically resizable.
+		var scale = minimapWidth / this.props.size.width;
 
-		var scaleX = $wrapper.clientWidth  / this.props.size.width;
-		var scaleY = $wrapper.clientHeight / this.props.size.height;
+		return this.props.markers.map(function(marker) {
+			var style = {
+				width:  Math.round(scale * TICKET_WIDTH),
+				height: Math.round(scale * TICKET_HEIGHT),
 
-		$cursor.style.width  = Math.round(scaleX * $minimap.clientWidth);
-		$cursor.style.height = Math.round(scaleY * $minimap.clientHeight);
+				top:  Math.round(scale * marker.position.y),
+				left: Math.round(scale * marker.position.x),
 
-		this.scroller.refresh();
+				zIndex: marker.position.z,
+
+				backgroundColor: marker.color,
+			}
+
+			var size = {
+				width: style.width,
+				height: style.height,
+			}
+
+			var position = {
+				x: style.left,
+				y: style.top,
+			}
+
+			// return (
+			// 	<Marker key={marker.id} color={marker.color}
+			// 		size={size} position={position} />
+			// );
+
+			return (
+				<div key={marker.id} className="marker" style={style} />
+			);
+		}.bind(this));
 	},
 });
 
