@@ -21,14 +21,16 @@
 		right:    8;
 		position: absolute;
 
-		border: 2px solid @gray;
+		border: 1px solid;
 
-		z-index:          @layer-ui;
-		background-color: @gray-light;
+		border-color:     @gray-light;
+		background-color: @white;
+
+		z-index: @layer-ui;
 
 		.cursor {
-			z-index:          @layer-ui + 1;
-			background-color: @white;
+			z-index:          @layer-ui + 2;
+			background-color: fade(@gray-light, 40%);
 		}
 	}
 }

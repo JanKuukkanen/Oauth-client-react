@@ -41,7 +41,7 @@ var SideBar = React.createClass({
 
 		return (
 			<div className="sidebar" style={style}>
-				<img className="sidebar-logo" src="dist/assets/logo.svg" />
+				<img className="sidebar-logo" src="dist/assets/img/logo.svg" />
 				<div className="sidebar-avatar-wrapper">
 					<img className="sidebar-avatar" src={avatar} />
 				</div>

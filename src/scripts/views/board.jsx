@@ -4,10 +4,12 @@ var React = require('react/addons');
 
 var Board      = require('../components/board.jsx');
 var Ticket     = require('../components/ticket.jsx');
+var Setting    = require('../components/setting.jsx');
 var SideBar    = require('../components/sidebar.jsx');
 var Scrollable = require('../components/scrollable.jsx');
 
 var TicketStore   = require('../stores/ticket');
+var SettingStore  = require('../stores/setting');
 var TicketActions = require('../actions/ticket');
 
 var TICKET_WIDTH  = require('../constants').TICKET_WIDTH;
@@ -28,6 +30,9 @@ var BoardView = React.createClass({
 
 			active:  null,
 			tickets: [ ],
+
+			snapToGrid:  SettingStore.get('snapToGrid'),
+			showMinimap: SettingStore.get('showMinimap'),
 		}
 	},
 
@@ -40,6 +45,13 @@ var BoardView = React.createClass({
 				tickets: TicketStore.getTickets(),
 			});
 		}.bind(this));
+
+		SettingStore.addChangeListener(function() {
+			this.setState({
+				snapToGrid:  SettingStore.get('snapToGrid'),
+				showMinimap: SettingStore.get('showMinimap'),
+			});
+		}.bind(this));
 	},
 
 	render: function() {
@@ -50,7 +62,11 @@ var BoardView = React.createClass({
 		return (
 			<div className="board-view">
 				<SideBar />
-				<Scrollable size={dimensions}>
+				<div className="options">
+					{this.renderSettings()}
+				</div>
+				<Scrollable size={dimensions}
+						showMinimap={this.state.showMinimap}>
 					<Board size={dimensions}>
 						{this.renderTickets()}
 					</Board>
@@ -59,12 +75,37 @@ var BoardView = React.createClass({
 		);
 	},
 
+	renderSettings: function() {
+		var settings = [
+			{
+				key:   'snapToGrid',
+				icon:  'th',
+				value: this.state.snapToGrid,
+			},
+			{
+				key:   'showMinimap',
+				icon:  'globe',
+				value: this.state.showMinimap,
+			}
+		];
+		return settings.map(function(setting) {
+			return (
+				<Setting key={setting.key}
+					icon={setting.icon} value={setting.value} />
+			);
+		});
+	},
+
 	renderTickets: function() {
 		return this.state.tickets.map(function(t) {
 			return (
-				<Ticket key={t.id} id={t.id} color={t.color}
+				<Ticket key={t.id}
+					id={t.id}
+					snap={this.state.snapToGrid}
+					color={t.color}
 					active={t.id === this.state.active}
-					content={t.content} position={t.position} />
+					content={t.content}
+					position={t.position} />
 			);
 		}.bind(this));
 	},

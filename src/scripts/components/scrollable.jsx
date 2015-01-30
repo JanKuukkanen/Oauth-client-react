@@ -24,6 +24,12 @@ var Scrollable = React.createClass({
 			width:  React.PropTypes.number,
 			height: React.PropTypes.number,
 		}).isRequired,
+
+		/**
+		 * The 'showMinimap' property indicates whether or not a minimap is
+		 * shown.
+		 */
+		showMinimap: React.PropTypes.bool.isRequired,
 	},
 
 	getInitialState: function() {
@@ -70,13 +76,22 @@ var Scrollable = React.createClass({
 		this.scroller = null;
 	},
 
+	componentDidUpdate: function() {
+		this._resizeMinimapCursor();
+	},
+
 	render: function() {
+		var minimapClasses = React.addons.classSet({
+			'hidden':  !this.props.showMinimap,
+			'minimap': true,
+		});
+
 		return (
 			<div className="scrollable">
 				<div ref="wrapper" className="wrapper">
 					{this.renderChildren()}
 				</div>
-				<div ref="minimap" className="minimap">
+				<div ref="minimap" className={minimapClasses}>
 					<div ref="cursor" className="cursor" />
 				</div>
 			</div>
