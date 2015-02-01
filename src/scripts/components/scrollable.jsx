@@ -103,6 +103,8 @@ var Scrollable = React.createClass({
 	 * the window size and orientation.
 	 */
 	_resizeMinimapCursor: function() {
+		if(!this.props.showMinimap) return;
+
 		var $cursor  = this.refs.cursor.getDOMNode();
 		var $wrapper = this.refs.wrapper.getDOMNode();
 		var $minimap = this.refs.minimap.getDOMNode();
