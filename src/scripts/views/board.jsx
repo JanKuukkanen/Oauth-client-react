@@ -1,11 +1,11 @@
 'use strict';
 
-var React = require('react/addons');
+var React = require('react');
 
 var Board      = require('../components/board.jsx');
 var Ticket     = require('../components/ticket.jsx');
 var Setting    = require('../components/setting.jsx');
-var SideBar    = require('../components/sidebar.jsx');
+var Sidebar    = require('../components/sidebar.jsx');
 var Scrollable = require('../components/scrollable.jsx');
 
 var TicketStore   = require('../stores/ticket');
@@ -19,10 +19,6 @@ var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
  *
  */
 var BoardView = React.createClass({
-	propTypes: {
-		id: React.PropTypes.string.isRequired,
-	},
-
 	getInitialState: function() {
 		return {
 			width:  12,
@@ -37,21 +33,29 @@ var BoardView = React.createClass({
 	},
 
 	componentDidMount: function() {
-		TicketActions.loadTickets(this.props.id)
+		TicketActions.loadTickets(this.props.id);
 
-		TicketStore.addChangeListener(function() {
-			this.setState({
-				active:  TicketStore.getActiveTicket(),
-				tickets: TicketStore.getTickets(),
-			});
-		}.bind(this));
+		TicketStore.addChangeListener(this._ticketStoreChangeListener);
+		SettingStore.addChangeListener(this._settingStoreChangeListener);
+	},
 
-		SettingStore.addChangeListener(function() {
-			this.setState({
-				snapToGrid:  SettingStore.get('snapToGrid'),
-				showMinimap: SettingStore.get('showMinimap'),
-			});
-		}.bind(this));
+	componentWillUnmount: function() {
+		TicketStore.removeChangeListener(this._ticketStoreChangeListener);
+		SettingStore.removeChangeListener(this._settingStoreChangeListener);
+	},
+
+	_ticketStoreChangeListener: function() {
+		this.setState({
+			active:  TicketStore.getActiveTicket(),
+			tickets: TicketStore.getTickets(),
+		});
+	},
+
+	_settingStoreChangeListener: function() {
+		this.setState({
+			snapToGrid:  SettingStore.get('snapToGrid'),
+			showMinimap: SettingStore.get('showMinimap'),
+		});
 	},
 
 	render: function() {
@@ -60,17 +64,19 @@ var BoardView = React.createClass({
 			height: this.state.height * TICKET_HEIGHT,
 		}
 		return (
-			<div className="board-view">
-				<SideBar />
-				<div className="options">
-					{this.renderSettings()}
+			<div className="application">
+				<Sidebar user={this.props.user} />
+				<div className="view view-board">
+					<div className="options">
+						{this.renderSettings()}
+					</div>
+					<Scrollable size={dimensions} markers={this.state.tickets}
+							showMinimap={this.state.showMinimap}>
+						<Board size={dimensions} snap={this.state.snapToGrid}>
+							{this.renderTickets()}
+						</Board>
+					</Scrollable>
 				</div>
-				<Scrollable size={dimensions} markers={this.state.tickets}
-						showMinimap={this.state.showMinimap}>
-					<Board size={dimensions} snap={this.state.snapToGrid}>
-						{this.renderTickets()}
-					</Board>
-				</Scrollable>
 			</div>
 		);
 	},

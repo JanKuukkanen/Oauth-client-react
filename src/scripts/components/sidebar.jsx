@@ -13,7 +13,7 @@ var SideBar = React.createClass({
 		user: React.PropTypes.shape({
 			name: React.PropTypes.string.isRequired,
 			type: React.PropTypes.oneOf(_.values(UserType)).isRequired,
-		}),
+		}).isRequired,
 
 		/**
 		 * Width of the sidebar.
@@ -23,10 +23,6 @@ var SideBar = React.createClass({
 
 	getDefaultProps: function() {
 		return {
-			user: {
-				name: 'demouser',
-				type: UserType.GUEST,
-			},
 			width: 80,
 		}
 	},
@@ -41,7 +37,7 @@ var SideBar = React.createClass({
 
 		return (
 			<div className="sidebar" style={style}>
-				<img className="sidebar-logo" src="dist/assets/img/logo.svg" />
+				<img className="sidebar-logo" src="/dist/assets/img/logo.svg" />
 				<div className="sidebar-avatar-wrapper">
 					<img className="sidebar-avatar" src={avatar} />
 				</div>

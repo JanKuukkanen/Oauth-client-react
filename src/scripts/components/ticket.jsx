@@ -6,10 +6,13 @@ var Hammer     = require('hammerjs');
 var TweenState = require('react-tween-state');
 
 var Stripe           = require('./stripe.jsx');
-var TicketColor      = require('../constants/enums').TicketColor;
-var TicketActions    = require('../actions/ticket');
-var DraggableMixin   = require('../mixins/draggable');
 var TicketEditDialog = require('./ticket-edit-dialog.jsx');
+
+var TicketColor   = require('../constants/enums').TicketColor;
+var TicketActions = require('../actions/ticket');
+
+var DraggableMixin  = require('../mixins/draggable');
+var PureRenderMixin = React.addons.PureRenderMixin;
 
 var gridify = require('../utils/gridify');
 
@@ -18,7 +21,7 @@ var gridify = require('../utils/gridify');
  */
 var Ticket = React.createClass({
 
-	mixins: [DraggableMixin, TweenState.Mixin],
+	mixins: [DraggableMixin, TweenState.Mixin, PureRenderMixin],
 
 	propTypes: {
 		/**

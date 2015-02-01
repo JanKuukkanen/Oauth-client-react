@@ -170,32 +170,15 @@ var Scrollable = React.createClass({
 
 		return this.props.markers.map(function(marker) {
 			var style = {
-				width:  Math.round(scale * TICKET_WIDTH),
-				height: Math.round(scale * TICKET_HEIGHT),
-
 				top:  Math.round(scale * marker.position.y),
 				left: Math.round(scale * marker.position.x),
 
-				zIndex: marker.position.z,
+				width:  Math.round(scale * TICKET_WIDTH),
+				height: Math.round(scale * TICKET_HEIGHT),
 
+				zIndex:          marker.position.z,
 				backgroundColor: marker.color,
 			}
-
-			var size = {
-				width: style.width,
-				height: style.height,
-			}
-
-			var position = {
-				x: style.left,
-				y: style.top,
-			}
-
-			// return (
-			// 	<Marker key={marker.id} color={marker.color}
-			// 		size={size} position={position} />
-			// );
-
 			return (
 				<div key={marker.id} className="marker" style={style} />
 			);

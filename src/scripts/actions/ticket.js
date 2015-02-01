@@ -103,7 +103,7 @@ function editTicket(ticket) {
 /**
  *
  */
-function loadTickets() {
+function loadTickets(boardId) {
 	Dispatcher.dispatch({ type: Action.LOAD_TICKETS });
 
 	// Mock a server response by setting a timeout...
@@ -112,6 +112,21 @@ function loadTickets() {
 			type:    Action.LOAD_TICKETS_SUCCESS,
 			payload: mockTickets,
 		});
+		// Mock movement...
+		// setTimeout(function() {
+		// 	var ticket = mockTickets[0];
+
+		// 	ticket.position = {
+		// 		x: 0,
+		// 		y: 0,
+		// 	}
+		// 	ticket.content = 'uliuliuli';
+
+		// 	Dispatcher.dispatch({
+		// 		type:    Action.EDIT_TICKET,
+		// 		payload: ticket,
+		// 	});
+		// }, 3000);
 	}, 80);
 }
 

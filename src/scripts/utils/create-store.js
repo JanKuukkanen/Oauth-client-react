@@ -17,25 +17,16 @@ var CHANGE_EVENT = 'change';
  */
 function createStore(exports, callback) {
 	var store = assign({}, EventEmitter.prototype, {
-		/**
-		 * Emits a 'change' event.
-		 */
 		emitChange: function() {
 			this.emit(CHANGE_EVENT);
 		},
 
-		/**
-		 * Encapsulates the 'EventEmitter.on' method.
-		 */
 		addChangeListener: function(callback) {
-			this.on(CHANGE_EVENT, callback);
+			this.addListener(CHANGE_EVENT, callback);
 		},
 
-		/**
-		 * Encapsulates the 'EventEmitter.off' method.
-		 */
 		removeChangeListener: function(callback) {
-			this.off(CHANGE_EVENT, callback);
+			this.removeListener(CHANGE_EVENT, callback);
 		},
 	});
 
