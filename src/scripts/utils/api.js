@@ -61,6 +61,7 @@ var TIMEOUT_MS = 100;
 module.exports = {
 	login:    login,
 	logout:   logout,
+	register: register,
 	getUser:  getUser,
 	getBoard: getBoard,
 }
@@ -83,6 +84,17 @@ function login(opts) {
 				user:  _mocks.user,
 				token: '1234567ABCDEFG',
 			});
+		}, TIMEOUT_MS);
+	});
+}
+
+/**
+ *
+ */
+function register(opts) {
+	return new Promise(function(resolve, reject) {
+		setTimeout(function() {
+			return resolve(_mocks.user);
 		}, TIMEOUT_MS);
 	});
 }

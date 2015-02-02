@@ -3,8 +3,9 @@
 var Action      = require('../constants/actions');
 var createStore = require('../utils/create-store');
 
-var _user  = null;//localStorage.getItem('user');
-var _token = null;//localStorage.getItem('token');
+// User needs to be parsed...
+var _user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+var _token = localStorage.getItem('token');
 
 /**
  *
@@ -60,22 +61,24 @@ function getToken() {
  *
  */
 function _setUser(user) {
-	_user = user;
-	// localStorage.setItem('user', JSON.stringify(_user = user));
+	console.log('_setUser', user);
+	localStorage.setItem('user', JSON.stringify(_user = user));
 }
 
 /**
  *
  */
 function _setToken(token) {
-	_token = token;
-	// localStorage.setItem('token', _token = token);
+	console.log('_setToken', token);
+	localStorage.setItem('token', _token = token);
 }
 
 /**
  *
  */
 function _clear() {
+	console.log('clear:', localStorage.removeItem('user'));
+	console.log('clear:', localStorage.removeItem('token'));
 	_user  = null;
 	_token = null;
 	// localStorage.removeItem('user');

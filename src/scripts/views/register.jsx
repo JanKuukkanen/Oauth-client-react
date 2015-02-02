@@ -1,7 +1,10 @@
 'use strict';
 
+var page             = require('page');
 var React            = require('react/addons');
 var LinkedStateMixin = React.addons.LinkedStateMixin;
+
+var AuthActions = require('../actions/auth');
 
 var RegisterView = React.createClass({
 	mixins: [LinkedStateMixin],
@@ -11,6 +14,19 @@ var RegisterView = React.createClass({
 			email:    '',
 			password: '',
 		}
+	},
+
+	_onRegisterSubmit: function() {
+		AuthActions.register({
+			email:    this.state.email,
+			password: this.state.password,
+		})
+			// Once the user has 'registered', redirect to 'LoginView'.
+			.then(page.show.bind(null, '/login'));
+	},
+
+	_showLoginView: function() {
+		return page.show('/login');
 	},
 
 	render: function() {
@@ -37,7 +53,8 @@ var RegisterView = React.createClass({
 								valueLink={this.linkState('password')} />
 						</div>
 
-						<button className="btn violet">
+						<button className="btn violet"
+								onClick={this._onRegisterSubmit}>
 							Register
 						</button>
 
@@ -47,7 +64,8 @@ var RegisterView = React.createClass({
 							Already registered?
 						</span>
 
-						<button className="btn turquoise fade">
+						<button className="btn turquoise fade"
+								onClick={this._showLoginView}>
 							Sign In
 						</button>
 

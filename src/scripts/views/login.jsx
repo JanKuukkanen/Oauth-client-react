@@ -4,7 +4,6 @@ var page             = require('page');
 var React            = require('react/addons');
 var LinkedStateMixin = React.addons.LinkedStateMixin;
 
-var AuthStore   = require('../stores/auth');
 var AuthActions = require('../actions/auth');
 
 var LoginView = React.createClass({
@@ -27,6 +26,13 @@ var LoginView = React.createClass({
 		})
 			// When we have logged in, redirect to 'WorkSpace'.
 			.then(page.show.bind(null, '/boards'));
+	},
+
+	/**
+	 *
+	 */
+	_showRegisterView: function() {
+		return page.show('/register');
 	},
 
 	render: function() {
@@ -64,7 +70,8 @@ var LoginView = React.createClass({
 							Not registered?
 						</span>
 
-						<button className="btn violet fade">
+						<button className="btn violet fade"
+								onClick={this._showRegisterView}>
 							Register
 						</button>
 

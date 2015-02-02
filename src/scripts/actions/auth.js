@@ -11,6 +11,7 @@ var Dispatcher = require('../dispatcher');
 module.exports = {
 	login:    login,
 	logout:   logout,
+	register: register,
 	loadUser: loadUser,
 }
 
@@ -30,7 +31,6 @@ function login(credentials) {
 			type:    Action.LOGIN_SUCCESS,
 			payload: user,
 		});
-		return user;
 	}
 
 	function onLoginError(err) {
@@ -47,10 +47,32 @@ function login(credentials) {
 /**
  *
  */
+function register(credentials) {
+	Dispatcher.dispatch({ type: Action.REGISTER });
+
+	function onRegisterSuccess(user) {
+		Dispatcher.dispatch({
+			type:    Action.REGISTER_SUCCESS,
+			payload: user,
+		});
+	}
+
+	function onRegisterFailure(err) {
+		Dispatcher.dispatch({
+			type:    Action.REGISTER_FAILURE,
+			payload: err,
+		});
+	}
+
+	return api.register({ payload: credentials })
+		.then(onRegisterSuccess, onRegisterFailure);
+}
+
+/**
+ *
+ */
 function logout() {
-	Dispatcher.dispatch({
-		type: Action.LOGOUT,
-	});
+	Dispatcher.dispatch({ type: Action.LOGOUT });
 
 	function onLogoutSuccess() {
 		Dispatcher.dispatch({
@@ -73,12 +95,9 @@ function logout() {
  *
  */
 function loadUser() {
-	Dispatcher.dispatch({
-		type: Action.LOAD_USER,
-	});
+	Dispatcher.dispatch({ type: Action.LOAD_USER });
 
 	function onLoadUserSuccess(user) {
-		console.log('loadUser:success:user');
 		Dispatcher.dispatch({
 			type:    Action.LOAD_USER_SUCCESS,
 			payload: user,
