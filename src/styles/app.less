@@ -1,3 +1,5 @@
+@import "form.less";
+
 @import "dialog.less";
 @import "custom-dialogs.less";
 
@@ -18,6 +20,8 @@ html {
 	position: fixed;
 
 	font-family: 'Lato', sans-serif;
+
+	background-color: @black;
 
 	img {
 		display: block;
@@ -50,6 +54,14 @@ html {
 
 		width:  100%;
 		height: 100%;
+
+		&.view-board {
+			background-color: @gray-light;
+		}
+
+		&.view-workspace {
+			background-color: @white;
+		}
 	}
 
 	.sidebar {

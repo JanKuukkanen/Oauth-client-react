@@ -1,0 +1,92 @@
+@import "variables.less";
+
+/**
+ * TODO Do we need to use some media queries here? Or is it just 'fine'.
+ */
+.form {
+	color: @white;
+
+	width:  80%;
+	height: 100vh;
+
+	max-width: 256px;
+
+	margin: 0 auto;
+
+	/**
+	 * The 'logo' in the form.
+	 */
+	.logo {
+		margin:     32px 8px;
+		text-align: center;
+
+		.title {
+			font-size:   32;
+			font-family: 'Lobster', cursive;
+		}
+
+		img {
+			width:  32px;
+			height: 32px;
+
+			margin-right: 8px;
+
+			display: inline-block;
+		}
+	}
+
+	.form-title {
+		font-size: 24px;
+		margin-bottom: -16px;
+	}
+
+	/**
+	 * Input fields for credentials.
+	 */
+	.fields {
+		margin: 32px 0px;
+
+		.input {
+			width:  100%;
+			height: 32px;
+
+			padding: 8px;
+
+			display: block;
+
+			border:           1px solid @gray-light;
+			background-color: @white;
+
+			&:first-child {
+				border-top-left-radius:  5px;
+				border-top-right-radius: 5px;
+			}
+
+			&:last-child {
+				border-bottom-left-radius:  5px;
+				border-bottom-right-radius: 5px;
+			}
+		}
+	}
+
+	.separator {
+		margin-top:    32px;
+		margin-bottom: 16px;
+		border-bottom: 1px solid @white;
+	}
+
+	/**
+	 * The 'Not yet registered?', 'Already registed?' bit.
+	 */
+	.info {
+		display:       block;
+		padding-left:  8px;
+		margin-bottom: 16px;
+		font-size:     12px;
+	}
+
+	.btn {
+		width:  100%;
+		margin: 0px;
+	}
+}

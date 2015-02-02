@@ -53,11 +53,11 @@ var TicketEditDialog = React.createClass({
 						<textarea valueLink={this.linkState('content')} />
 					</div>
 					<div className="dialog-footer">
-						<button className="btn btn-submit dialog-submit"
+						<button className="btn turquoise dialog-submit"
 								onClick={this._onSubmit}>
 							Done
 						</button>
-						<button className="btn btn-danger dialog-cancel"
+						<button className="btn red dialog-cancel"
 								onClick={this._onDelete}>
 							Delete
 						</button>

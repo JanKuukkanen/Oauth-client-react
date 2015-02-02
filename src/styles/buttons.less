@@ -5,6 +5,8 @@
  * Buttons, not much else.
  */
 .btn {
+	cursor: pointer;
+
 	width:  128px;
 	height: 36px;
 	margin: 16px;
@@ -23,7 +25,7 @@
 
 	.transition(background-color, 0.2s);
 
-	&.btn-submit {
+	&.turquoise {
 		border-color:     @turquoise-dark;
 		background-color: @turquoise;
 
@@ -32,12 +34,33 @@
 		}
 	}
 
-	&.btn-danger {
+	&.red {
 		border-color:     @red-dark;
 		background-color: @red;
 
 		&:hover {
 			background-color: @red-dark;
+		}
+	}
+
+	&.violet {
+		border-color:     @violet-dark;
+		background-color: @violet;
+
+		&:hover {
+			background-color: @violet-dark;
+		}
+	}
+
+	&.fade {
+		opacity: 0.8;
+
+		border:           1px solid;
+		border-color:     @white;
+		background-color: transparent;
+
+		&:hover {
+			opacity: 1.0;
 		}
 	}
 }

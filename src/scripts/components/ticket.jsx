@@ -21,7 +21,7 @@ var gridify = require('../utils/gridify');
  */
 var Ticket = React.createClass({
 
-	mixins: [DraggableMixin, TweenState.Mixin, PureRenderMixin],
+	mixins: [DraggableMixin, TweenState.Mixin],
 
 	propTypes: {
 		/**

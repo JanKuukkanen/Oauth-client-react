@@ -164,7 +164,7 @@ function removeTicket(ticket) {
  */
 function setActiveTicket(ticket) {
 	Dispatcher.dispatch({
-		type:    Action.SET_ACTIVE_TICKET,
+		type:    Action.SET_TICKET_ACTIVE,
 		payload: ticket,
 	});
 }

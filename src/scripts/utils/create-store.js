@@ -16,7 +16,7 @@ var CHANGE_EVENT = 'change';
  * @returns {object}  Store object, which is also an EventEmitter.
  */
 function createStore(exports, callback) {
-	var store = assign({}, EventEmitter.prototype, {
+	var store = assign(new EventEmitter(), {
 		emitChange: function() {
 			this.emit(CHANGE_EVENT);
 		},
@@ -30,8 +30,8 @@ function createStore(exports, callback) {
 		},
 	});
 
-	store                 = assign(store, exports);
-	store.dispatcherToken = Dispatcher.register(callback.bind(store));
+	store               = assign(store, exports);
+	store.dispatchToken = Dispatcher.register(callback.bind(store));
 
 	return store;
 }
