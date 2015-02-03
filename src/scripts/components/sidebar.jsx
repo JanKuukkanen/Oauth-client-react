@@ -13,7 +13,7 @@ var SideBar = React.createClass({
 		user: React.PropTypes.shape({
 			name: React.PropTypes.string.isRequired,
 			type: React.PropTypes.oneOf(_.values(UserType)).isRequired,
-		}).isRequired,
+		}),
 
 		/**
 		 * Width of the sidebar.
@@ -23,20 +23,19 @@ var SideBar = React.createClass({
 
 	getDefaultProps: function() {
 		return {
-			width: 80,
+			user: {
+				name: 'unknown',
+				type: 'unknown',
+			},
 		}
 	},
 
 	render: function() {
-		var style = {
-			width: this.props.width,
-		}
-
-		// TODO Gravatar or something?
+		// TODO Gravatar or something? Needs to relate to the user..
 		var avatar = "http://www.placecage.com/c/128/128";
 
 		return (
-			<div className="sidebar" style={style}>
+			<div className="sidebar">
 				<img className="sidebar-logo" src="/dist/assets/img/logo.svg" />
 				<div className="sidebar-avatar-wrapper">
 					<img className="sidebar-avatar" src={avatar} />

@@ -21,6 +21,9 @@ var settingsStoreAPI = {
  */
 module.exports = createStore(settingsStoreAPI, function(action) {
 	switch(action.type) {
+		/**
+		 *
+		 */
 		case Action.CHANGE_SETTING:
 			_set(action.payload.key, action.payload.value);
 			this.emitChange();

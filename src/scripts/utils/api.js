@@ -13,18 +13,32 @@ var _mocks = {
 		type: 'user',
 	},
 
-	board: {
-		id:   '123ABC',
-		name: 'Mock Board',
+	boards: [
+		{
+			id:   '123ABC',
+			name: 'Mock Board #1',
 
-		size: {
-			width:  10,
-			height: 10,
+			size: {
+				width:  10,
+				height: 10,
+			},
+
+			accessCode: '',
+			background: '',
 		},
+		{
+			id:   '234BCD',
+			name: 'Mock Board #2',
 
-		accessCode: '',
-		background: '',
-	},
+			size: {
+				width:  12,
+				height: 18,
+			},
+
+			accessCode: '',
+			background: '',
+		}
+	],
 
 	tickets: [
 		{
@@ -62,8 +76,11 @@ module.exports = {
 	login:    login,
 	logout:   logout,
 	register: register,
-	getUser:  getUser,
-	getBoard: getBoard,
+
+	getUser: getUser,
+
+	getBoard:  getBoard,
+	getBoards: getBoards,
 }
 
 /**
@@ -127,9 +144,28 @@ function getUser(opts) {
 function getBoard(opts) {
 	return new Promise(function(resolve, reject) {
 		setTimeout(function() {
-			return resolve(_mocks.board);
+			return resolve(_mocks.boards[0]);
 		}, TIMEOUT_MS);
 	});
+}
+
+/**
+ *
+ */
+function getBoards(opts) {
+	return new Promise(function(resolve, reject) {
+		setTimeout(function() {
+			return resolve(_mocks.boards);
+		}, TIMEOUT_MS);
+	});
+}
+
+/**
+ *
+ */
+function getTickets(opts) {
+	// http.get /boards/ opts.id.board /tickets
+	//
 }
 
 

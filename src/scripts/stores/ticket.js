@@ -29,34 +29,54 @@ var TicketStoreAPI = {
  */
 module.exports = createStore(TicketStoreAPI, function(action) {
 	switch(action.type) {
+		/**
+		 *
+		 */
 		case Action.LOAD_TICKETS_SUCCESS:
 			_initialize(action.payload);
 			_calculateZLayers();
 			this.emitChange();
 			break;
 
+		/**
+		 *
+		 */
 		case Action.ADD_TICKET:
 			_addTicket(action.payload);
 			this.emitChange();
 			break;
-
 		case Action.ADD_TICKET_SUCCESS:
 			_update(_index(action.payload.dirty), action.payload.clean);
 			_calculateZLayers();
 			this.emitChange();
 			break;
+		case Action.ADD_TICKET_FAILURE:
+			break;
 
+		/**
+		 *
+		 */
 		case Action.EDIT_TICKET:
 			_update(_index(action.payload.id), action.payload);
 			_calculateZLayers();
 			this.emitChange();
 			break;
+		case Action.EDIT_TICKET_FAILURE:
+			break;
 
+		/**
+		 *
+		 */
 		case Action.REMOVE_TICKET:
 			_remove(_index(action.payload.id));
 			this.emitChange();
 			break;
+		case Action.REMOVE_TICKET_FAILURE:
+			break;
 
+		/**
+		 *
+		 */
 		case Action.SET_TICKET_ACTIVE:
 			_active = action.payload.id;
 			this.emitChange();

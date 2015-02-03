@@ -32,10 +32,7 @@ page('/register', notLoggedIn, function showRegisterView(ctx) {
  * WorkspaceView.
  */
 page('/boards', isLoggedIn, function showWorkspaceView(ctx) {
-	var view = React.createElement(WorkspaceView, {
-		user: ctx.user,
-	});
-	return React.render(view, document.body);
+	return React.render(React.createElement(WorkspaceView), document.body);
 });
 
 /**
@@ -43,8 +40,7 @@ page('/boards', isLoggedIn, function showWorkspaceView(ctx) {
  */
 page('/boards/:id', isLoggedIn, function showBoardView(ctx) {
 	var view = React.createElement(BoardView, {
-		id:   ctx.params.id,
-		user: ctx.user,
+		id: ctx.params.id,
 	});
 	return React.render(view, document.body);
 });
@@ -78,7 +74,7 @@ AuthStore.addChangeListener(function() {
  * also refresh the profile by loading the user from the server async.
  */
 function isLoggedIn(ctx, next) {
-	if((ctx.user = AuthStore.getUser()) && AuthStore.getToken()) {
+	if(AuthStore.getToken()) {
 		return AuthActions.loadUser() && next();
 	}
 	return page.redirect('/login');
@@ -90,7 +86,7 @@ function isLoggedIn(ctx, next) {
  * is no 'previous' page.
  */
 function notLoggedIn(ctx, next) {
-	if(!AuthStore.getUser() && !AuthStore.getToken()) {
+	if(!AuthStore.getToken()) {
 		return next();
 	}
 	return page.back('/boards');
