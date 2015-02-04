@@ -37,7 +37,6 @@ var Ticket = React.createClass({
 		/**
 		 *
 		 */
-
 		id: React.PropTypes.string.isRequired,
 
 		/**

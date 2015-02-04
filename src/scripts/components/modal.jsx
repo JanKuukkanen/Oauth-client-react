@@ -6,15 +6,6 @@ var Hammer = require('hammerjs');
 /**
  * Modal can be used to wrap and display content above other stuff in a
  * fashionable manner.
- *
- * Sample usage:
- *
- * <Modal>
- *   <MyComponent />
- *   <MyOtherComponent>
- *     <div className="my-component-thing" />
- *   </MyOtherComponent>
- * </Modal>
  */
 var Modal = React.createClass({
 

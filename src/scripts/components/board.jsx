@@ -3,20 +3,24 @@
 var React  = require('react');
 var Hammer = require('hammerjs');
 
+var gridify       = require('../utils/gridify');
 var TicketColor   = require('../constants/enums').TicketColor;
 var TicketActions = require('../actions/ticket');
-
-var gridify = require('../utils/gridify');
 
 var TICKET_WIDTH  = require('../constants').TICKET_WIDTH;
 var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
 
+/**
+ * Board component is used as a scrollable element. The main functionality of
+ * it comes from its ability to create new Tickets on a 'doubletap' event.
+ *
+ * TODO Add a 'background' property.
+ */
 var Board = React.createClass({
 	propTypes: {
 		/**
-		 * The 'snap' property indicates whether or not tickets will snap on
-		 * the board. Note that here the snap property is used to determine
-		 * where a ticket should be created.
+		 * The 'snap' property indicates whether to snap created tickets to a
+		 * grid of 'ticket.width' x 'ticket.height'.
 		 */
 		snap: React.PropTypes.bool,
 
@@ -29,16 +33,16 @@ var Board = React.createClass({
 		}).isRequired,
 
 		/**
-		 * The 'sideBarWidth' property indicates the current width of the
-		 * sidebar. We need it for calculations and stuff...
+		 * The 'sidebarWidth' property indicates the current width of the
+		 * sidebar. Used for calculating the absolute position of new tickets.
 		 */
-		sideBarWidth: React.PropTypes.number,
+		sidebarWidth: React.PropTypes.number,
 	},
 
 	getDefaultProps: function() {
 		return {
 			snap:         false,
-			sideBarWidth: 80,
+			sidebarWidth: 80,
 		}
 	},
 
@@ -51,21 +55,24 @@ var Board = React.createClass({
 		this.hammer.on('doubletap', function addTicket(ev) {
 			// We need to take into account the static sidebar when calculating
 			// the pointer position.
-			ev.center.x = ev.center.x - this.props.sideBarWidth;
+			ev.center.x = ev.center.x - this.props.sidebarWidth;
 
-			// Calculate the position to be at the center of the ticket. Note
-			// that since 'board' is actually embedded inside a scrollable, we
-			// receive an undocumented 'offset' property, which tells us where
-			// we have scrolled on the board.
+			// Calculate the position to be at the center of the ticket. Since
+			// the 'Board' component is wrapped by a 'Scrollable', we receive
+			// an 'offset' property.
+			// If the user has enabled snapping, we also need to make sure to
+			// snap the position to a grid.
+
 			var pos = {
 				x: (ev.center.x - this.props.offset.x) - (TICKET_WIDTH / 2),
 				y: (ev.center.y - this.props.offset.y) - (TICKET_HEIGHT / 2),
 			}
 
-			// The position is just an illusion... If we have snap on...
 			var endpos = this.props.snap ? gridify(pos) : pos;
 
-			// Clamp the position so that it does not go out of bounds...
+			// Finally we need to clamp the position so that it does not go
+			// over the bounds of the board.
+
 			endpos.x = endpos.x < 0 ?
 				0 : ((endpos.x + TICKET_WIDTH) > this.props.size.width ?
 					(this.props.size.width - TICKET_WIDTH) : endpos.x);
@@ -74,8 +81,7 @@ var Board = React.createClass({
 				0 : ((endpos.y + TICKET_HEIGHT) > this.props.size.height ?
 					(this.props.size.height - TICKET_HEIGHT) : endpos.y);
 
-			// We're done!
-			TicketActions.addTicket({
+			return TicketActions.addTicket({
 				color:    TicketColor.VIOLET,
 				content:  '',
 				position: endpos,
