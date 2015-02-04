@@ -20,8 +20,7 @@ var gridify = require('../utils/gridify');
  *
  */
 var Ticket = React.createClass({
-
-	mixins: [DraggableMixin, TweenState.Mixin],
+	mixins: [DraggableMixin, TweenState.Mixin, PureRenderMixin],
 
 	propTypes: {
 		/**
@@ -68,9 +67,13 @@ var Ticket = React.createClass({
 
 	getInitialState: function() {
 		return {
-			x:         this.props.position.x,
-			y:         this.props.position.y,
-			isEditing: false,
+			// Having internal positional state when we also receive it from
+			// the 'props' passed in can be considered anti-pattern. However,
+			// we are using 'react-tween-state' internal state is required.
+			x: this.props.position.x,
+			y: this.props.position.y,
+
+			showEditDialog: false,
 		}
 	},
 
@@ -80,10 +83,8 @@ var Ticket = React.createClass({
 		this.hammer.add(new Hammer.Tap({ event: 'doubletap', taps: 2 }));
 
 		// Setup a listener for our custom 'doubletap' event, which will toggle
-		// the ticket's 'isEditing' state when invoked.
-		this.hammer.on('doubletap', function showEditDialog() {
-			this.setState({ isEditing: true });
-		}.bind(this));
+		// the ticket's 'showEditDialog' state when invoked.
+		this.hammer.on('doubletap', this._toggleEditDialog);
 
 		// Setup a listener for 'dragStart' events, so that when a ticket is
 		// tapped or dragged, it is moved to a '.last-active' layer.
@@ -142,21 +143,21 @@ var Ticket = React.createClass({
 	/**
 	 * Passed to the Modal as dismissal function.
 	 */
-	_dismissEditDialog: function() {
-		this.setState({ isEditing: false });
+	_toggleEditDialog: function() {
+		this.setState({ showEditDialog: !this.state.showEditDialog });
 	},
 
 	/**
 	 * Uses 'tween-state' to tween the current position to the target.
 	 */
 	_tweenPositionTo: function(to, from, duration) {
-		['x', 'y'].map(function(coordinate) {
+		['x', 'y'].map(function(axis) {
 			var tweeningOpts = {
 				duration:   duration || 500,
-				endValue:   to[coordinate],
-				beginValue: from ? from[coordinate] : null,
+				endValue:   to[axis],
+				beginValue: from ? from[axis] : null,
 			}
-			return this.tweenState(coordinate, tweeningOpts);
+			return this.tweenState(axis, tweeningOpts);
 		}.bind(this));
 	},
 
@@ -171,11 +172,12 @@ var Ticket = React.createClass({
 			'last-active': this.props.active,
 		});
 
-		if(this.state.isEditing) {
+		if(this.state.showEditDialog) {
 			var editDialog = (
 				<TicketEditDialog id={this.props.id}
-					color={this.props.color} content={this.props.content}
-					onDismiss={this._dismissEditDialog} />
+					color={this.props.color}
+					content={this.props.content}
+					onDismiss={this._toggleEditDialog} />
 			);
 		}
 

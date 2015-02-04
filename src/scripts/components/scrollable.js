@@ -87,10 +87,12 @@ var Scrollable = React.createClass({
 		this.scroller = null;
 	},
 
-	componentDidUpdate: function() {
+	componentDidUpdate: function(prev) {
 		// When the 'minimap' is set to be hidden, it does not have a size. So
 		// when we set the minimap to show, we need to resize the cursor.
-		this._resizeMinimapCursor();
+		if(!prev.minimap && this.props.minimap) {
+			this._resizeMinimapCursor();
+		}
 	},
 
 	/**
