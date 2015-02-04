@@ -2,7 +2,8 @@
 
 var React = require('react');
 
-var Sidebar = require('../components/sidebar.jsx');
+var Sidebar      = require('../components/sidebar.jsx');
+var BoardPreview = require('../components/board-preview.jsx');
 
 var AuthStore    = require('../stores/auth');
 var BoardStore   = require('../stores/board');
@@ -41,11 +42,16 @@ var Workspace = React.createClass({
 	},
 
 	render: function() {
+		// TODO We need to make the workspace a 'Scrollable', because it seems
+		//      to solve most of iOS problems on its own. However this is not
+		//      really something that is very urgent.
 		return (
 			<div className="application">
 				<Sidebar user={this.state.user} />
 				<div className="view view-workspace">
-					{this.renderBoards()}
+					<div className="board-list">
+						{this.renderBoards()}
+					</div>
 				</div>
 			</div>
 		);
@@ -53,11 +59,9 @@ var Workspace = React.createClass({
 
 	renderBoards: function() {
 		return this.state.boards.map(function(board) {
-			var boardURL = '/boards/' + board.id + '';
 			return (
-				<div key={board.id} className="board-preview">
-					<a href={boardURL}>{board.name}</a>
-				</div>
+				<BoardPreview key={board.id} size={board.size}
+					title={board.name} background={board.background} />
 			);
 		});
 	},

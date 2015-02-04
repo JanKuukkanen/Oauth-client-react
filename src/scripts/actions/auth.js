@@ -88,7 +88,7 @@ function logout() {
 	}
 
 	return api.logout({ token: AuthStore.getToken() })
-		.then(onLoginSuccess, onLogoutError);
+		.then(onLogoutSuccess, onLogoutError);
 }
 
 /**
@@ -101,7 +101,7 @@ function loadUser() {
 		Dispatcher.dispatch({
 			type:    Action.LOAD_USER_SUCCESS,
 			payload: user,
-		})
+		});
 	}
 
 	function onLoadUserError(err) {

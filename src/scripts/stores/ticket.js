@@ -12,6 +12,14 @@ var _active = null;
 
 /**
  * A list of tickets.
+ *
+ * TODO We need to store tickets based on the board they are on. Then we can do
+ *      stuff like 'getTickets(boardID)'... The data structure will probably be
+ *      Immutable.Map of BoardID to Immutable.List of Ticket.
+ *
+ *      This is actually something that is required to make the 'board-preview'
+ *      have the ticket's as markers. So we can load all the tickets for all
+ *      the boards the user has.
  */
 var _tickets = Immutable.List([]);
 

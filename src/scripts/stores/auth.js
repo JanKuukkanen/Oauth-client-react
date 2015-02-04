@@ -86,9 +86,6 @@ function _setToken(token) {
  *
  */
 function _clear() {
-	_user  = null;
-	_token = null;
-
 	localStorage.removeItem('user');
 	localStorage.removeItem('token');
 }

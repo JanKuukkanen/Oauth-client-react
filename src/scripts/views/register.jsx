@@ -6,6 +6,8 @@ var LinkedStateMixin = React.addons.LinkedStateMixin;
 
 var AuthActions = require('../actions/auth');
 
+var Logo = require('../components/logo.jsx');
+
 var RegisterView = React.createClass({
 	mixins: [LinkedStateMixin],
 
@@ -35,9 +37,9 @@ var RegisterView = React.createClass({
 				<div className="view view-register">
 					<div className="form">
 
-						<div className="logo">
-							<img src="/dist/assets/img/logo.svg" />
-							<span className="title">Contriboard</span>
+						<div className="title">
+							<Logo />
+							<div className="text">Contriboard</div>
 						</div>
 
 						<div className="form-title">

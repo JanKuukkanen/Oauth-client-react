@@ -6,7 +6,7 @@ var Board      = require('../components/board.jsx');
 var Ticket     = require('../components/ticket.jsx');
 var Setting    = require('../components/setting.jsx');
 var Sidebar    = require('../components/sidebar.jsx');
-var Scrollable = require('../components/scrollable.jsx');
+var Scrollable = require('../components/scrollable.js');
 
 var AuthStore    = require('../stores/auth');
 var BoardStore   = require('../stores/board');
@@ -19,6 +19,13 @@ var TicketActions = require('../actions/ticket');
 
 var TICKET_WIDTH  = require('../constants').TICKET_WIDTH;
 var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
+
+/**
+ * Fix issues with iOS and scrolling causing bouncing.
+ */
+function _preventBounce(ev) {
+	return ev.preventDefault();
+}
 
 /**
  *
@@ -55,20 +62,20 @@ var BoardView = React.createClass({
 	},
 
 	componentDidMount: function() {
+		// Fix for bouncing on iOS. No scrolling here!
+		document.addEventListener('touchmove', _preventBounce);
+
 		BoardStore.addChangeListener(this._onBoardStoreChange);
 		TicketStore.addChangeListener(this._onTicketStoreChange);
 		SettingStore.addChangeListener(this._onSettingStoreChange);
 
-		// Because the user might actually navigate directly to this page, we
-		// need to fetch our dependencies here instead of relying directly on
-		// the router. Another way might be to make the router listen to the
-		// stores and re-render the view, which would just update the component
-		// if it is already mounted.
 		BoardActions.loadBoards();
 		TicketActions.loadTickets(this.props.id);
 	},
 
 	componentWillUnmount: function() {
+		document.removeEventListener('touchmove', _preventBounce);
+
 		BoardStore.removeChangeListener(this._onBoardStoreChange);
 		TicketStore.removeChangeListener(this._onTicketStoreChange);
 		SettingStore.removeChangeListener(this._onSettingStoreChange);
@@ -99,6 +106,22 @@ var BoardView = React.createClass({
 			width:  this.state.board.size.width  * TICKET_WIDTH,
 			height: this.state.board.size.height * TICKET_HEIGHT,
 		}
+		var markers = this.state.tickets.map(function(t) {
+			return {
+				size: {
+					width:  TICKET_WIDTH,
+					height: TICKET_HEIGHT,
+				},
+				position: {
+					x: t.position.x,
+					y: t.position.y,
+					z: t.position.z,
+				},
+				color: t.color,
+
+			}
+		});
+
 		return (
 			<div className="application">
 				<Sidebar user={this.state.user} />
@@ -106,8 +129,8 @@ var BoardView = React.createClass({
 					<div className="options">
 						{this.renderSettings()}
 					</div>
-					<Scrollable size={dimensions} markers={this.state.tickets}
-							showMinimap={this.state.showMinimap}>
+					<Scrollable size={dimensions} markers={markers}
+							minimap={this.state.showMinimap}>
 						<Board size={dimensions} snap={this.state.snapToGrid}>
 							{this.renderTickets()}
 						</Board>

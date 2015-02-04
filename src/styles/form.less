@@ -1,3 +1,4 @@
+@import "mixins.less";
 @import "variables.less";
 
 /**
@@ -16,27 +17,34 @@
 	/**
 	 * The 'logo' in the form.
 	 */
-	.logo {
-		margin:     32px 8px;
+	.title {
+		.flexbox();
+
+		.align-items(center);
+		.justify-content(center);
+
+		margin:     32px 0px;
 		text-align: center;
 
-		.title {
-			font-size:   32;
-			font-family: 'Lobster', cursive;
+		.logo {
+			.flex(0, 1);
 		}
 
-		img {
-			width:  32px;
-			height: 32px;
+		.text {
+			.flex(0, 1);
 
-			margin-right: 8px;
+			font-size:   32px;
+			line-height: 100%;
+			font-family: 'Lobster', cursive;
 
-			display: inline-block;
+			margin-left:   4px;
+			margin-right:  8px;
+			margin-bottom: -4px;
 		}
 	}
 
 	.form-title {
-		font-size: 24px;
+		font-size:     24px;
 		margin-bottom: -16px;
 	}
 
