@@ -4,14 +4,24 @@ var React  = require('react');
 var Hammer = require('hammerjs');
 
 /**
- * Modal can be used to wrap and display content above other stuff in a
+ * Dialog can be used to wrap and display content above other stuff in a
  * fashionable manner.
  */
-var Modal = React.createClass({
+var Dialog = React.createClass({
 
 	propTypes: {
-	    /**
-	     * The 'container' is the DOM element the actual Modal is mounted on.
+		/**
+		 * Used to specify an additional 'className' for the '.dialog'.
+		 */
+		className: React.PropTypes.string,
+
+		/**
+		 * The 'onDismiss' callback is invoked when the overlay is clicked.
+		 */
+		onDismiss: React.PropTypes.func,
+
+		/**
+	     * The 'container' is the DOM element the actual Dialog is mounted on.
 	     * Defaults to 'document.body' so you don't usually need to pass in a
 	     * separate container.
 	     */
@@ -22,14 +32,21 @@ var Modal = React.createClass({
 		},
 
 		/**
-		 * The 'onDismiss' callback is invoked when the overlay is clicked.
+		 * The 'children' property for Dialog is a special case. You need to
+		 * pass in three child elements, which will become the dialog 'header',
+		 * 'content' and 'footer'.
 		 */
-		onDismiss: React.PropTypes.func,
+		children: function(props) {
+			if(React.Children.count(props.children) !== 3) {
+				return new Error('You must pass in 3 child elements.');
+			}
+		},
 	},
 
 	getDefaultProps: function() {
 		return {
 			container: document.body,
+			className: '',
 			onDismiss: function() {},
 		}
 	},
@@ -45,10 +62,10 @@ var Modal = React.createClass({
 		// Make sure any clicks, taps and whatever on the 'overlay' trigger the
 		// 'onDismiss' handler. Pointer events on the 'content' should not
 		// trigger the 'onDismiss' handler.
-		this.hammer = new Hammer(this.target.firstChild);
 
-		this.hammer.on('tap', function(ev) {
-			if(ev.target.className === 'modal-overlay') {
+		this.hammer = new Hammer(this.target.firstChild);
+		this.hammer.on('tap', function dismiss(ev) {
+			if(ev.target.className === 'dialog-overlay') {
 				return this.props.onDismiss();
 			}
 		}.bind(this));
@@ -72,20 +89,30 @@ var Modal = React.createClass({
 	render: function() {
 		return (
 			/* jshint ignore:start */
-			<span className="modal-placeholder" />
+			<span className="dialog-placeholder" />
 			/* jshint ignore:end */
 		);
 	},
 
 	/**
-	 * Returns the actual Modal component DOM representation.
+	 * Returns the actual Dialog component DOM representation.
 	 */
 	_render: function() {
+		var classes = 'dialog' + (this.props.className ?
+			(' ' + this.props.className + '') : '');
 		return (
 			/* jshint ignore:start */
-			<div className="modal-overlay">
-				<div className="modal-content">
-					{this.props.children}
+			<div className="dialog-overlay">
+				<div className={classes}>
+					<div className="dialog-header">
+						{this.props.children[0]}
+					</div>
+					<div className="dialog-content">
+						{this.props.children[1]}
+					</div>
+					<div className="dialog-footer">
+						{this.props.children[2]}
+					</div>
 				</div>
 			</div>
 			/* jshint ignore:end */
@@ -93,5 +120,5 @@ var Modal = React.createClass({
 	}
 });
 
-module.exports = Modal;
+module.exports = Dialog;
 

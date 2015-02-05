@@ -1,0 +1,45 @@
+@import "mixins.less";
+@import "variables.less";
+
+/**
+ *
+ */
+.edit-ticket-dialog {
+	.dialog-header {
+		padding: 0px !important;
+	}
+
+	.dialog-content {
+		.flexbox();
+
+		.form {
+			.flex(1, 0);
+			.flexbox();
+			/**
+			 * TODO Once we have reorganized the css, we shouldn't have to declare
+			 *      overrides for '.form' here. Currently '.form' is at a global
+			 *      level so it interferes with this class here.
+			 */
+			width:     100%;
+			max-width: 100%;
+
+			height: auto;
+			margin: 0px;
+
+			textarea {
+				.flex(1, 0);
+			}
+		}
+	}
+
+	.controls {
+		.flexbox();
+		.flex-direction(row-reverse);
+
+		margin: 8px -8px;
+
+		.btn {
+			margin: 0px 8px;
+		}
+	}
+}

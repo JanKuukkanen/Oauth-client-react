@@ -88,8 +88,8 @@
 /**
  *
  */
-.box-shadow(@color) {
-	-webkit-box-shadow: 1px 1px 1px 1px @color;
-	-moz-box-shadow:    1px 1px 1px 1px @color;
-	box-shadow:         1px 1px 1px 1px @color;
+.box-shadow(@color, @h: 1px, @v: 1px, @blur: 1px, @spread: 1px) {
+	-webkit-box-shadow: @h @v @blur @spread @color;
+	-moz-box-shadow:    @h @v @blur @spread @color;
+	box-shadow:         @h @v @blur @spread @color;
 }

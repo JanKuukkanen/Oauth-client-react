@@ -8,7 +8,7 @@ var UserType    = require('../constants/enums').UserType;
 var AuthActions = require('../actions/auth');
 
 var Logo   = require('./logo.jsx');
-var Modal  = require('./modal.jsx');
+var Modal  = require('./dialog.jsx');
 var Avatar = require('./avatar.jsx');
 
 var SideBar = React.createClass({
@@ -59,24 +59,9 @@ var SideBar = React.createClass({
 			var dialog = (
 				/* jshint ignore:start */
 				<Modal onDismiss={this._toggleDialog}>
-					<div className="dialog">
-						<div className="dialog-content">
-							<Avatar url={avatar} theme="light" large={true} />
-							<div className="username">
-								{this.props.user.name}
-							</div>
-						</div>
-						<div className="dialog-footer">
-							<button className="btn turquoise dialog-submit"
-									onClick={this._toggleDialog}>
-								Done
-							</button>
-							<button className="btn red dialog-cancel"
-									onClick={this._logout}>
-								Logout
-							</button>
-						</div>
-					</div>
+					<div>Hello Header</div>
+					<div />
+					<div>Hello Footer</div>
 				</Modal>
 				/* jshint ignore:end */
 			);

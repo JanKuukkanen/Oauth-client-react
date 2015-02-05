@@ -59,12 +59,15 @@ var Workspace = React.createClass({
 		);
 	},
 
+	/**
+	 * TODO Make the boards scrollable horizontally, similarly to the PS4
+	 *      Dashboard, could be good?
+	 */
 	renderBoards: function() {
 		return this.state.boards.map(function(board) {
 			return (
 				/* jshint ignore:start */
-				<BoardPreview key={board.id} size={board.size}
-					title={board.name} background={board.background} />
+				<BoardPreview key={board.id} board={board} />
 				/* jshint ignore:end */
 			);
 		});

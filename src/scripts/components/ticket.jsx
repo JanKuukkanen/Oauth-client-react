@@ -6,7 +6,7 @@ var Hammer     = require('hammerjs');
 var TweenState = require('react-tween-state');
 
 var Stripe           = require('./stripe.jsx');
-var TicketEditDialog = require('./ticket-edit-dialog.jsx');
+var EditTicketDialog = require('./edit-ticket-dialog.jsx');
 
 var TicketColor   = require('../constants/enums').TicketColor;
 var TicketActions = require('../actions/ticket');
@@ -167,17 +167,22 @@ var Ticket = React.createClass({
 			left:   this.getTweeningValue('x'),
 			zIndex: this.props.position.z,
 		}
+
 		var classes = React.addons.classSet({
 			'ticket':      true,
 			'last-active': this.props.active,
 		});
 
+		var ticket = {
+			id:      this.props.id,
+			color:   this.props.color,
+			content: this.props.content,
+		}
+
 		if(this.state.showEditDialog) {
 			var editDialog = (
 				/* jshint ignore:start */
-				<TicketEditDialog id={this.props.id}
-					color={this.props.color}
-					content={this.props.content}
+				<EditTicketDialog ticket={ticket}
 					onDismiss={this._toggleEditDialog} />
 				/* jshint ignore:end */
 			);
