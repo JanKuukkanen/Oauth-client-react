@@ -39,6 +39,7 @@ var LoginView = React.createClass({
 
 	render: function() {
 		return (
+			/* jshint ignore:start */
 			<div className="application">
 				<div className="view view-login">
 					<div className="form">
@@ -80,6 +81,7 @@ var LoginView = React.createClass({
 					</div>
 				</div>
 			</div>
+			/* jshint ignore:end */
 		);
 	}
 });

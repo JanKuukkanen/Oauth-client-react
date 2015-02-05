@@ -98,10 +98,12 @@ var Minimap = React.createClass({
 		}
 
 		return (
+			/* jshint ignore:start */
 			<div className={classes} style={style}>
 				{this.props.children}
 				{this.renderMarkers(style.width / this.props.area.width)}
 			</div>
+			/* jshint ignore:end */
 		);
 	},
 
@@ -122,7 +124,9 @@ var Minimap = React.createClass({
 				backgroundColor: marker.color,
 			}
 			return (
+				/* jshint ignore:start */
 				<div key={index} className="marker" style={style} />
+				/* jshint ignore:end */
 			);
 		});
 	}

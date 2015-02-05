@@ -3,8 +3,8 @@
 var React   = require('react');
 var IScroll = require('iscroll');
 
-var Cursor  = require('../components/cursor');
-var Minimap = require('../components/minimap');
+var Cursor  = require('../components/cursor.jsx');
+var Minimap = require('../components/minimap.jsx');
 
 /**
  * Component that is used to wrap another in order to make it scrollable using
@@ -129,6 +129,7 @@ var Scrollable = React.createClass({
 			},
 		}
 		return (
+			/* jshint ignore:start */
 			<div className="scrollable">
 				<div ref="wrapper" className="wrapper">
 					{this.renderScrollable()}
@@ -137,6 +138,7 @@ var Scrollable = React.createClass({
 					<Cursor ref="cursor" />
 				</Minimap>
 			</div>
+			/* jshint ignore:end */
 		);
 	},
 

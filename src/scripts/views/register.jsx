@@ -33,6 +33,7 @@ var RegisterView = React.createClass({
 
 	render: function() {
 		return (
+			/* jshint ignore:start */
 			<div className="application">
 				<div className="view view-register">
 					<div className="form">
@@ -74,6 +75,7 @@ var RegisterView = React.createClass({
 					</div>
 				</div>
 			</div>
+			/* jshint ignore:end */
 		);
 	}
 });

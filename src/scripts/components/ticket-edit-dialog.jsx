@@ -44,6 +44,7 @@ var TicketEditDialog = React.createClass({
 
 	render: function() {
 		return (
+			/* jshint ignore:start */
 			<Modal onDismiss={this.props.onDismiss}>
 				<div className="dialog">
 					<div className="dialog-header">
@@ -64,6 +65,7 @@ var TicketEditDialog = React.createClass({
 					</div>
 				</div>
 			</Modal>
+			/* jshint ignore:end */
 		);
 	},
 

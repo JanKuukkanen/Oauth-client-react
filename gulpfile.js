@@ -2,7 +2,9 @@
 
 var gulp       = require('gulp');
 var less       = require('gulp-less');
+var react      = require('gulp-react');
 var mocha      = require('gulp-mocha');
+var jshint     = require('gulp-jshint');
 var server     = require('gulp-webserver');
 var source     = require('vinyl-source-stream');
 var reactify   = require('reactify');
@@ -16,6 +18,12 @@ gulp.task('test', function() {
 			},
 			reporter: 'spec',
 		}))
+});
+
+gulp.task('jshint', function() {
+	return gulp.src('./src/scripts/**/*')
+		.pipe(jshint('.jshintrc'))
+		.pipe(jshint.reporter('jshint-stylish'));
 });
 
 gulp.task('less', function() {

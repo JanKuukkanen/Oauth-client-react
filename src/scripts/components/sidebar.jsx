@@ -53,10 +53,11 @@ var SideBar = React.createClass({
 
 	render: function() {
 		// TODO Gravatar or something? Needs to relate to the user..
-		var avatar = "http://www.placecage.com/c/128/128";
+		var avatar = 'http://www.placecage.com/c/128/128';
 
 		if(this.state.showDialog) {
 			var dialog = (
+				/* jshint ignore:start */
 				<Modal onDismiss={this._toggleDialog}>
 					<div className="dialog">
 						<div className="dialog-content">
@@ -77,15 +78,18 @@ var SideBar = React.createClass({
 						</div>
 					</div>
 				</Modal>
+				/* jshint ignore:end */
 			);
 		}
 
 		return (
+			/* jshint ignore:start */
 			<div className="sidebar">
 				<Logo   url="/boards" />
 				<Avatar url={avatar} onClick={this._toggleDialog} />
 				{dialog}
 			</div>
+			/* jshint ignore:end */
 		);
 	}
 });

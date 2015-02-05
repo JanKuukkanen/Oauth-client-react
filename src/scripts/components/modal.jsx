@@ -48,7 +48,7 @@ var Modal = React.createClass({
 		this.hammer = new Hammer(this.target.firstChild);
 
 		this.hammer.on('tap', function(ev) {
-			if(ev.target.className == 'modal-overlay') {
+			if(ev.target.className === 'modal-overlay') {
 				return this.props.onDismiss();
 			}
 		}.bind(this));
@@ -71,7 +71,9 @@ var Modal = React.createClass({
 
 	render: function() {
 		return (
+			/* jshint ignore:start */
 			<span className="modal-placeholder" />
+			/* jshint ignore:end */
 		);
 	},
 
@@ -80,11 +82,13 @@ var Modal = React.createClass({
 	 */
 	_render: function() {
 		return (
+			/* jshint ignore:start */
 			<div className="modal-overlay">
 				<div className="modal-content">
 					{this.props.children}
 				</div>
 			</div>
+			/* jshint ignore:end */
 		);
 	}
 });

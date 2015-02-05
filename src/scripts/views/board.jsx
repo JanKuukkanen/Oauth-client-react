@@ -123,6 +123,7 @@ var BoardView = React.createClass({
 		});
 
 		return (
+			/* jshint ignore:start */
 			<div className="application">
 				<Sidebar user={this.state.user} />
 				<div className="view view-board">
@@ -137,6 +138,7 @@ var BoardView = React.createClass({
 					</Scrollable>
 				</div>
 			</div>
+			/* jshint ignore:end */
 		);
 	},
 
@@ -155,8 +157,10 @@ var BoardView = React.createClass({
 		];
 		return settings.map(function(setting) {
 			return (
+				/* jshint ignore:start */
 				<Setting key={setting.key}
 					icon={setting.icon} value={setting.value} />
+				/* jshint ignore:end */
 			);
 		});
 	},
@@ -164,6 +168,7 @@ var BoardView = React.createClass({
 	renderTickets: function() {
 		return this.state.tickets.map(function(t) {
 			return (
+				/* jshint ignore:start */
 				<Ticket key={t.id}
 					id={t.id}
 					snap={this.state.snapToGrid}
@@ -171,6 +176,7 @@ var BoardView = React.createClass({
 					active={t.id === this.state.lastActiveTicket}
 					content={t.content}
 					position={t.position} />
+				/* jshint ignore:end */
 			);
 		}.bind(this));
 	},

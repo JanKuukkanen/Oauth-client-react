@@ -22,10 +22,12 @@ var Logo = React.createClass({
 
 	render: function() {
 		return (
+			/* jshint ignore:start */
 			<div className="logo" onClick={this._navigate}>
 				<div className="logo-header-bar"/>
 				<div className="logo-content-area" />
 			</div>
+			/* jshint ignore:end */
 		);
 	}
 

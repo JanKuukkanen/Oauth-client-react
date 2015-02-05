@@ -40,9 +40,11 @@ var Setting = React.createClass({
 		});
 
 		return (
+			/* jshint ignore:start */
 			<div className={classes}>
 				<i className={"fa fa-" + this.props.icon + " fa-fw fa-lg"} />
 			</div>
+			/* jshint ignore:end */
 		);
 	}
 });

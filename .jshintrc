@@ -1,0 +1,28 @@
+{
+	"asi":     true,
+	"node":    true,
+	"strict":  true,
+	"browser": true,
+
+	"newcap":    true,
+	"camelcase": true,
+
+	"eqnull": true,
+	"eqeqeq": true,
+
+	"maxlen":   80,
+	"quotmark": "single",
+
+	"undef": true,
+
+	"globals": {
+		"it":         false,
+		"chai":       false,
+		"inject":     false,
+		"module":     false,
+		"describe":   false,
+		"beforeEach": false,
+
+		"Promise": true
+	}
+}

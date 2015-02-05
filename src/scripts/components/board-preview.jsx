@@ -52,6 +52,7 @@ var BoardPreview = React.createClass({
 			},
 		}
 		return (
+			/* jshint ignore:start */
 			<div className="board-preview" onClick={this._showBoard}>
 				<div className="preview" style={styles.container}>
 					<div className="board" style={styles.board} />
@@ -62,9 +63,9 @@ var BoardPreview = React.createClass({
 					</div>
 				</div>
 			</div>
+			/* jshint ignore:end */
 		);
 	}
-
 });
 
 module.exports = BoardPreview;

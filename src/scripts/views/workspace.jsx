@@ -46,6 +46,7 @@ var Workspace = React.createClass({
 		//      to solve most of iOS problems on its own. However this is not
 		//      really something that is very urgent.
 		return (
+			/* jshint ignore:start */
 			<div className="application">
 				<Sidebar user={this.state.user} />
 				<div className="view view-workspace">
@@ -54,14 +55,17 @@ var Workspace = React.createClass({
 					</div>
 				</div>
 			</div>
+			/* jshint ignore:end */
 		);
 	},
 
 	renderBoards: function() {
 		return this.state.boards.map(function(board) {
 			return (
+				/* jshint ignore:start */
 				<BoardPreview key={board.id} size={board.size}
 					title={board.name} background={board.background} />
+				/* jshint ignore:end */
 			);
 		});
 	},

@@ -20,7 +20,9 @@ var Cursor = React.createClass({
 
 	render: function() {
 		return (
+			/* jshint ignore:start */
 			<div className="cursor" />
+			/* jshint ignore:end */
 		);
 	},
 });

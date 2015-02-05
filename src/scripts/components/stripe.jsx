@@ -13,7 +13,9 @@ var Stripe = React.createClass({
 		}
 
 		return (
+			/* jshint ignore:start */
 			<div className="stripe" style={style} />
+			/* jshint ignore:end */
 		);
 	}
 });

@@ -40,11 +40,12 @@ var Avatar = React.createClass({
 			'light':  this.props.theme === 'light',
 			'avatar': true,
 		});
-
 		return (
+			/* jshint ignore:start */
 			<div className={classes}>
 				<img src={this.props.url} onClick={this.props.onClick} />
 			</div>
+			/* jshint ignore:end */
 		);
 	}
 });

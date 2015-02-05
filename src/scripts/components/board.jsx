@@ -91,9 +91,11 @@ var Board = React.createClass({
 
 	render: function() {
 		return (
+			/* jshint ignore:start */
 			<div className="board" style={this.props.size}>
 				{this.props.children}
 			</div>
+			/* jshint ignore:end */
 		);
 	},
 });

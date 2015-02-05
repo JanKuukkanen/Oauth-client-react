@@ -133,8 +133,8 @@ var Ticket = React.createClass({
 		if(this.state.isDragging) return;
 
 		// Don't wanna tween if there ain't nothing to tween to...
-		if(this.state.x === next.position.x
-		&& this.state.y === next.position.y) {
+		if(this.state.x === next.position.x &&
+				this.state.y === next.position.y) {
 			return;
 		}
 		return this._tweenPositionTo(next.position);
@@ -174,14 +174,17 @@ var Ticket = React.createClass({
 
 		if(this.state.showEditDialog) {
 			var editDialog = (
+				/* jshint ignore:start */
 				<TicketEditDialog id={this.props.id}
 					color={this.props.color}
 					content={this.props.content}
 					onDismiss={this._toggleEditDialog} />
+				/* jshint ignore:end */
 			);
 		}
 
 		return (
+			/* jshint ignore:start */
 			<div className={classes} style={style}>
 				<Stripe color={this.props.color} />
 				<div className="content">
@@ -189,6 +192,7 @@ var Ticket = React.createClass({
 				</div>
 				{editDialog}
 			</div>
+			/* jshint ignore:end */
 		);
 	},
 });

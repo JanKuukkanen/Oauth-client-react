@@ -25,7 +25,9 @@ var ColorButton = React.createClass({
 			backgroundColor: this.props.color,
 		}
 		return (
+			/* jshint ignore:start */
 			<div className="color-button" style={style} />
+			/* jshint ignore:end */
 		);
 	},
 });
@@ -51,6 +53,7 @@ var ColorSelect = React.createClass({
 			backgroundColor: this.props.color.value,
 		}
 		return (
+			/* jshint ignore:start */
 			<div className="color-select">
 				<div className="selected" style={selectedColor} />
 				<div ref="selector" className="selector">
@@ -62,6 +65,7 @@ var ColorSelect = React.createClass({
 				}.bind(this))}
 				</div>
 			</div>
+			/* jshint ignore:end */
 		);
 	},
 
