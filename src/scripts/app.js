@@ -59,8 +59,6 @@ page('/', function() {
  * We listen to changes in the AuthStore, so that when the user is logged out
  * for various reasons, we can redirect the user to the 'login' page. This in
  * a sense works very similarly to the AngularJS '$http.interceptor'.
- *
- * TODO Should we also redirect the user, if a login is succesful?
  */
 AuthStore.addChangeListener(function() {
 	if(!AuthStore.getUser() && !AuthStore.getToken()) {
