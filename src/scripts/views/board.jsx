@@ -6,7 +6,7 @@ var Board      = require('../components/board.jsx');
 var Ticket     = require('../components/ticket.jsx');
 var Setting    = require('../components/setting.jsx');
 var Sidebar    = require('../components/sidebar.jsx');
-var Scrollable = require('../components/scrollable.js');
+var Scrollable = require('../components/scrollable.jsx');
 
 var AuthStore    = require('../stores/auth');
 var BoardStore   = require('../stores/board');
