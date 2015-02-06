@@ -38,7 +38,7 @@ var BoardPreview = React.createClass({
 
 	getDefaultProps: function() {
 		return {
-			name:      '',
+			name:       '',
 			background: '',
 		}
 	},

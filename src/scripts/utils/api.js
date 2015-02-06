@@ -131,7 +131,7 @@ var _mocks = {
 	],
 }
 
-var TIMEOUT_MS = 100;
+var TIMEOUT_MS = (process.env.NODE_ENV === 'test' ? 100 : 0);
 
 module.exports = {
 	login:    login,
@@ -142,6 +142,9 @@ module.exports = {
 
 	getBoard:  getBoard,
 	getBoards: getBoards,
+
+	// getTicket:  getTicket,
+	getTickets: getTickets,
 }
 
 /**
@@ -223,8 +226,9 @@ function getBoards(opts) {
  *
  */
 function getTickets(opts) {
-	// http.get /boards/ opts.id.board /tickets
-	//
+	return new Promise(function(resolve, reject) {
+		setTimeout(function() {
+			return resolve(_mocks.tickets);
+		}, TIMEOUT_MS);
+	});
 }
-
-
