@@ -24,10 +24,10 @@ var Dialog = React.createClass({
 	     * Defaults to 'document.body' so you don't usually need to pass in a
 	     * separate container.
 	     */
-	    container: function(props) {
-	    	if(!(props.container instanceof Element)) {
-	    		return new Error('container must be an Element');
-	    	}
+		container: function(props) {
+			if(!(props.container instanceof Element)) {
+				return new Error('container must be an Element');
+			}
 		},
 
 		/**

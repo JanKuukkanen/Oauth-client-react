@@ -19,11 +19,7 @@ var RegisterView = React.createClass({
 	},
 
 	_onRegisterSubmit: function() {
-		AuthActions.register({
-			email:    this.state.email,
-			password: this.state.password,
-		})
-			// Once the user has 'registered', redirect to 'LoginView'.
+		return AuthActions.register(this.state)
 			.then(page.show.bind(null, '/login'));
 	},
 

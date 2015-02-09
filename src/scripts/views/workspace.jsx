@@ -9,6 +9,9 @@ var AuthStore   = require('../stores/auth');
 var DataStore   = require('../stores/data');
 var DataActions = require('../actions/data');
 
+var TICKET_WIDTH  = require('../constants').TICKET_WIDTH;
+var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
+
 var Workspace = React.createClass({
 	getInitialState: function() {
 		return {
@@ -34,7 +37,13 @@ var Workspace = React.createClass({
 	},
 
 	_onDataStoreChange: function() {
-		this.setState({ boards: DataStore.getBoards() });
+		return this.setState({
+			boards: DataStore.getBoards().map(function(board) {
+				board.size.width  = board.size.width  * TICKET_WIDTH;
+				board.size.height = board.size.height * TICKET_HEIGHT;
+				return board;
+			}),
+		});
 	},
 
 	render: function() {

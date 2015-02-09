@@ -130,7 +130,8 @@ function addBoard(dirtyBoard) {
  * TODO Make the ID generation into its own utility function.
  */
 function addTicket(boardID, dirtyTicket) {
-	dirtyTicket.id = Math.random().toString(36).substr(2, 9);
+	dirtyTicket.id        = Math.random().toString(36).substr(2, 9);
+	dirtyTicket.updatedAt = Date.now();
 
 	Dispatcher.dispatch({
 		payload: {

@@ -73,10 +73,12 @@ var BoardView = React.createClass({
 
 	_onDataStoreChange: function() {
 		var board      = DataStore.getBoard(this.props.id);
+		console.log('onDataStoreChange:', board.size);
 		    board.size = {
 		    	width:  board.size.width  * TICKET_WIDTH,
 		    	height: board.size.height * TICKET_HEIGHT,
 		    }
+		console.log('onDataStoreChange:', board.size);
 		return this.setState({
 			board:   board,
 			tickets: DataStore.getTickets(this.props.id),
@@ -158,7 +160,7 @@ var BoardView = React.createClass({
 				/* jshint ignore:start */
 				<Ticket key={ticket.id} ticket={ticket} boardID={this.props.id}
 					snap={this.state.snapToGrid}
-					active={ticket.id === this.state.lastActiveTicket} />
+					active={ticket.id === this.state.activeTicket} />
 				/* jshint ignore:end */
 			);
 		}.bind(this));

@@ -70,8 +70,8 @@ var Minimap = React.createClass({
 		return {
 			show: false,
 			area: {
-				width:  16,
-				height: 9,
+				width:  1,
+				height: 1,
 			},
 			markers: [ ],
 		}

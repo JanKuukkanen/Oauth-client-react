@@ -36,7 +36,7 @@ function getBoards() {
 function getBoard(boardID) {
 	var defaultBoard = {
 		id:   boardID,
-		size: { width: 0, height: 0 }
+		size: { width: 10, height: 10 }
 	}
 	var board = _boards.find(function(b) {
 		return b.get('id') === boardID
@@ -151,7 +151,9 @@ function _addTicket(boardID, newTicket) {
 	}
 	return _boards.update(index, function(board) {
 		if(newTicket instanceof Array) {
-			var newTickets = newTicket.map(function(ticket) {
+			// If the passed in data is in form of an array, we can assume the
+			// data is actually a list of tickets.
+			var tickets = Immutable.List(newTicket.map(function(ticket) {
 				return Immutable.Map({
 					id:       ticket.id,
 					color:    ticket.color,
@@ -162,8 +164,12 @@ function _addTicket(boardID, newTicket) {
 					}),
 					updatedAt: ticket.updatedAt,
 				});
-			});
-			return board.set('tickets', Immutable.List(newTickets));
+			}));
+			// We always calculate the 'position.z' value for the tickets.
+			var mapped = _mapIDtoUpdateOrder(tickets);
+			return board.set('tickets', tickets.map(function(t) {
+				return t.setIn(['position', 'z'], mapped.get(t.get('id')));
+			}));
 		}
 		return board.set('tickets', board.get('tickets').push(Immutable.Map({
 			id:       newTicket.id,
@@ -172,6 +178,7 @@ function _addTicket(boardID, newTicket) {
 			position: Immutable.Map({
 				x: newTicket.position.x,
 				y: newTicket.position.y,
+				z: board.get('tickets').size,
 			}),
 			updatedAt: newTicket.updatedAt,
 		})));
@@ -216,8 +223,10 @@ function _editTicket(boardID, ticketID, uTicket) {
 		if(ticketIndex < 0) {
 			return oldBoard;
 		}
-		return oldBoard.set('tickets',
-			oldBoard.get('tickets').update(ticketIndex, function(oldTicket) {
+		// First we need to update the ticket at the specified index, making
+		// sure we only overwrite values that are specified in the new ticket.
+		var tickets = oldBoard.get('tickets')
+			.update(ticketIndex, function(oldTicket) {
 				return Immutable.Map({
 					id:      uTicket.id      || oldTicket.get('id'),
 					color:   uTicket.color   || oldTicket.get('color'),
@@ -230,8 +239,21 @@ function _editTicket(boardID, ticketID, uTicket) {
 
 					updatedAt: uTicket.updatedAt,
 				});
-			}));
+			});
+		// We always calculate the 'position.z' value for the tickets.
+		var mapped = _mapIDtoUpdateOrder(tickets);
+		return oldBoard.set('tickets', tickets.map(function(t) {
+			return t.setIn(['position', 'z'], mapped.get(t.get('id')));
+		}));
 	});
+}
+
+/**
+ *
+ */
+function _mapIDtoUpdateOrder(tickets) {
+	return tickets.sortBy(function(t) { return t.get('updatedAt'); })
+		.map(function(t) { return t.get('id'); }).toMap().flip();
 }
 
 /**
