@@ -26,6 +26,15 @@ function _preventBounce(ev) {
 /**
  *
  */
+function _upsize(board) {
+	board.size.width  = board.size.width  * TICKET_WIDTH;
+	board.size.height = board.size.height * TICKET_HEIGHT;
+	return board;
+}
+
+/**
+ *
+ */
 var BoardView = React.createClass({
 	propTypes: {
 		/**
@@ -37,7 +46,7 @@ var BoardView = React.createClass({
 	getInitialState: function() {
 		return {
 			user:    AuthStore.getUser(),
-			board:   DataStore.getBoard(this.props.id),
+			board:   _upsize(DataStore.getBoard(this.props.id)),
 			tickets: DataStore.getTickets(this.props.id),
 
 			snapToGrid:   StateStore.getSetting('snapToGrid'),
@@ -72,15 +81,8 @@ var BoardView = React.createClass({
 	},
 
 	_onDataStoreChange: function() {
-		var board      = DataStore.getBoard(this.props.id);
-		console.log('onDataStoreChange:', board.size);
-		    board.size = {
-		    	width:  board.size.width  * TICKET_WIDTH,
-		    	height: board.size.height * TICKET_HEIGHT,
-		    }
-		console.log('onDataStoreChange:', board.size);
 		return this.setState({
-			board:   board,
+			board:   _upsize(DataStore.getBoard(this.props.id)),
 			tickets: DataStore.getTickets(this.props.id),
 		});
 	},

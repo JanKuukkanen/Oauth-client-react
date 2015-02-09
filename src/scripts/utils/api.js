@@ -9,6 +9,7 @@ var TicketColor = require('../constants/enums').TicketColor;
  */
 var _mocks = {
 	user: {
+		id:   '123',
 		name: 'martti@alanen.fi',
 		type: 'user',
 	},
@@ -38,67 +39,6 @@ var _mocks = {
 			accessCode: '',
 			background: '',
 		},
-		{
-			id:   '345ABC',
-			name: 'Mock Board #3',
-
-			size: {
-				width:  8,
-				height: 18,
-			},
-
-			accessCode: '',
-			background: '',
-		},
-		{
-			id:   '456ABC',
-			name: 'Mock Board #4',
-
-			size: {
-				width:  10,
-				height: 10,
-			},
-
-			accessCode: '',
-			background: '',
-		},
-		{
-			id:   '567ABC',
-			name: 'Mock Board #5',
-
-			size: {
-				width:  10,
-				height: 10,
-			},
-
-			accessCode: '',
-			background: '',
-		},
-		{
-			id:   '678ABC',
-			name: 'Mock Board #6',
-
-			size: {
-				width:  10,
-				height: 10,
-			},
-
-			accessCode: '',
-			background: '',
-		},
-		{
-			id:   '789ABC',
-			name: 'Mock Board #7',
-
-			size: {
-				width:  10,
-				height: 10,
-			},
-
-			accessCode: '',
-			background: '',
-		},
-
 	],
 
 	tickets: [

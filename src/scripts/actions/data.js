@@ -180,14 +180,20 @@ function editBoard(boardID, dirtyBoard) {
 	var oldBoard = DataStore.getBoard(boardID);
 
 	Dispatcher.dispatch({
-		type:    Action.EDIT_BOARD,
-		payload: dirtyBoard,
+		payload: {
+			board:   dirtyBoard,
+			boardID: boardID,
+		},
+		type: Action.EDIT_BOARD,
 	});
 
 	function onSuccess(cleanBoard) {
 		Dispatcher.dispatch({
-			type:    Action.EDIT_BOARD_SUCCESS,
-			payload: cleanBoard,
+			payload: {
+				board:   cleanBoard,
+				boardID: boardID,
+			},
+			type: Action.EDIT_BOARD_SUCCESS,
 		});
 	}
 

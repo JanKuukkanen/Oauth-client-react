@@ -4,22 +4,22 @@ var _        = require('lodash');
 var page     = require('page');
 var React    = require('react');
 
-var UserType    = require('../constants/enums').UserType;
-var AuthActions = require('../actions/auth');
+var UserType  = require('../constants/enums').UserType;
+var UserTypes = _.values(UserType);
 
-var Logo   = require('./logo.jsx');
-var Modal  = require('./dialog.jsx');
-var Avatar = require('./avatar.jsx');
+var Logo           = require('../components/logo.jsx');
+var Avatar         = require('../components/avatar.jsx');
+var EditUserDialog = require('../components/edit-user-dialog.jsx');
 
 var SideBar = React.createClass({
 	propTypes: {
-
 		/**
 		 * The current user.
 		 */
 		user: React.PropTypes.shape({
+			id:   React.PropTypes.string.isRequired,
 			name: React.PropTypes.string.isRequired,
-			type: React.PropTypes.oneOf(_.values(UserType)).isRequired,
+			type: React.PropTypes.oneOf(UserTypes).isRequired,
 		}),
 
 		/**
@@ -43,12 +43,11 @@ var SideBar = React.createClass({
 		}
 	},
 
-	_logout: function() {
-		return AuthActions.logout();
-	},
-
+	/**
+	 * Shows or hides the 'EditUserDialog'.
+	 */
 	_toggleDialog: function() {
-		this.setState({ showDialog: !this.state.showDialog });
+		return this.setState({ showDialog: !this.state.showDialog });
 	},
 
 	render: function() {
@@ -58,15 +57,11 @@ var SideBar = React.createClass({
 		if(this.state.showDialog) {
 			var dialog = (
 				/* jshint ignore:start */
-				<Modal onDismiss={this._toggleDialog}>
-					<div>Hello Header</div>
-					<div />
-					<div>Hello Footer</div>
-				</Modal>
+				<EditUserDialog user={this.props.user}
+					onDismiss={this._toggleDialog} />
 				/* jshint ignore:end */
 			);
 		}
-
 		return (
 			/* jshint ignore:start */
 			<div className="sidebar">

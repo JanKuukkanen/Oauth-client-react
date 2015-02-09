@@ -5,6 +5,8 @@ var LinkedStateMixin = React.addons.LinkedStateMixin;
 
 var Dialog = require('../components/dialog.jsx');
 
+var DataActions = require('../actions/data');
+
 /**
  *
  */
@@ -38,7 +40,10 @@ var EditBoardDialog = React.createClass({
 	 *
 	 */
 	_submit: function() {
-		// BoardActions.editBoard(this.props.board.id, this.state);
+		DataActions.editBoard(this.props.board.id, {
+			name:       this.state.name,
+			background: this.state.background,
+		});
 		return this.props.onDismiss();
 	},
 
@@ -46,7 +51,7 @@ var EditBoardDialog = React.createClass({
 	 *
 	 */
 	_remove: function() {
-		// BoardActions.removeBoard(this.props.board.id);
+		DataActions.removeBoard(this.props.board.id);
 		return this.props.onDismiss();
 	},
 
