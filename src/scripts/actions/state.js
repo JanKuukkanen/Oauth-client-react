@@ -7,13 +7,13 @@ var Dispatcher = require('../dispatcher');
  *
  */
 module.exports = {
-	set: set,
+	setting: setting,
 }
 
 /**
  *
  */
-function set(key, value) {
+function setting(key, value) {
 	Dispatcher.dispatch({
 		payload: {
 			key:   key,

@@ -14,14 +14,7 @@ var DataStoreAPI = {
 
 	getTicket:  getTicket,
 	getTickets: getTickets,
-
-	getActiveTicket: getActiveTicket,
 }
-
-/**
- *
- */
-var _active = null;
 
 /**
  * Represents the structure of data inside our application.
@@ -71,13 +64,6 @@ function getTicket(boardID, ticketID) {
 		return ticket ? ticket.toJS() : null;
 	}
 	return null;
-}
-
-/**
- *
- */
-function getActiveTicket() {
-	return _active;
 }
 
 /**
@@ -135,8 +121,10 @@ function _editBoard(boardID, uBoard) {
 			name:       uBoard.name       || old.get('name'),
 			accessCode: uBoard.accessCode || old.get('accessCode'),
 			background: uBoard.background || old.get('background'),
+
 			size: uBoard.size ?
 				Immutable.Map(uBoard.size) : old.get('size'),
+
 			tickets: old.get('tickets'),
 		});
 	});
@@ -360,14 +348,6 @@ module.exports = createStore(DataStoreAPI, function(action) {
 				action.payload.boardID,
 				action.payload.ticket
 			);
-			this.emitChange();
-			break;
-
-		/**
-		 *
-		 */
-		case Action.SET_TICKET_ACTIVE:
-			_active = action.payload.id;
 			this.emitChange();
 			break;
 	}

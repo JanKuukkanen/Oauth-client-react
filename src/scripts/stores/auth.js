@@ -6,7 +6,7 @@ var createStore = require('../utils/create-store');
 /**
  *
  */
-var authStoreAPI = {
+var AuthStoreAPI = {
 	getUser:  getUser,
 	getToken: getToken,
 }
@@ -14,7 +14,7 @@ var authStoreAPI = {
 /**
  *
  */
-module.exports = createStore(authStoreAPI, function(action) {
+module.exports = createStore(AuthStoreAPI, function(action) {
 	switch(action.type) {
 		/**
 		 *

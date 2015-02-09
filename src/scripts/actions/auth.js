@@ -26,14 +26,14 @@ function login(credentials) {
 		type: Action.LOGIN,
 	});
 
-	function onLoginSuccess(user) {
+	function onSuccess(user) {
 		Dispatcher.dispatch({
 			type:    Action.LOGIN_SUCCESS,
 			payload: user,
 		});
 	}
 
-	function onLoginError(err) {
+	function onError(err) {
 		Dispatcher.dispatch({
 			type:    Action.LOGIN_FAILURE,
 			payload: err,
@@ -41,7 +41,7 @@ function login(credentials) {
 	}
 
 	return api.login({ payload: credentials })
-		.then(onLoginSuccess, onLoginError);
+		.then(onSuccess, onError);
 }
 
 /**
@@ -50,14 +50,14 @@ function login(credentials) {
 function register(credentials) {
 	Dispatcher.dispatch({ type: Action.REGISTER });
 
-	function onRegisterSuccess(user) {
+	function onSuccess(user) {
 		Dispatcher.dispatch({
 			type:    Action.REGISTER_SUCCESS,
 			payload: user,
 		});
 	}
 
-	function onRegisterFailure(err) {
+	function onError(err) {
 		Dispatcher.dispatch({
 			type:    Action.REGISTER_FAILURE,
 			payload: err,
@@ -65,7 +65,7 @@ function register(credentials) {
 	}
 
 	return api.register({ payload: credentials })
-		.then(onRegisterSuccess, onRegisterFailure);
+		.then(onSuccess, onError);
 }
 
 /**
@@ -74,13 +74,13 @@ function register(credentials) {
 function logout() {
 	Dispatcher.dispatch({ type: Action.LOGOUT });
 
-	function onLogoutSuccess() {
+	function onSuccess() {
 		Dispatcher.dispatch({
 			type: Action.LOGOUT_SUCCESS,
 		});
 	}
 
-	function onLogoutError(err) {
+	function onError(err) {
 		Dispatcher.dispatch({
 			type:    Action.LOGOUT_FAILURE,
 			payload: err,
@@ -88,7 +88,7 @@ function logout() {
 	}
 
 	return api.logout({ token: AuthStore.getToken() })
-		.then(onLogoutSuccess, onLogoutError);
+		.then(onSuccess, onError);
 }
 
 /**
@@ -97,14 +97,14 @@ function logout() {
 function loadUser() {
 	Dispatcher.dispatch({ type: Action.LOAD_USER });
 
-	function onLoadUserSuccess(user) {
+	function onSuccess(user) {
 		Dispatcher.dispatch({
 			type:    Action.LOAD_USER_SUCCESS,
 			payload: user,
 		});
 	}
 
-	function onLoadUserError(err) {
+	function onError(err) {
 		Dispatcher.dispatch({
 			type:    Action.LOAD_USER_FAILURE,
 			payload: err,
@@ -112,5 +112,5 @@ function loadUser() {
 	}
 
 	return api.getUser({ token: AuthStore.getToken() })
-		.then(onLoadUserSuccess, onLoadUserError);
+		.then(onSuccess, onError);
 }
