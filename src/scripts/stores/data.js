@@ -24,7 +24,7 @@ var DataStoreAPI = {
 var _active = null;
 
 /**
- *
+ * Represents the structure of data inside our application.
  */
 var _boards = Immutable.List([]);
 

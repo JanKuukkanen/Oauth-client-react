@@ -143,17 +143,18 @@ module.exports = {
 	getBoard:  getBoard,
 	getBoards: getBoards,
 
-	// getTicket:  getTicket,
+	getTicket:  getTicket,
 	getTickets: getTickets,
-}
 
-/**
- * The 'opts' object should probably contain the following:
- *   a) The 'token' string.
- *   b) The 'payload' object.
- *   c) The 'identifier' for resources, eg. /boards/identifier...
- * Anything else?
- */
+	createBoard:  createBoard,
+	createTicket: createTicket,
+
+	updateBoard:  updateBoard,
+	updateTicket: updateTicket,
+
+	removeBoard:  removeBoard,
+	removeTicket: removeTicket,
+}
 
 /**
  *
@@ -225,10 +226,89 @@ function getBoards(opts) {
 /**
  *
  */
+function getTicket(opts) {
+	return new Promise(function(resolve, reject) {
+		setTimeout(function() {
+			return resolve(_mocks.tickets[0]);
+		}, TIMEOUT_MS);
+	});
+}
+
+/**
+ *
+ */
 function getTickets(opts) {
 	return new Promise(function(resolve, reject) {
 		setTimeout(function() {
 			return resolve(_mocks.tickets);
+		}, TIMEOUT_MS);
+	});
+}
+
+/**
+ *
+ */
+function createBoard(opts) {
+	return new Promise(function(resolve, reject) {
+		setTimeout(function() {
+			opts.payload.id = Math.random().toString(36).substr(2, 9);
+			return resolve(opts.payload);
+		}, TIMEOUT_MS);
+	});
+}
+
+/**
+ *
+ */
+function createTicket(opts) {
+	return new Promise(function(resolve, reject) {
+		setTimeout(function() {
+			opts.payload.id = Math.random().toString(36).substr(2, 9);
+			return resolve(opts.payload);
+		}, TIMEOUT_MS);
+	});
+}
+
+/**
+ *
+ */
+function updateBoard(opts) {
+	return new Promise(function(resolve, reject) {
+		setTimeout(function() {
+			return resolve(opts.payload);
+		}, TIMEOUT_MS);
+	});
+}
+
+/**
+ *
+ */
+function updateTicket(opts) {
+	return new Promise(function(resolve, reject) {
+		setTimeout(function() {
+			return resolve(opts.payload);
+		}, TIMEOUT_MS);
+	});
+}
+
+/**
+ *
+ */
+function deleteBoard(opts) {
+	return new Promise(function(resolve, reject) {
+		setTimeout(function() {
+			return resolve(opts.payload);
+		}, TIMEOUT_MS);
+	});
+}
+
+/**
+ *
+ */
+function deleteTicket(opts) {
+	return new Promise(function(resolve, reject) {
+		setTimeout(function() {
+			return resolve(opts.payload);
 		}, TIMEOUT_MS);
 	});
 }

@@ -137,7 +137,7 @@ function addTicket(boardID, dirtyTicket) {
 			ticket:  dirtyTicket,
 			boardID: boardID,
 		},
-		type:    Action.ADD_TICKET,
+		type: Action.ADD_TICKET,
 	});
 
 	function onSuccess(cleanTicket) {
@@ -215,7 +215,8 @@ function editBoard(boardID, dirtyBoard) {
  *
  */
 function editTicket(boardID, ticketID, dirtyTicket) {
-	var oldTicket = DataStore.getTicket(boardID, ticketID);
+	var oldTicket             = DataStore.getTicket(boardID, ticketID);
+	    dirtyTicket.updatedAt = Date.now();
 
 	Dispatcher.dispatch({
 		payload: {
