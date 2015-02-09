@@ -4,12 +4,11 @@ var _                = require('lodash');
 var React            = require('react/addons');
 var LinkedStateMixin = React.addons.LinkedStateMixin;
 
-var Dialog        = require('../components/dialog.jsx');
-var ColorSelect   = require('../components/color-select.jsx');
+var Dialog      = require('../components/dialog.jsx');
+var ColorSelect = require('../components/color-select.jsx');
 
-var TicketActions = require('../actions/ticket');
-
-var colors = _.values(require('../constants/enums').TicketColor);
+var DataActions  = require('../actions/data');
+var TicketColors = _.values(require('../constants/enums').TicketColor);
 
 /**
  *
@@ -22,21 +21,15 @@ var EditTicketDialog = React.createClass({
 		 *
 		 */
 		ticket: React.PropTypes.shape({
-			/**
-			 *
-			 */
-			id: React.PropTypes.string.isRequired,
-
-			/**
-			 *
-			 */
-			color: React.PropTypes.oneOf(colors).isRequired,
-
-			/**
-			 *
-			 */
+			id:      React.PropTypes.string.isRequired,
+			color:   React.PropTypes.oneOf(TicketColors).isRequired,
 			content: React.PropTypes.string.isRequired,
 		}).isRequired,
+
+		/**
+		 *
+		 */
+		boardID: React.PropTypes.string.isRequired,
 
 		/**
 		 *
@@ -55,7 +48,10 @@ var EditTicketDialog = React.createClass({
 	 *
 	 */
 	_submit: function() {
-		TicketActions.editTicket({
+		var boardID  = this.props.boardID;
+		var ticketID = this.props.ticket.id;
+
+		DataActions.editTicket(boardID, ticketID, {
 			id:      this.props.ticket.id,
 			color:   this.state.color,
 			content: this.state.content,
@@ -67,9 +63,10 @@ var EditTicketDialog = React.createClass({
 	 *
 	 */
 	_remove: function() {
-		TicketActions.removeTicket({
-			id: this.props.ticket.id,
-		});
+		var boardID  = this.props.boardID;
+		var ticketID = this.props.ticket.id;
+
+		DataActions.removeTicket(boardID, ticketID);
 		return this.props.onDismiss();
 	},
 

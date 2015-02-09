@@ -34,10 +34,14 @@ function getBoards() {
  *
  */
 function getBoard(boardID) {
+	var defaultBoard = {
+		id:   boardID,
+		size: { width: 0, height: 0 }
+	}
 	var board = _boards.find(function(b) {
 		return b.get('id') === boardID
 	});
-	return board ? board.remove('tickets').toJS() : null;
+	return board ? board.remove('tickets').toJS() : defaultBoard;
 }
 
 /**
@@ -47,23 +51,27 @@ function getTickets(boardID) {
 	var board = _boards.find(function(b) {
 		return b.get('id') === boardID;
 	});
-	return board ? board.get('tickets').toJS() : null;
+	return board ? board.get('tickets').toJS() : [];
 }
 
 /**
  *
  */
 function getTicket(boardID, ticketID) {
+	var defaultTicket = {
+		id:       ticketID,
+		position: { x: 0, y: 0, z: 0 }
+	}
 	var board = _boards.find(function(b) {
 		return b.get('id') === boardID;
 	});
 	if(board) {
-		var ticket = board.tickets.find(function(t) {
+		var ticket = board.get('tickets').find(function(t) {
 			return t.get('id') === ticketID;
 		});
-		return ticket ? ticket.toJS() : null;
+		return ticket ? ticket.toJS() : defaultTicket;
 	}
-	return null;
+	return defaultTicket;
 }
 
 /**
@@ -72,7 +80,7 @@ function getTicket(boardID, ticketID) {
 function _addBoard(nBoard) {
 	if(nBoard instanceof Array) {
 		nBoard.forEach(function(board) {
-			return _boards = _addBoard(board);
+			_boards = _addBoard(board);
 		});
 		return _boards;
 	}
@@ -157,7 +165,7 @@ function _addTicket(boardID, newTicket) {
 			});
 			return board.set('tickets', Immutable.List(newTickets));
 		}
-		return board.set('tickets', board.tickets.push(Immutable.Map({
+		return board.set('tickets', board.get('tickets').push(Immutable.Map({
 			id:       newTicket.id,
 			color:    newTicket.color,
 			content:  newTicket.content,
@@ -181,13 +189,13 @@ function _removeTicket(boardID, ticketID) {
 		return _boards;
 	}
 	return _boards.update(boardIndex, function(board) {
-		var ticketIndex = board.tickets.findIndex(function(t) {
+		var ticketIndex = board.get('tickets').findIndex(function(t) {
 			return t.get('id') === ticketID;
 		});
 		if(ticketIndex < 0) {
 			return board;
 		}
-		return board.set('tickets', board.tickets.remove(ticketIndex));
+		return board.set('tickets', board.get('tickets').remove(ticketIndex));
 	});
 }
 
@@ -202,14 +210,14 @@ function _editTicket(boardID, ticketID, uTicket) {
 		return _boards;
 	}
 	return _boards.update(boardIndex, function(oldBoard) {
-		var ticketIndex = oldBoard.tickets.findIndex(function(t) {
+		var ticketIndex = oldBoard.get('tickets').findIndex(function(t) {
 			return t.get('id') === ticketID;
 		});
 		if(ticketIndex < 0) {
 			return oldBoard;
 		}
 		return oldBoard.set('tickets',
-			oldBoard.tickets.update(ticketIndex, function(oldTicket) {
+			oldBoard.get('tickets').update(ticketIndex, function(oldTicket) {
 				return Immutable.Map({
 					id:      uTicket.id      || oldTicket.get('id'),
 					color:   uTicket.color   || oldTicket.get('color'),
@@ -340,7 +348,10 @@ module.exports = createStore(DataStoreAPI, function(action) {
 		 *
 		 */
 		case Action.REMOVE_TICKET:
-			_boards = _removeTicket(action.payload.ticketID);
+			_boards = _removeTicket(
+				action.payload.boardID,
+				action.payload.ticketID
+			);
 			this.emitChange();
 			break;
 		case Action.REMOVE_TICKET_FAILURE:

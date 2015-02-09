@@ -19,6 +19,10 @@ var BoardPreview = React.createClass({
 			/**
 			 *
 			 */
+			id: React.PropTypes.string.isRequired,
+			/**
+			 *
+			 */
 			size: React.PropTypes.shape({
 				width:  React.PropTypes.number,
 				height: React.PropTypes.number,

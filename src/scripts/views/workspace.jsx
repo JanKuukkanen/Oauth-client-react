@@ -5,46 +5,45 @@ var React = require('react');
 var Sidebar      = require('../components/sidebar.jsx');
 var BoardPreview = require('../components/board-preview.jsx');
 
-var AuthStore    = require('../stores/auth');
-var BoardStore   = require('../stores/board');
-var BoardActions = require('../actions/board');
+var AuthStore   = require('../stores/auth');
+var DataStore   = require('../stores/data');
+var DataActions = require('../actions/data');
 
 var Workspace = React.createClass({
 	getInitialState: function() {
 		return {
 			user:   AuthStore.getUser(),
-			boards: BoardStore.getBoards(),
+			boards: DataStore.getBoards(),
 		}
 	},
 
 	componentDidMount: function() {
 		AuthStore.addChangeListener(this._onAuthStoreChange);
-		BoardStore.addChangeListener(this._onBoardStoreChange);
+		DataStore.addChangeListener(this._onDataStoreChange);
 
-		return BoardActions.loadBoards();
+		return DataActions.loadBoards();
 	},
 
 	componentWillUnmount: function() {
 		AuthStore.removeChangeListener(this._onAuthStoreChange);
-		BoardStore.removeChangeListener(this._onBoardStoreChange);
+		DataStore.removeChangeListener(this._onDataStoreChange);
 	},
 
 	_onAuthStoreChange: function() {
-		this.setState({
-			user: AuthStore.getUser(),
-		});
+		this.setState({ user: AuthStore.getUser() });
 	},
 
-	_onBoardStoreChange: function() {
-		this.setState({
-			boards: BoardStore.getBoards(),
-		});
+	_onDataStoreChange: function() {
+		this.setState({ boards: DataStore.getBoards() });
 	},
 
 	render: function() {
 		// TODO We need to make the workspace a 'Scrollable', because it seems
 		//      to solve most of iOS problems on its own. However this is not
 		//      really something that is very urgent.
+		//
+		//      Make the boards scrollable horizontally, similarly to the PS4
+		//      Dashboard, could be good?
 		return (
 			/* jshint ignore:start */
 			<div className="application">
@@ -60,9 +59,7 @@ var Workspace = React.createClass({
 	},
 
 	/**
-	 * TODO Make the boards scrollable horizontally, similarly to the PS4
-	 *      Dashboard, could be good?
-	 */
+	 * TODO 	 */
 	renderBoards: function() {
 		return this.state.boards.map(function(board) {
 			return (

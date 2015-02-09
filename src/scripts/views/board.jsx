@@ -8,14 +8,10 @@ var Setting    = require('../components/setting.jsx');
 var Sidebar    = require('../components/sidebar.jsx');
 var Scrollable = require('../components/scrollable.jsx');
 
-var AuthStore    = require('../stores/auth');
-var BoardStore   = require('../stores/board');
-var TicketStore  = require('../stores/ticket');
-var SettingStore = require('../stores/setting');
-
-var AuthActions   = require('../actions/auth');
-var BoardActions  = require('../actions/board');
-var TicketActions = require('../actions/ticket');
+var AuthStore   = require('../stores/auth');
+var DataStore   = require('../stores/data');
+var StateStore  = require('../stores/state');
+var DataActions = require('../actions/data');
 
 var TICKET_WIDTH  = require('../constants').TICKET_WIDTH;
 var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
@@ -40,72 +36,62 @@ var BoardView = React.createClass({
 
 	getInitialState: function() {
 		return {
-			user: AuthStore.getUser(),
-			board: BoardStore.getBoard(this.props.id) || {
-				size: {
-					width:  10,
-					height: 10,
-				},
-				background: '',
-			},
-			tickets: [ ],
+			user:    AuthStore.getUser(),
+			board:   DataStore.getBoard(this.props.id),
+			tickets: DataStore.getTickets(this.props.id),
 
-			/**
-			 * We keep track of the ticket the user last clicked, so we can
-			 * highlight it by raising it on top of other tickets.
-			 */
-			lastActiveTicket: null,
-
-			snapToGrid:  SettingStore.get('snapToGrid'),
-			showMinimap: SettingStore.get('showMinimap'),
+			snapToGrid:   StateStore.getSetting('snapToGrid'),
+			showMinimap:  StateStore.getSetting('showMinimap'),
+			activeTicket: StateStore.getActiveTicket(),
 		}
 	},
 
 	componentDidMount: function() {
-		// Fix for bouncing on iOS. No scrolling here!
-		document.addEventListener('touchmove', _preventBounce);
+		AuthStore.addChangeListener(this._onAuthStoreChange);
+		DataStore.addChangeListener(this._onDataStoreChange);
+		StateStore.addChangeListener(this._onStateStoreChange);
 
-		BoardStore.addChangeListener(this._onBoardStoreChange);
-		TicketStore.addChangeListener(this._onTicketStoreChange);
-		SettingStore.addChangeListener(this._onSettingStoreChange);
+		DataActions.loadBoards();
+		DataActions.loadTickets(this.props.id);
 
-		BoardActions.loadBoards();
-		TicketActions.loadTickets(this.props.id);
+		return document.addEventListener('touchmove', _preventBounce);
 	},
 
 	componentWillUnmount: function() {
-		document.removeEventListener('touchmove', _preventBounce);
+		AuthStore.removeChangeListener(this._onAuthStoreChange)
+		DataStore.removeChangeListener(this._onDataStoreChange);
+		StateStore.removeChangeListener(this._onStateStoreChange);
 
-		BoardStore.removeChangeListener(this._onBoardStoreChange);
-		TicketStore.removeChangeListener(this._onTicketStoreChange);
-		SettingStore.removeChangeListener(this._onSettingStoreChange);
+		return document.removeEventListener('touchmove', _preventBounce);
 	},
 
-	_onBoardStoreChange: function() {
+	_onAuthStoreChange: function() {
 		this.setState({
-			board: BoardStore.getBoard(this.props.id),
+			user: AuthStore.getUser(),
 		});
 	},
 
-	_onTicketStoreChange: function() {
-		this.setState({
-			tickets:          TicketStore.getTickets(),
-			lastActiveTicket: TicketStore.getActiveTicket(),
+	_onDataStoreChange: function() {
+		var board      = DataStore.getBoard(this.props.id);
+		    board.size = {
+		    	width:  board.size.width  * TICKET_WIDTH,
+		    	height: board.size.height * TICKET_HEIGHT,
+		    }
+		return this.setState({
+			board:   board,
+			tickets: DataStore.getTickets(this.props.id),
 		});
 	},
 
-	_onSettingStoreChange: function() {
-		this.setState({
-			snapToGrid:  SettingStore.get('snapToGrid'),
-			showMinimap: SettingStore.get('showMinimap'),
+	_onStateStoreChange: function() {
+		return this.setState({
+			snapToGrid:   StateStore.getSetting('snapToGrid'),
+			showMinimap:  StateStore.getSetting('showMinimap'),
+			activeTicket: StateStore.getActiveTicket(),
 		});
 	},
 
 	render: function() {
-		var dimensions = {
-			width:  this.state.board.size.width  * TICKET_WIDTH,
-			height: this.state.board.size.height * TICKET_HEIGHT,
-		}
 		var markers = this.state.tickets.map(function(t) {
 			return {
 				size: {
@@ -118,10 +104,8 @@ var BoardView = React.createClass({
 					z: t.position.z,
 				},
 				color: t.color,
-
 			}
 		});
-
 		return (
 			/* jshint ignore:start */
 			<div className="application">
@@ -130,9 +114,11 @@ var BoardView = React.createClass({
 					<div className="options">
 						{this.renderSettings()}
 					</div>
-					<Scrollable size={dimensions} markers={markers}
+					<Scrollable size={this.state.board.size}
+							markers={markers}
 							minimap={this.state.showMinimap}>
-						<Board size={dimensions} snap={this.state.snapToGrid}>
+						<Board board={this.state.board}
+								snap={this.state.snapToGrid}>
 							{this.renderTickets()}
 						</Board>
 					</Scrollable>
@@ -159,23 +145,20 @@ var BoardView = React.createClass({
 			return (
 				/* jshint ignore:start */
 				<Setting key={setting.key}
-					icon={setting.icon} value={setting.value} />
+					icon={setting.icon}
+					value={setting.value} />
 				/* jshint ignore:end */
 			);
 		});
 	},
 
 	renderTickets: function() {
-		return this.state.tickets.map(function(t) {
+		return this.state.tickets.map(function(ticket) {
 			return (
 				/* jshint ignore:start */
-				<Ticket key={t.id}
-					id={t.id}
+				<Ticket key={ticket.id} ticket={ticket} boardID={this.props.id}
 					snap={this.state.snapToGrid}
-					color={t.color}
-					active={t.id === this.state.lastActiveTicket}
-					content={t.content}
-					position={t.position} />
+					active={ticket.id === this.state.lastActiveTicket} />
 				/* jshint ignore:end */
 			);
 		}.bind(this));

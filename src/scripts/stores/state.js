@@ -45,12 +45,12 @@ function getActiveTicket() {
 /**
  *
  */
-function _setting(key, value) {
+function _setSetting(key, value) {
 	if(_settings.has(key)) {
 		var settings     = _settings.set(key, value);
 		var settingsJSON = JSON.stringify(settings.toJS());
 
-		localStorage.setItem('settings', SettingsJSON);
+		localStorage.setItem('settings', settingsJSON);
 		return settings;
 	}
 }
@@ -64,14 +64,17 @@ module.exports = createStore(StateStoreAPI, function(action) {
 		 *
 		 */
 		case Action.CHANGE_SETTING:
-			_set(action.payload.key, action.payload.value);
+			_settings = _setSetting(
+				action.payload.key,
+				action.payload.value
+			);
 			this.emitChange();
 			break;
 
 		/**
 		 *
 		 */
-		case Action.SET_TICKET_ACTIVE:
+		case Action.SET_ACTIVE_TICKET:
 			_active = action.payload.id;
 			this.emitChange();
 			break;

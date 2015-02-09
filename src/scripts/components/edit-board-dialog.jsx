@@ -14,9 +14,6 @@ var EditBoardDialog = React.createClass({
 	propTypes: {
 		/**
 		 * Initial state for the board we are editing.
-		 *
-		 * TODO Generating an access token.
-		 * TODO Should we also edit board 'size'.
 		 */
 		board: React.PropTypes.shape({
 			id:         React.PropTypes.string.isRequired,

@@ -3,7 +3,7 @@
 var React  = require('react/addons');
 var Hammer = require('hammerjs');
 
-var SettingActions = require('../actions/setting');
+var StateActions = require('../actions/state');
 
 var Setting = React.createClass({
 	propTypes: {
@@ -19,12 +19,11 @@ var Setting = React.createClass({
 	},
 
 	componentDidMount: function() {
-		var key = this._currentElement.key;
-
+		var key     = this._currentElement.key;
 		this.hammer = new Hammer(this.getDOMNode());
 
 		this.hammer.on('tap', function toggle() {
-			SettingActions.set(key, !(this.props.value));
+			return StateActions.setSetting(key, !(this.props.value));
 		}.bind(this));
 	},
 
@@ -38,7 +37,6 @@ var Setting = React.createClass({
 			'option': true,
 			'active': this.props.value,
 		});
-
 		return (
 			/* jshint ignore:start */
 			<div className={classes}>

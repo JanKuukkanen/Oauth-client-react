@@ -152,8 +152,8 @@ module.exports = {
 	updateBoard:  updateBoard,
 	updateTicket: updateTicket,
 
-	removeBoard:  removeBoard,
-	removeTicket: removeTicket,
+	deleteBoard:  deleteBoard,
+	deleteTicket: deleteTicket,
 }
 
 /**

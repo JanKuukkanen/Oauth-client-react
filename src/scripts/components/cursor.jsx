@@ -2,6 +2,9 @@
 
 var React = require('react');
 
+/**
+ *
+ */
 var Cursor = React.createClass({
 	/**
 	 * Resize the cursor. For 'IScroll' reasons we use the css properties

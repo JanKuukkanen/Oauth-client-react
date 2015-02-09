@@ -8,7 +8,6 @@ var Hammer = require('hammerjs');
  * fashionable manner.
  */
 var Dialog = React.createClass({
-
 	propTypes: {
 		/**
 		 * Used to specify an additional 'className' for the '.dialog'.

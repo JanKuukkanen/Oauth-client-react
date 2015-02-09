@@ -8,8 +8,11 @@ var TweenState = require('react-tween-state');
 var Stripe           = require('./stripe.jsx');
 var EditTicketDialog = require('./edit-ticket-dialog.jsx');
 
-var TicketColor   = require('../constants/enums').TicketColor;
-var TicketActions = require('../actions/ticket');
+var TicketColor  = require('../constants/enums').TicketColor;
+var TicketColors = _.values(TicketColor);
+
+var DataActions  = require('../actions/data');
+var StateActions = require('../actions/state');
 
 var DraggableMixin  = require('../mixins/draggable');
 var PureRenderMixin = React.addons.PureRenderMixin;
@@ -36,26 +39,36 @@ var Ticket = React.createClass({
 		/**
 		 *
 		 */
-		id: React.PropTypes.string.isRequired,
+		ticket: React.PropTypes.shape({
+			/**
+		 	 *
+			 */
+			id: React.PropTypes.string.isRequired,
 
-		/**
-		 *
-		 */
-		color: React.PropTypes.oneOf(_.values(TicketColor)).isRequired,
+			/**
+			 *
+			 */
+			color: React.PropTypes.oneOf(TicketColors).isRequired,
 
-		/**
-		 *
-		 */
-		content: React.PropTypes.string.isRequired,
+			/**
+			 *
+			 */
+			content: React.PropTypes.string.isRequired,
 
-		/**
-		 *
-		 */
-		position: React.PropTypes.shape({
-			x: React.PropTypes.number.isRequired,
-			y: React.PropTypes.number.isRequired,
-			z: React.PropTypes.number.isRequired,
+			/**
+			 *
+			 */
+			position: React.PropTypes.shape({
+				x: React.PropTypes.number.isRequired,
+				y: React.PropTypes.number.isRequired,
+				// z: React.PropTypes.number.isRequired,
+			}).isRequired,
 		}).isRequired,
+
+		/**
+		 *
+		 */
+		boardID: React.PropTypes.string.isRequired,
 	},
 
 	getDefaultProps: function() {
@@ -70,8 +83,8 @@ var Ticket = React.createClass({
 			// Having internal positional state when we also receive it from
 			// the 'props' passed in can be considered anti-pattern. However,
 			// we are using 'react-tween-state' internal state is required.
-			x: this.props.position.x,
-			y: this.props.position.y,
+			x: this.props.ticket.position.x,
+			y: this.props.ticket.position.y,
 
 			showEditDialog: false,
 		}
@@ -89,7 +102,7 @@ var Ticket = React.createClass({
 		// Setup a listener for 'dragStart' events, so that when a ticket is
 		// tapped or dragged, it is moved to a '.last-active' layer.
 		this.draggable.on('dragStart', function setAsActive() {
-			TicketActions.setActiveTicket({ id: this.props.id });
+			return StateActions.setActiveTicket(this.props.ticket.id);
 		}.bind(this));
 
 		// Setup a listener for Draggable mixin's 'dragEnd' events, so we can
@@ -113,12 +126,14 @@ var Ticket = React.createClass({
 				this.setState({ x: endpos.x, y: endpos.y });
 			}
 
-			TicketActions.editTicket({
-				id: this.props.id,
+			var boardID  = this.props.boardID;
+			var ticketID = this.props.ticket.id;
+
+			return DataActions.editTicket(boardID, ticketID, {
 				position: {
 					x: this.state.x,
 					y: this.state.y,
-				}
+				},
 			});
 		}.bind(this));
 	},
@@ -133,11 +148,11 @@ var Ticket = React.createClass({
 		if(this.state.isDragging) return;
 
 		// Don't wanna tween if there ain't nothing to tween to...
-		if(this.state.x === next.position.x &&
-				this.state.y === next.position.y) {
+		if(this.state.x === next.ticket.position.x &&
+				this.state.y === next.ticket.position.y) {
 			return;
 		}
-		return this._tweenPositionTo(next.position);
+		return this._tweenPositionTo(next.ticket.position);
 	},
 
 	/**
@@ -165,7 +180,7 @@ var Ticket = React.createClass({
 		var style = {
 			top:    this.getTweeningValue('y'),
 			left:   this.getTweeningValue('x'),
-			zIndex: this.props.position.z,
+			zIndex: this.props.ticket.position.z,
 		}
 
 		var classes = React.addons.classSet({
@@ -173,16 +188,12 @@ var Ticket = React.createClass({
 			'last-active': this.props.active,
 		});
 
-		var ticket = {
-			id:      this.props.id,
-			color:   this.props.color,
-			content: this.props.content,
-		}
-
 		if(this.state.showEditDialog) {
 			var editDialog = (
 				/* jshint ignore:start */
-				<EditTicketDialog ticket={ticket}
+				<EditTicketDialog
+					ticket={this.props.ticket}
+					boardID={this.props.boardID}
 					onDismiss={this._toggleEditDialog} />
 				/* jshint ignore:end */
 			);
@@ -191,9 +202,9 @@ var Ticket = React.createClass({
 		return (
 			/* jshint ignore:start */
 			<div className={classes} style={style}>
-				<Stripe color={this.props.color} />
+				<Stripe color={this.props.ticket.color} />
 				<div className="content">
-					{this.props.content}
+					{this.props.ticket.content}
 				</div>
 				{editDialog}
 			</div>

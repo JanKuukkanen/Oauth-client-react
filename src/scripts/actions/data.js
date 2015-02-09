@@ -179,13 +179,13 @@ function editBoard(boardID, dirtyBoard) {
 	var oldBoard = DataStore.getBoard(boardID);
 
 	Dispatcher.dispatch({
-		type:    Action.BOARD_EDIT,
+		type:    Action.EDIT_BOARD,
 		payload: dirtyBoard,
 	});
 
 	function onSuccess(cleanBoard) {
 		Dispatcher.dispatch({
-			type:    Action.BOARD_EDIT_SUCCESS,
+			type:    Action.EDIT_BOARD_SUCCESS,
 			payload: cleanBoard,
 		});
 	}
@@ -197,7 +197,7 @@ function editBoard(boardID, dirtyBoard) {
 				board:   oldBoard,
 				boardID: oldBoard.id,
 			},
-			type: Action.BOARD_EDIT_FAILURE,
+			type: Action.EDIT_BOARD_FAILURE,
 		});
 	}
 
@@ -224,7 +224,7 @@ function editTicket(boardID, ticketID, dirtyTicket) {
 			boardID:  boardID,
 			ticketID: ticketID,
 		},
-		type: Action.TICKET_EDIT,
+		type: Action.EDIT_TICKET,
 	});
 
 	function onSuccess(cleanTicket) {
@@ -234,7 +234,7 @@ function editTicket(boardID, ticketID, dirtyTicket) {
 				boardID:  boardID,
 				ticketID: ticketID,
 			},
-			type: Action.TICKET_EDIT_SUCCESS,
+			type: Action.EDIT_TICKET_SUCCESS,
 		});
 	}
 
@@ -246,7 +246,7 @@ function editTicket(boardID, ticketID, dirtyTicket) {
 				ticket:   oldTicket,
 				ticketID: oldTicket.id
 			},
-			type: Action.TICKET_EDIT_FAILURE,
+			type: Action.EDIT_TICKET_FAILURE,
 		});
 	}
 
@@ -272,7 +272,7 @@ function removeBoard(boardID) {
 		payload: {
 			boardID: boardID,
 		},
-		type: Action.BOARD_REMOVE,
+		type: Action.REMOVE_BOARD,
 	});
 
 	function onSuccess() {
@@ -280,7 +280,7 @@ function removeBoard(boardID) {
 			payload: {
 				boardID: boardID,
 			},
-			type: Action.BOARD_REMOVE_SUCCESS,
+			type: Action.REMOVE_BOARD_SUCCESS,
 		});
 	}
 
@@ -290,7 +290,7 @@ function removeBoard(boardID) {
 				board: oldBoard,
 				error: err,
 			},
-			type: Action.BOARD_REMOVE_FAILURE,
+			type: Action.REMOVE_BOARD_FAILURE,
 		});
 	}
 
@@ -314,7 +314,7 @@ function removeTicket(boardID, ticketID) {
 			boardID:  boardID,
 			ticketID: ticketID,
 		},
-		type: Action.TICKET_REMOVE,
+		type: Action.REMOVE_TICKET,
 	});
 
 	function onSuccess() {
@@ -323,7 +323,7 @@ function removeTicket(boardID, ticketID) {
 				boardID:  boardID,
 				ticketID: ticketID,
 			},
-			type: Action.TICKET_REMOVE_SUCCESS,
+			type: Action.REMOVE_TICKET_SUCCESS,
 		});
 	}
 
@@ -334,7 +334,7 @@ function removeTicket(boardID, ticketID) {
 				ticket:  oldTicket,
 				boardID: boardID,
 			},
-			type: Action.TICKET_REMOVE_FAILURE,
+			type: Action.REMOVE_TICKET_FAILURE,
 		});
 	}
 
