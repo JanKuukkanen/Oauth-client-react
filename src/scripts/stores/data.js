@@ -93,7 +93,6 @@ function _mapIDtoUpdateOrder(tickets) {
  * that this does not take into account any 'tickets'.
  */
 function _board(payload, defaults) {
-	// Make sure the defaults are defined.
 	defaults = _.defaults(defaults || Default.BOARD, Default.BOARD);
 
 	return Immutable.Map({
@@ -116,7 +115,6 @@ function _board(payload, defaults) {
  * note that this does not create a 'position.z'.
  */
 function _ticket(payload, defaults) {
-	// Make sure the defaults are defined.
 	defaults = _.defaults(defaults || Default.TICKET, Default.TICKET);
 
 	return Immutable.Map({
