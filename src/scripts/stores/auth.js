@@ -4,46 +4,32 @@ var Action      = require('../constants/actions');
 var createStore = require('../utils/create-store');
 
 /**
- *
+ * Public API of the AuthStore.
  */
 var AuthStoreAPI = {
 	getUser:  getUser,
 	getToken: getToken,
 }
 
-/**
- *
- */
 module.exports = createStore(AuthStoreAPI, function(action) {
 	switch(action.type) {
-		/**
-		 *
-		 */
+
 		case Action.LOGIN_SUCCESS:
 			_setUser(action.payload.user);
 			_setToken(action.payload.token);
 			this.emitChange();
 			break;
 
-		/**
-		 *
-		 */
 		case Action.LOAD_USER_SUCCESS:
 			_setUser(action.payload);
 			this.emitChange();
 			break;
 
-		/**
-		 *
-		 */
 		case Action.LOGOUT_SUCCESS:
 			_clear();
 			this.emitChange();
 			break;
 
-		/**
-		 *
-		 */
 		case Action.AUTH_FAILURE:
 			_clear();
 			this.emitChange();
@@ -52,7 +38,7 @@ module.exports = createStore(AuthStoreAPI, function(action) {
 });
 
 /**
- *
+ * Returns the currently logged in user.
  */
 function getUser() {
 	if(localStorage.getItem('user')) {
@@ -62,28 +48,28 @@ function getUser() {
 }
 
 /**
- *
+ * Returns the token of the currently logged in user.
  */
 function getToken() {
 	return localStorage.getItem('token');
 }
 
 /**
- *
+ * Set the user.
  */
 function _setUser(user) {
 	localStorage.setItem('user', JSON.stringify(user));
 }
 
 /**
- *
+ * Set the token.
  */
 function _setToken(token) {
 	localStorage.setItem('token', token);
 }
 
 /**
- *
+ * Clears the current credentials, effectively logging out the user.
  */
 function _clear() {
 	localStorage.removeItem('user');

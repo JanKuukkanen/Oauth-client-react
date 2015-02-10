@@ -13,40 +13,38 @@ var DataStore   = require('../stores/data');
 var StateStore  = require('../stores/state');
 var DataActions = require('../actions/data');
 
+var resize        = require('../utils/resize');
+var Default       = require('../constants/defaults');
 var TICKET_WIDTH  = require('../constants').TICKET_WIDTH;
 var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
 
 /**
  * Fix issues with iOS and scrolling causing bouncing.
+ *
+ * TODO This should become deprecated as soon as we convert the workspace to be
+ *      a Scrollable element also.
  */
 function _preventBounce(ev) {
 	return ev.preventDefault();
 }
 
 /**
+ * Displays an interactive, scrollable view with tickets that can be created,
+ * removed and edited.
  *
- */
-function _upsize(board) {
-	board.size.width  = board.size.width  * TICKET_WIDTH;
-	board.size.height = board.size.height * TICKET_HEIGHT;
-	return board;
-}
-
-/**
- *
+ * @param {string} id  The 'id' attribute of the Board we want to view.
  */
 var BoardView = React.createClass({
 	propTypes: {
-		/**
-		 * The 'id' of the board we want to view.
-		 */
 		id: React.PropTypes.string.isRequired,
 	},
 
 	getInitialState: function() {
 		return {
-			user:    AuthStore.getUser(),
-			board:   _upsize(DataStore.getBoard(this.props.id)),
+			user: AuthStore.getUser(),
+			board: resize(
+				DataStore.getBoard(this.props.id) || Default.BOARD
+			),
 			tickets: DataStore.getTickets(this.props.id),
 
 			snapToGrid:   StateStore.getSetting('snapToGrid'),
@@ -82,7 +80,9 @@ var BoardView = React.createClass({
 
 	_onDataStoreChange: function() {
 		return this.setState({
-			board:   _upsize(DataStore.getBoard(this.props.id)),
+			board: resize(
+				DataStore.getBoard(this.props.id) || Default.BOARD
+			),
 			tickets: DataStore.getTickets(this.props.id),
 		});
 	},
@@ -107,6 +107,7 @@ var BoardView = React.createClass({
 					y: t.position.y,
 					z: t.position.z,
 				},
+				key:   t.id,
 				color: t.color,
 			}
 		});
@@ -133,18 +134,15 @@ var BoardView = React.createClass({
 	},
 
 	renderSettings: function() {
-		var settings = [
-			{
-				key:   'snapToGrid',
-				icon:  'th',
-				value: this.state.snapToGrid,
-			},
-			{
-				key:   'showMinimap',
-				icon:  'globe',
-				value: this.state.showMinimap,
-			}
-		];
+		var settings = [{
+			key:   'snapToGrid',
+			icon:  'th',
+			value: this.state.snapToGrid,
+		}, {
+			key:   'showMinimap',
+			icon:  'globe',
+			value: this.state.showMinimap,
+		}];
 		return settings.map(function(setting) {
 			return (
 				/* jshint ignore:start */

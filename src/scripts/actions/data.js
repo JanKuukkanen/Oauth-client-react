@@ -94,8 +94,10 @@ function addBoard(dirtyBoard) {
 	dirtyBoard.id = Math.random().toString(36).substr(2, 9);
 
 	Dispatcher.dispatch({
-		type:    Action.ADD_BOARD,
-		payload: dirtyBoard,
+		payload: {
+			board: dirtyBoard,
+		},
+		type: Action.ADD_BOARD,
 	});
 
 	function onSuccess(cleanBoard) {

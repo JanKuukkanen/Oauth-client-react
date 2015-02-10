@@ -4,10 +4,15 @@ var page             = require('page');
 var React            = require('react/addons');
 var LinkedStateMixin = React.addons.LinkedStateMixin;
 
-var AuthActions = require('../actions/auth');
-
 var Logo = require('../components/logo.jsx');
 
+var AuthActions = require('../actions/auth');
+
+/**
+ * View that displays a Register form.
+ *
+ * TODO Refactor into smaller components, similarly to LoginView.
+ */
 var RegisterView = React.createClass({
 	mixins: [LinkedStateMixin],
 

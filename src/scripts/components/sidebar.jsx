@@ -54,7 +54,7 @@ var SideBar = React.createClass({
 		// TODO Gravatar or something? Needs to relate to the user..
 		var avatar = 'http://www.placecage.com/c/128/128';
 
-		if(this.state.showDialog) {
+		if(this.props.user && this.state.showDialog) {
 			var dialog = (
 				/* jshint ignore:start */
 				<EditUserDialog user={this.props.user}

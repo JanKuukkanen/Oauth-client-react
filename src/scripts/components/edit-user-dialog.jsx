@@ -32,7 +32,7 @@ var EditUserDialog = React.createClass({
 	 *
 	 */
 	_logout: function() {
-		return AuthActions.logout().then(this.props.onDismiss);
+		return AuthActions.logout();
 	},
 
 	render: function() {

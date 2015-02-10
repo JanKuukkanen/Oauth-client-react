@@ -114,18 +114,19 @@ var Minimap = React.createClass({
 	 *                        and position, when placed on the minimap.
 	 */
 	renderMarkers: function(scale) {
-		return this.props.markers.map(function(marker, index) {
+		return this.props.markers.map(function(marker) {
 			var style = {
-				top:             Math.round(scale * marker.position.y),
-				left:            Math.round(scale * marker.position.x),
-				width:           Math.round(scale * marker.size.width),
-				height:          Math.round(scale * marker.size.height),
+				top:    Math.round(scale * marker.position.y),
+				left:   Math.round(scale * marker.position.x),
+				width:  Math.round(scale * marker.size.width),
+				height: Math.round(scale * marker.size.height),
+
 				zIndex:          marker.position.z,
 				backgroundColor: marker.color,
 			}
 			return (
 				/* jshint ignore:start */
-				<div key={index} className="marker" style={style} />
+				<div key={marker.key} className="marker" style={style} />
 				/* jshint ignore:end */
 			);
 		});

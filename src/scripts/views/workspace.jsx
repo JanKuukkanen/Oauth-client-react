@@ -9,26 +9,20 @@ var AuthStore   = require('../stores/auth');
 var DataStore   = require('../stores/data');
 var DataActions = require('../actions/data');
 
-var TICKET_WIDTH  = require('../constants').TICKET_WIDTH;
-var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
+var resize = require('../utils/resize');
 
 /**
+ * Displays the User's Boards.
  *
- */
-function _upsize(board) {
-	board.size.width  = board.size.width  * TICKET_WIDTH;
-	board.size.height = board.size.height * TICKET_HEIGHT;
-	return board;
-}
-
-/**
- *
+ * TODO Can the boards be scrollable similarly to PS4 Dashboard? In any case we
+ *      should wrap the content into a Scrollable since it solves practically
+ *      all the issues with different browsers.
  */
 var Workspace = React.createClass({
 	getInitialState: function() {
 		return {
 			user:   AuthStore.getUser(),
-			boards: DataStore.getBoards().map(_upsize),
+			boards: DataStore.getBoards().map(resize),
 		}
 	},
 
@@ -50,17 +44,11 @@ var Workspace = React.createClass({
 
 	_onDataStoreChange: function() {
 		return this.setState({
-			boards: DataStore.getBoards().map(_upsize),
+			boards: DataStore.getBoards().map(resize),
 		});
 	},
 
 	render: function() {
-		// TODO We need to make the workspace a 'Scrollable', because it seems
-		//      to solve most of iOS problems on its own. However this is not
-		//      really something that is very urgent.
-		//
-		//      Make the boards scrollable horizontally, similarly to the PS4
-		//      Dashboard, could be good?
 		return (
 			/* jshint ignore:start */
 			<div className="application">
@@ -75,8 +63,6 @@ var Workspace = React.createClass({
 		);
 	},
 
-	/**
-	 * TODO 	 */
 	renderBoards: function() {
 		return this.state.boards.map(function(board) {
 			return (

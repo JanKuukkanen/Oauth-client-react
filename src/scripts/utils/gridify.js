@@ -5,6 +5,12 @@ var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
 
 /**
  * Simple helper function to snap a position to grid.
+ *
+ * @param {object} position    The position to snap.
+ * @param {number} position.x
+ * @param {number} position.y
+ *
+ * @returns {object} The snapped position.
  */
 module.exports = function gridify(position) {
 	return {

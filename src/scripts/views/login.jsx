@@ -4,10 +4,15 @@ var page             = require('page');
 var React            = require('react/addons');
 var LinkedStateMixin = React.addons.LinkedStateMixin;
 
-var AuthActions = require('../actions/auth');
-
 var Logo = require('../components/logo.jsx');
 
+var AuthActions = require('../actions/auth');
+
+/**
+ * View that displays a Login form.
+ *
+ * TODO Refactor into smaller components, similarly to RegisterView.
+ */
 var LoginView = React.createClass({
 	mixins: [LinkedStateMixin],
 
@@ -18,21 +23,11 @@ var LoginView = React.createClass({
 		}
 	},
 
-	/**
-	 *
-	 */
 	_onLoginSubmit: function() {
-		AuthActions.login({
-			email:    this.state.email,
-			password: this.state.password,
-		})
-			// When we have logged in, redirect to 'WorkSpace'.
+		return AuthActions.login(this.state)
 			.then(page.show.bind(null, '/boards'));
 	},
 
-	/**
-	 *
-	 */
 	_showRegisterView: function() {
 		return page.show('/register');
 	},

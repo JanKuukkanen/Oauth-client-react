@@ -4,9 +4,6 @@ var Promise = require('promise');
 
 var TicketColor = require('../constants/enums').TicketColor;
 
-/**
- * Mock implementation so API is not needed...
- */
 var _mocks = {
 	user: {
 		id:   '123',
@@ -63,8 +60,8 @@ var _mocks = {
 				y: 300,
 			},
 
-			color:   TicketColor.RED,
-			content: 'Mock Ticket #1',
+			color:   TicketColor.BLUE,
+			content: 'Mock Ticket #2',
 
 			updatedAt: Date.now(),
 		}
