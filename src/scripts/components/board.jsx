@@ -3,9 +3,9 @@
 var React  = require('react');
 var Hammer = require('hammerjs');
 
-var gridify     = require('../utils/gridify');
-var TicketColor = require('../constants/enums').TicketColor;
-var DataActions = require('../actions/data');
+var gridify       = require('../utils/gridify');
+var TicketColor   = require('../constants/enums').TicketColor;
+var TicketActions = require('../actions/ticket');
 
 var TICKET_WIDTH  = require('../constants').TICKET_WIDTH;
 var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
@@ -92,7 +92,7 @@ var Board = React.createClass({
 				0 : ((endpos.y + TICKET_HEIGHT) > boardSize.height ?
 					(boardSize.height - TICKET_HEIGHT) : endpos.y);
 
-			return DataActions.addTicket(
+			return TicketActions.addTicket(
 				this.props.board.id,
 				{
 					color:    TicketColor.VIOLET,

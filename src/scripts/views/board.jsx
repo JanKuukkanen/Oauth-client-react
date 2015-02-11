@@ -8,10 +8,12 @@ var Setting    = require('../components/setting.jsx');
 var Sidebar    = require('../components/sidebar.jsx');
 var Scrollable = require('../components/scrollable.jsx');
 
-var AuthStore   = require('../stores/auth');
-var DataStore   = require('../stores/data');
-var StateStore  = require('../stores/state');
-var DataActions = require('../actions/data');
+var AuthStore     = require('../stores/auth');
+var StateStore    = require('../stores/state');
+var BoardStore    = require('../stores/board');
+var TicketStore   = require('../stores/ticket');
+var BoardActions  = require('../actions/board');
+var TicketActions = require('../actions/ticket');
 
 var resize        = require('../utils/resize');
 var Default       = require('../constants/defaults');
@@ -43,9 +45,9 @@ var BoardView = React.createClass({
 		return {
 			user: AuthStore.getUser(),
 			board: resize(
-				DataStore.getBoard(this.props.id) || Default.BOARD
+				BoardStore.getBoard(this.props.id) || Default.BOARD
 			),
-			tickets: DataStore.getTickets(this.props.id),
+			tickets: TicketStore.getTickets(this.props.id),
 
 			snapToGrid:   StateStore.getSetting('snapToGrid'),
 			showMinimap:  StateStore.getSetting('showMinimap'),
@@ -55,19 +57,21 @@ var BoardView = React.createClass({
 
 	componentDidMount: function() {
 		AuthStore.addChangeListener(this._onAuthStoreChange);
-		DataStore.addChangeListener(this._onDataStoreChange);
 		StateStore.addChangeListener(this._onStateStoreChange);
+		BoardStore.addChangeListener(this._onBoardStoreChange);
+		TicketStore.addChangeListener(this._onTicketStoreChange);
 
-		DataActions.loadBoards();
-		DataActions.loadTickets(this.props.id);
+		BoardActions.loadBoards();
+		TicketActions.loadTickets(this.props.id);
 
 		return document.addEventListener('touchmove', _preventBounce);
 	},
 
 	componentWillUnmount: function() {
-		AuthStore.removeChangeListener(this._onAuthStoreChange)
-		DataStore.removeChangeListener(this._onDataStoreChange);
+		AuthStore.removeChangeListener(this._onAuthStoreChange);
 		StateStore.removeChangeListener(this._onStateStoreChange);
+		BoardStore.removeChangeListener(this._onBoardStoreChange);
+		TicketStore.removeChangeListener(this._onTicketStoreChange);
 
 		return document.removeEventListener('touchmove', _preventBounce);
 	},
@@ -78,20 +82,23 @@ var BoardView = React.createClass({
 		});
 	},
 
-	_onDataStoreChange: function() {
-		return this.setState({
-			board: resize(
-				DataStore.getBoard(this.props.id) || Default.BOARD
-			),
-			tickets: DataStore.getTickets(this.props.id),
-		});
-	},
-
 	_onStateStoreChange: function() {
 		return this.setState({
 			snapToGrid:   StateStore.getSetting('snapToGrid'),
 			showMinimap:  StateStore.getSetting('showMinimap'),
 			activeTicket: StateStore.getActiveTicket(),
+		});
+	},
+
+	_onBoardStoreChange: function() {
+		return this.setState({
+			board: resize(BoardStore.getBoard(this.props.id) || Default.BOARD)
+		});
+	},
+
+	_onTicketStoreChange: function() {
+		return this.setState({
+			tickets: TicketStore.getTickets(this.props.id),
 		});
 	},
 

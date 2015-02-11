@@ -6,8 +6,8 @@ var Sidebar      = require('../components/sidebar.jsx');
 var BoardPreview = require('../components/board-preview.jsx');
 
 var AuthStore   = require('../stores/auth');
-var DataStore   = require('../stores/data');
-var DataActions = require('../actions/data');
+var BoardStore   = require('../stores/board');
+var BoardActions = require('../actions/board');
 
 var resize = require('../utils/resize');
 
@@ -22,29 +22,29 @@ var Workspace = React.createClass({
 	getInitialState: function() {
 		return {
 			user:   AuthStore.getUser(),
-			boards: DataStore.getBoards().map(resize),
+			boards: BoardStore.getBoards().map(resize),
 		}
 	},
 
 	componentDidMount: function() {
 		AuthStore.addChangeListener(this._onAuthStoreChange);
-		DataStore.addChangeListener(this._onDataStoreChange);
+		BoardStore.addChangeListener(this._onBoardStoreChange);
 
-		return DataActions.loadBoards();
+		return BoardActions.loadBoards();
 	},
 
 	componentWillUnmount: function() {
 		AuthStore.removeChangeListener(this._onAuthStoreChange);
-		DataStore.removeChangeListener(this._onDataStoreChange);
+		BoardStore.removeChangeListener(this._onBoardStoreChange);
 	},
 
 	_onAuthStoreChange: function() {
-		this.setState({ user: AuthStore.getUser() });
+		return this.setState({ user: AuthStore.getUser() });
 	},
 
-	_onDataStoreChange: function() {
-		return this.setState({
-			boards: DataStore.getBoards().map(resize),
+	_onBoardStoreChange: function() {
+		this.setState({
+			boards: BoardStore.getBoards().map(resize),
 		});
 	},
 

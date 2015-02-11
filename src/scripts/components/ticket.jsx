@@ -8,16 +8,13 @@ var TweenState = require('react-tween-state');
 var Stripe           = require('./stripe.jsx');
 var EditTicketDialog = require('./edit-ticket-dialog.jsx');
 
-var TicketColor  = require('../constants/enums').TicketColor;
-var TicketColors = _.values(TicketColor);
-
-var DataActions  = require('../actions/data');
-var StateActions = require('../actions/state');
-
+var gridify         = require('../utils/gridify');
+var TicketColor     = require('../constants/enums').TicketColor;
+var TicketColors    = _.values(TicketColor);
+var StateActions    = require('../actions/state');
+var TicketActions   = require('../actions/ticket');
 var DraggableMixin  = require('../mixins/draggable');
 var PureRenderMixin = React.addons.PureRenderMixin;
-
-var gridify = require('../utils/gridify');
 
 /**
  *
@@ -61,7 +58,7 @@ var Ticket = React.createClass({
 			position: React.PropTypes.shape({
 				x: React.PropTypes.number.isRequired,
 				y: React.PropTypes.number.isRequired,
-				// z: React.PropTypes.number.isRequired,
+				z: React.PropTypes.number.isRequired,
 			}).isRequired,
 		}).isRequired,
 
@@ -129,7 +126,7 @@ var Ticket = React.createClass({
 			var boardID  = this.props.boardID;
 			var ticketID = this.props.ticket.id;
 
-			return DataActions.editTicket(boardID, ticketID, {
+			return TicketActions.editTicket(boardID, ticketID, {
 				position: {
 					x: this.state.x,
 					y: this.state.y,

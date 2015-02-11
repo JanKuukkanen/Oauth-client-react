@@ -7,8 +7,8 @@ var LinkedStateMixin = React.addons.LinkedStateMixin;
 var Dialog      = require('../components/dialog.jsx');
 var ColorSelect = require('../components/color-select.jsx');
 
-var DataActions  = require('../actions/data');
-var TicketColors = _.values(require('../constants/enums').TicketColor);
+var TicketActions = require('../actions/ticket');
+var TicketColors  = _.values(require('../constants/enums').TicketColor);
 
 /**
  *
@@ -51,7 +51,7 @@ var EditTicketDialog = React.createClass({
 		var boardID  = this.props.boardID;
 		var ticketID = this.props.ticket.id;
 
-		DataActions.editTicket(boardID, ticketID, {
+		TicketActions.editTicket(boardID, ticketID, {
 			id:      this.props.ticket.id,
 			color:   this.state.color,
 			content: this.state.content,
@@ -66,7 +66,7 @@ var EditTicketDialog = React.createClass({
 		var boardID  = this.props.boardID;
 		var ticketID = this.props.ticket.id;
 
-		DataActions.removeTicket(boardID, ticketID);
+		TicketActions.removeTicket(boardID, ticketID);
 		return this.props.onDismiss();
 	},
 

@@ -36,6 +36,19 @@ var _mocks = {
 			accessCode: '',
 			background: '',
 		},
+		{
+			id:   '345ABC',
+			name: 'Mock Board #3',
+
+			size: {
+				width:  8,
+				height: 18,
+			},
+
+			accessCode: '',
+			background: '',
+		},
+
 	],
 
 	tickets: [
