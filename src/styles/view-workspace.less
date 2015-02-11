@@ -1,0 +1,21 @@
+@import "mixins.less";
+@import "variables.less";
+
+.view-workspace {
+	overflow: auto !important;
+
+	.board-list {
+		margin: 32px;
+
+		.flexbox();
+
+		.flex-wrap(wrap);
+		.flex-direction(row);
+
+		.align-content(flex-start);
+
+		.board-preview {
+			.flex(0, 0)
+		}
+	}
+}

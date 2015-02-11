@@ -1,10 +1,11 @@
 @import "mixins.less";
 @import "variables.less";
 
-/**
- * Scrollable is our basis for a board.
- */
 .scrollable {
+	.board {
+		background-color: @white;
+	}
+
 	.wrapper {
 		height:   100%;
 		overflow: hidden;
@@ -12,47 +13,4 @@
 
 		background-color: @gray-light;
 	}
-
-	.minimap {
-		width:  @ticket-width;
-		height: @ticket-height;
-
-		top:      8;
-		right:    8;
-		position: absolute;
-
-		border: 1px solid;
-
-		border-color:     @gray-light;
-		background-color: @white;
-
-		z-index: @layer-ui;
-
-		.cursor {
-			position: absolute;
-
-			z-index:          (@layer-ui + 1);
-			background-color: fade(@gray-light, 40%);
-		}
-
-		.marker {
-			position: absolute;
-
-			border: 1px solid @white;
-			/**
-			 * Fixes issue with markers blocking the cursor, even though they
-			 * are at a lower z-index.
-			 */
-			pointer-events: none;
-
-			.transition(all, .2s);
-		}
-	}
-}
-
-/**
- * Board is a scrollable element.
- */
-.board {
-	background-color: @white;
 }

@@ -1,0 +1,35 @@
+@import "mixins.less";
+@import "variables.less";
+
+.minimap {
+	width:  @ticket-width;
+	height: @ticket-height;
+
+	top:      8;
+	right:    8;
+	position: absolute;
+
+	border: 1px solid;
+
+	border-color:     @gray-light;
+	background-color: @white;
+
+	z-index: @layer-ui;
+
+	.cursor {
+		cursor:   pointer;
+		position: absolute;
+
+		z-index:          (@layer-ui + 1);
+		background-color: fade(@gray-light, 40%);
+	}
+
+	.marker {
+		.transition(all, .2s);
+
+		position:       absolute;
+		pointer-events: none;
+
+		border: 1px solid @white;
+	}
+}

@@ -4,14 +4,11 @@ var page             = require('page');
 var React            = require('react/addons');
 var LinkedStateMixin = React.addons.LinkedStateMixin;
 
-var Logo = require('../components/logo.jsx');
-
+var Form        = require('../components/form.jsx');
 var AuthActions = require('../actions/auth');
 
 /**
  * View that displays a Login form.
- *
- * TODO Refactor into smaller components, similarly to RegisterView.
  */
 var LoginView = React.createClass({
 	mixins: [LinkedStateMixin],
@@ -37,42 +34,22 @@ var LoginView = React.createClass({
 			/* jshint ignore:start */
 			<div className="application">
 				<div className="view view-login">
-					<div className="form">
-
-						<div className="title">
-							<Logo />
-							<div className="text">Contriboard</div>
-						</div>
-
-						<div className="form-title">
-							Login
-						</div>
-
-						<div className="fields">
-							<input type="email" className="input"
-								placeholder="Email"
-								valueLink={this.linkState('email')} />
-							<input type="password" className="input"
-								placeholder="Password"
-								valueLink={this.linkState('password')} />
-						</div>
-
-						<button className="btn turquoise"
-								onClick={this._onLoginSubmit}>
-							Login
-						</button>
-
-						<div className="separator" />
-
-						<span className="info">
-							Not registered?
-						</span>
-
+					<Form title="Login" onSubmit={this._onLoginSubmit}>
+						<input type="email"
+							className="input"
+							placeholder="Email"
+							valueLink={this.linkState('email')} />
+						<input type="password"
+							className="input"
+							placeholder="Password"
+							valueLink={this.linkState('password')} />
+					</Form>
+					<div className="form-info">
+						<p>Not registered?</p>
 						<button className="btn violet fade"
 								onClick={this._showRegisterView}>
 							Register
 						</button>
-
 					</div>
 				</div>
 			</div>

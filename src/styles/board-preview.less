@@ -1,10 +1,6 @@
 @import "mixins.less";
 @import "variables.less";
 
-/**
- * '.board-preview' is a flex element, so it should be placed inside a flex
- * container.
- */
 .board-preview {
 	.flex(0, 0);
 
@@ -18,10 +14,6 @@
 		background-color: @turquoise;
 	}
 
-	/**
-	 * Note that '.minimap-container' is set to corresponding width and height
-	 * as the '.minimap' max width and height are.
-	 */
 	.minimap-container {
 		.transition(all, .2s);
 		.box-shadow(fade(@black, 20%));
@@ -39,6 +31,10 @@
 		}
 
 		.minimap {
+			z-index:  0;
+			position: static;
+
+			border:           0px solid;
 			background-color: @white;
 		}
 	}

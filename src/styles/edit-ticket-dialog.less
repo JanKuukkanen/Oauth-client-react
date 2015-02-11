@@ -27,19 +27,22 @@
 		.form {
 			.flex(1, 0);
 			.flexbox();
-			/**
-			 * TODO Once we have reorganized the css, we shouldn't have to declare
-			 *      overrides for '.form' here. Currently '.form' is at a global
-			 *      level so it interferes with this class here.
-			 */
+
 			width:     100%;
 			max-width: 100%;
 
 			height: auto;
 			margin: 0px;
+			border: 0px solid;
 
 			textarea {
 				.flex(1, 0);
+
+				font-size:   14px;
+				font-family: 'Lato', sans-serif;
+
+				border: none;
+				resize: none;
 			}
 		}
 	}

@@ -1,24 +1,28 @@
-@import "form.less";
+@import "mixins.less";
+@import "variables.less";
 
-
-@import "logo.less";
-@import "sidebar.less";
-@import "workspace.less";
-@import "buttons.less";
-
-@import "board.less";
-@import "ticket.less";
-
-@import "avatar.less";
-
+@import "button.less";
+@import "dialog.less";
 @import "options.less";
 
+@import "logo.less";
+@import "form.less";
+@import "avatar.less";
+@import "minimap.less";
 @import "board-preview.less";
 
-@import "dialog.less";
 @import "edit-user-dialog.less";
 @import "edit-board-dialog.less";
 @import "edit-ticket-dialog.less";
+
+@import "board.less";
+@import "ticket.less";
+@import "sidebar.less";
+
+@import "view-login.less";
+@import "view-register.less";
+@import "view-board.less";
+@import "view-workspace.less";
 
 /**
  * Core stuff.
@@ -34,14 +38,6 @@ html {
 
 	img {
 		display: block;
-	}
-
-	textarea {
-		font-size:   14px;
-		font-family: 'Lato', sans-serif;
-
-		border: none;
-		resize: none;
 	}
 
 	body {
