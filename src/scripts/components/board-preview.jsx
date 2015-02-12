@@ -9,40 +9,23 @@ var EditBoardDialog = require('../components/edit-board-dialog.jsx');
 var TicketStore   = require('../stores/ticket');
 var TicketActions = require('../actions/ticket');
 
-var TICKET_WIDTH  = require('../constants').TICKET_WIDTH;
-var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
+var props     = require('../constants/props');
+var markers   = require('../utils/create-markers');
+var listener  = require('../mixins/listener');
 
 /**
- *
+ * Preview component for Boards. Based on the 'Minimap' component.
  */
 var BoardPreview = React.createClass({
+	mixins: [
+		listener(TicketStore),
+	],
+
 	propTypes: {
 		/**
-		 *
+		 * The board being previewed.
 		 */
-		board: React.PropTypes.shape({
-			/**
-			 *
-			 */
-			id: React.PropTypes.string.isRequired,
-			/**
-			 *
-			 */
-			size: React.PropTypes.shape({
-				width:  React.PropTypes.number,
-				height: React.PropTypes.number,
-			}).isRequired,
-
-			/**
-			 *
-			 */
-			name: React.PropTypes.string,
-
-			/**
-			 *
-			 */
-			background: React.PropTypes.string,
-		}).isRequired,
+		board: props.Board.isRequired,
 	},
 
 	getDefaultProps: function() {
@@ -59,13 +42,14 @@ var BoardPreview = React.createClass({
 		}
 	},
 
-	componentDidMount: function() {
-		TicketStore.addChangeListener(this._onTicketStoreChange);
-		TicketActions.loadTickets(this.props.board.id);
+	onChange: function() {
+		this.setState({
+			tickets: TicketStore.getTickets(this.props.board.id),
+		});
 	},
 
-	componentWillUnmount: function() {
-		TicketStore.removeChangeListener(this._onTicketStoreChange);
+	componentDidMount: function() {
+		TicketActions.loadTickets(this.props.board.id);
 	},
 
 	/**
@@ -83,40 +67,12 @@ var BoardPreview = React.createClass({
 		return this.setState({ isEditing: !this.state.isEditing });
 	},
 
-	/**
-	 * Listener for TicketStore changes.
-	 */
-	_onTicketStoreChange: function() {
-		this.setState({
-			tickets: TicketStore.getTickets(this.props.board.id),
-		});
-	},
-
 	render: function() {
-		var board = {
-			id:         this._currentElement.key,
-			name:       this.props.board.name,
-			background: this.props.board.background,
-		}
-		var markers = this.state.tickets.map(function(t) {
-			return {
-				size: {
-					width:  TICKET_WIDTH,
-					height: TICKET_HEIGHT,
-				},
-				position: {
-					x: t.position.x,
-					y: t.position.y,
-					z: t.position.z,
-				},
-				key:   t.id,
-				color: t.color,
-			}
-		});
 		if(this.state.isEditing) {
 			var editBoardDialog = (
 				/* jshint ignore:start */
-				<EditBoardDialog board={board} onDismiss={this._toggleEdit} />
+				<EditBoardDialog board={this.props.board}
+					onDismiss={this._toggleEdit} />
 				/* jshint ignore:end */
 			);
 		}
@@ -125,7 +81,7 @@ var BoardPreview = React.createClass({
 			<div className="board-preview">
 				<div className="minimap-container" onClick={this._navigate}>
 					<Minimap show={true} area={this.props.board.size}
-						markers={markers} />
+						markers={markers(this.state.tickets)} />
 				</div>
 				<div className="controls" onClick={this._toggleEdit}>
 					<span className="name">

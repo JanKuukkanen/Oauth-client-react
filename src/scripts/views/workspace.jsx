@@ -9,7 +9,8 @@ var AuthStore   = require('../stores/auth');
 var BoardStore   = require('../stores/board');
 var BoardActions = require('../actions/board');
 
-var resize = require('../utils/resize');
+var resize   = require('../utils/resize');
+var listener = require('../mixins/listener');
 
 /**
  * Displays the User's Boards.
@@ -19,33 +20,27 @@ var resize = require('../utils/resize');
  *      all the issues with different browsers.
  */
 var Workspace = React.createClass({
-	getInitialState: function() {
+	mixins: [
+		listener([ AuthStore, BoardStore ]),
+	],
+
+	getState: function() {
 		return {
 			user:   AuthStore.getUser(),
 			boards: BoardStore.getBoards().map(resize),
 		}
 	},
 
+	getInitialState: function() {
+		return this.getState();
+	},
+
+	onChange: function() {
+		return this.setState(this.getState());
+	},
+
 	componentDidMount: function() {
-		AuthStore.addChangeListener(this._onAuthStoreChange);
-		BoardStore.addChangeListener(this._onBoardStoreChange);
-
 		return BoardActions.loadBoards();
-	},
-
-	componentWillUnmount: function() {
-		AuthStore.removeChangeListener(this._onAuthStoreChange);
-		BoardStore.removeChangeListener(this._onBoardStoreChange);
-	},
-
-	_onAuthStoreChange: function() {
-		return this.setState({ user: AuthStore.getUser() });
-	},
-
-	_onBoardStoreChange: function() {
-		this.setState({
-			boards: BoardStore.getBoards().map(resize),
-		});
 	},
 
 	render: function() {

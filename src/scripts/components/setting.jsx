@@ -5,6 +5,9 @@ var Hammer = require('hammerjs');
 
 var StateActions = require('../actions/state');
 
+/**
+ * Simple button that is used to toggle settings.
+ */
 var Setting = React.createClass({
 	propTypes: {
 		/**
@@ -22,7 +25,7 @@ var Setting = React.createClass({
 		var key     = this._currentElement.key;
 		this.hammer = new Hammer(this.getDOMNode());
 
-		this.hammer.on('tap', function toggle() {
+		this.hammer.on('tap', function() {
 			return StateActions.setSetting(key, !(this.props.value));
 		}.bind(this));
 	},

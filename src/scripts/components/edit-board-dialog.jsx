@@ -5,26 +5,23 @@ var LinkedStateMixin = React.addons.LinkedStateMixin;
 
 var Dialog = require('../components/dialog.jsx');
 
+var props        = require('../constants/props');
 var BoardActions = require('../actions/board');
 
 /**
- *
+ * Displays an overlaid Dialog to edit the given Board.
  */
 var EditBoardDialog = React.createClass({
 	mixins: [LinkedStateMixin],
 
 	propTypes: {
 		/**
-		 * Initial state for the board we are editing.
+		 * Initial state of the board.
 		 */
-		board: React.PropTypes.shape({
-			id:         React.PropTypes.string.isRequired,
-			name:       React.PropTypes.string.isRequired,
-			background: React.PropTypes.string.isRequired,
-		}).isRequired,
+		board: props.Board.isRequired,
 
 		/**
-		 * Passed in to 'Dialog' as the 'onDismiss' callback.
+		 * Callback for dialog dismissal.
 		 */
 		onDismiss: React.PropTypes.func.isRequired,
 	},
@@ -37,7 +34,7 @@ var EditBoardDialog = React.createClass({
 	},
 
 	/**
-	 *
+	 * Triggers persisting the edits.
 	 */
 	_submit: function() {
 		BoardActions.editBoard(this.props.board.id, {
@@ -48,7 +45,7 @@ var EditBoardDialog = React.createClass({
 	},
 
 	/**
-	 *
+	 * Triggers the removal of the board.
 	 */
 	_remove: function() {
 		BoardActions.removeBoard(this.props.board.id);

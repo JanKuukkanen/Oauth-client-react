@@ -3,9 +3,19 @@
 var page  = require('page');
 var React = require('react');
 
+/**
+ * The apps logo. Optionally shows a title.
+ */
 var Logo = React.createClass({
 	propTypes: {
-		url:   React.PropTypes.string,
+		/**
+		 * Clicking on the logo will navigate to this url.
+		 */
+		url: React.PropTypes.string,
+
+		/**
+		 * Title displayed next to the logo.
+		 */
 		title: React.PropTypes.string,
 	},
 
@@ -16,6 +26,9 @@ var Logo = React.createClass({
 		}
 	},
 
+	/**
+	 * Navigates to the given 'this.props.url'.
+	 */
 	_navigate: function() {
 		if(this.props.url) {
 			return page.show(this.props.url);
@@ -46,7 +59,6 @@ var Logo = React.createClass({
 			/* jshint ignore:end */
 		);
 	}
-
 });
 
 module.exports = Logo;

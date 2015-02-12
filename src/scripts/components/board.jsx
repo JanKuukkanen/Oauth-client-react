@@ -3,6 +3,7 @@
 var React  = require('react');
 var Hammer = require('hammerjs');
 
+var props         = require('../constants/props');
 var gridify       = require('../utils/gridify');
 var TicketColor   = require('../constants/enums').TicketColor;
 var TicketActions = require('../actions/ticket');
@@ -11,30 +12,15 @@ var TICKET_WIDTH  = require('../constants').TICKET_WIDTH;
 var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
 
 /**
- * Board component is used as a scrollable element. The main functionality of
- * it comes from its ability to create new Tickets on a 'doubletap' event.
- *
- * TODO Add a 'background' property.
+ * Surface with a background and a specific size. Clicking on the surface
+ * creates a new 'Ticket'.
  */
 var Board = React.createClass({
 	propTypes: {
 		/**
-		 *
+		 * The 'board' we are representing.
 		 */
-		board: React.PropTypes.shape({
-			/**
-			 *
-			 */
-			id: React.PropTypes.string.isRequired,
-
-			/**
-			 * The 'size' property indicates the pixel size of the board.
-			 */
-			size: React.PropTypes.shape({
-				width:  React.PropTypes.number.isRequired,
-				height: React.PropTypes.number.isRequired,
-			}).isRequired,
-		}).isRequired,
+		board: props.Board.isRequired,
 
 		/**
 		 * The 'snap' property indicates whether to snap created tickets to a
@@ -92,13 +78,11 @@ var Board = React.createClass({
 				0 : ((endpos.y + TICKET_HEIGHT) > boardSize.height ?
 					(boardSize.height - TICKET_HEIGHT) : endpos.y);
 
-			return TicketActions.addTicket(
-				this.props.board.id,
-				{
-					color:    TicketColor.VIOLET,
-					content:  '',
-					position: endpos,
-				});
+			return TicketActions.addTicket(this.props.board.id, {
+				color:    TicketColor.VIOLET,
+				content:  '',
+				position: endpos,
+			});
 		}.bind(this));
 	},
 

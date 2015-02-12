@@ -2,6 +2,8 @@
 
 var React = require('react/addons');
 
+var props = require('../constants/props');
+
 /**
  * Defines the maximum width or height of this component.
  */
@@ -24,10 +26,7 @@ var Minimap = React.createClass({
 		 * the size of the minimap, it is instead used in calculating the size
 		 * of the minimap while retaining the correct aspect ratio.
 		 */
-		area: React.PropTypes.shape({
-			width:  React.PropTypes.number,
-			height: React.PropTypes.number,
-		}),
+		area: props.Size,
 
 		/**
 		 * Markers displayed on the minimap. Leave empty for no markers.
@@ -37,10 +36,7 @@ var Minimap = React.createClass({
 			 * The real size of the marker. The relative size is calculated by
 			 * the minimap.
 			 */
-			size: React.PropTypes.shape({
-				width:  React.PropTypes.number,
-				height: React.PropTypes.number,
-			}),
+			size: props.Size.isRequired,
 
 			/**
 			 * The color of the marker.
@@ -52,11 +48,7 @@ var Minimap = React.createClass({
 			 * the real position of the object. Minimap will calculate the
 			 * relative position based on it's size.
 			 */
-			position: React.PropTypes.shape({
-				x: React.PropTypes.number,
-				y: React.PropTypes.number,
-				z: React.PropTypes.number,
-			}),
+			position: props.Position.isRequired,
 		})),
 
 		/**

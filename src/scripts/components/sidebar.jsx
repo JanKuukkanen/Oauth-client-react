@@ -4,37 +4,21 @@ var _        = require('lodash');
 var page     = require('page');
 var React    = require('react');
 
-var UserType  = require('../constants/enums').UserType;
-var UserTypes = _.values(UserType);
-
 var Logo           = require('../components/logo.jsx');
 var Avatar         = require('../components/avatar.jsx');
 var EditUserDialog = require('../components/edit-user-dialog.jsx');
 
+var props = require('../constants/props');
+
+/**
+ * Sidebar with some navigation and user controls.
+ */
 var SideBar = React.createClass({
 	propTypes: {
 		/**
-		 * The current user.
+		 * The initial state of the User.
 		 */
-		user: React.PropTypes.shape({
-			id:   React.PropTypes.string.isRequired,
-			name: React.PropTypes.string.isRequired,
-			type: React.PropTypes.oneOf(UserTypes).isRequired,
-		}),
-
-		/**
-		 * Width of the sidebar.
-		 */
-		width: React.PropTypes.number,
-	},
-
-	getDefaultProps: function() {
-		return {
-			user: {
-				name: 'unknown',
-				type: 'unknown',
-			},
-		}
+		user: props.User.isRequired,
 	},
 
 	getInitialState: function() {

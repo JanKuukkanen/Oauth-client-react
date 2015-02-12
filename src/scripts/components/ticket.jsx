@@ -1,69 +1,47 @@
 'use strict';
 
-var _          = require('lodash');
-var React      = require('react/addons');
-var Hammer     = require('hammerjs');
-var TweenState = require('react-tween-state');
+var _               = require('lodash');
+var React           = require('react/addons');
+var Hammer          = require('hammerjs');
+var TweenState      = require('react-tween-state');
+var PureRenderMixin = React.addons.PureRenderMixin;
 
 var Stripe           = require('./stripe.jsx');
 var EditTicketDialog = require('./edit-ticket-dialog.jsx');
 
+var props           = require('../constants/props');
 var gridify         = require('../utils/gridify');
-var TicketColor     = require('../constants/enums').TicketColor;
-var TicketColors    = _.values(TicketColor);
 var StateActions    = require('../actions/state');
 var TicketActions   = require('../actions/ticket');
 var DraggableMixin  = require('../mixins/draggable');
-var PureRenderMixin = React.addons.PureRenderMixin;
 
 /**
- *
+ * Tickets are those movable little things on the board.
  */
 var Ticket = React.createClass({
 	mixins: [DraggableMixin, TweenState.Mixin, PureRenderMixin],
 
 	propTypes: {
 		/**
-		 *
+		 * The 'snap' property indicates whether the ticket should 'snap' to a
+		 * grid when moved.
 		 */
 		snap: React.PropTypes.bool,
 
 		/**
-		 *
+		 * The 'active' property indicates whether to append a '.last-active'
+		 * class to the component. This is basically used to bring tickets to
+		 * foreground when they are clicked.
 		 */
 		active: React.PropTypes.bool,
 
 		/**
-		 *
+		 * The initial state of the ticket.
 		 */
-		ticket: React.PropTypes.shape({
-			/**
-		 	 *
-			 */
-			id: React.PropTypes.string.isRequired,
-
-			/**
-			 *
-			 */
-			color: React.PropTypes.oneOf(TicketColors).isRequired,
-
-			/**
-			 *
-			 */
-			content: React.PropTypes.string.isRequired,
-
-			/**
-			 *
-			 */
-			position: React.PropTypes.shape({
-				x: React.PropTypes.number.isRequired,
-				y: React.PropTypes.number.isRequired,
-				z: React.PropTypes.number.isRequired,
-			}).isRequired,
-		}).isRequired,
+		ticket: props.Ticket.isRequired,
 
 		/**
-		 *
+		 * The 'id' of the board the Ticket belongs to.
 		 */
 		boardID: React.PropTypes.string.isRequired,
 	},
@@ -146,7 +124,7 @@ var Ticket = React.createClass({
 
 		// Don't wanna tween if there ain't nothing to tween to...
 		if(this.state.x === next.ticket.position.x &&
-				this.state.y === next.ticket.position.y) {
+		   this.state.y === next.ticket.position.y) {
 			return;
 		}
 		return this._tweenPositionTo(next.ticket.position);
@@ -179,12 +157,10 @@ var Ticket = React.createClass({
 			left:   this.getTweeningValue('x'),
 			zIndex: this.props.ticket.position.z,
 		}
-
 		var classes = React.addons.classSet({
 			'ticket':      true,
 			'last-active': this.props.active,
 		});
-
 		if(this.state.showEditDialog) {
 			var editDialog = (
 				/* jshint ignore:start */
@@ -195,7 +171,6 @@ var Ticket = React.createClass({
 				/* jshint ignore:end */
 			);
 		}
-
 		return (
 			/* jshint ignore:start */
 			<div className={classes} style={style}>

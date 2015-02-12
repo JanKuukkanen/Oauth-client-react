@@ -3,7 +3,7 @@
 var React = require('react');
 
 /**
- *
+ * Cursor is basically a box that can be resized using 'refs'.
  */
 var Cursor = React.createClass({
 	/**

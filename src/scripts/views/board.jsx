@@ -15,10 +15,10 @@ var TicketStore   = require('../stores/ticket');
 var BoardActions  = require('../actions/board');
 var TicketActions = require('../actions/ticket');
 
-var resize        = require('../utils/resize');
-var Default       = require('../constants/defaults');
-var TICKET_WIDTH  = require('../constants').TICKET_WIDTH;
-var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
+var resize   = require('../utils/resize');
+var markers  = require('../utils/create-markers');
+var listener = require('../mixins/listener');
+var Default  = require('../constants/defaults');
 
 /**
  * Fix issues with iOS and scrolling causing bouncing.
@@ -37,13 +37,18 @@ function _preventBounce(ev) {
  * @param {string} id  The 'id' attribute of the Board we want to view.
  */
 var BoardView = React.createClass({
+	mixins: [
+		listener([ AuthStore, StateStore, BoardStore, TicketStore ]),
+	],
+
 	propTypes: {
 		id: React.PropTypes.string.isRequired,
 	},
 
-	getInitialState: function() {
+	getState: function() {
 		return {
 			user: AuthStore.getUser(),
+
 			board: resize(
 				BoardStore.getBoard(this.props.id) || Default.BOARD
 			),
@@ -55,12 +60,15 @@ var BoardView = React.createClass({
 		}
 	},
 
-	componentDidMount: function() {
-		AuthStore.addChangeListener(this._onAuthStoreChange);
-		StateStore.addChangeListener(this._onStateStoreChange);
-		BoardStore.addChangeListener(this._onBoardStoreChange);
-		TicketStore.addChangeListener(this._onTicketStoreChange);
+	getInitialState: function() {
+		return this.getState();
+	},
 
+	onChange: function() {
+		return this.setState(this.getState());
+	},
+
+	componentDidMount: function() {
 		BoardActions.loadBoards();
 		TicketActions.loadTickets(this.props.id);
 
@@ -68,56 +76,10 @@ var BoardView = React.createClass({
 	},
 
 	componentWillUnmount: function() {
-		AuthStore.removeChangeListener(this._onAuthStoreChange);
-		StateStore.removeChangeListener(this._onStateStoreChange);
-		BoardStore.removeChangeListener(this._onBoardStoreChange);
-		TicketStore.removeChangeListener(this._onTicketStoreChange);
-
 		return document.removeEventListener('touchmove', _preventBounce);
 	},
 
-	_onAuthStoreChange: function() {
-		this.setState({
-			user: AuthStore.getUser(),
-		});
-	},
-
-	_onStateStoreChange: function() {
-		return this.setState({
-			snapToGrid:   StateStore.getSetting('snapToGrid'),
-			showMinimap:  StateStore.getSetting('showMinimap'),
-			activeTicket: StateStore.getActiveTicket(),
-		});
-	},
-
-	_onBoardStoreChange: function() {
-		return this.setState({
-			board: resize(BoardStore.getBoard(this.props.id) || Default.BOARD)
-		});
-	},
-
-	_onTicketStoreChange: function() {
-		return this.setState({
-			tickets: TicketStore.getTickets(this.props.id),
-		});
-	},
-
 	render: function() {
-		var markers = this.state.tickets.map(function(t) {
-			return {
-				size: {
-					width:  TICKET_WIDTH,
-					height: TICKET_HEIGHT,
-				},
-				position: {
-					x: t.position.x,
-					y: t.position.y,
-					z: t.position.z,
-				},
-				key:   t.id,
-				color: t.color,
-			}
-		});
 		return (
 			/* jshint ignore:start */
 			<div className="application">
@@ -127,7 +89,7 @@ var BoardView = React.createClass({
 						{this.renderSettings()}
 					</div>
 					<Scrollable size={this.state.board.size}
-							markers={markers}
+							markers={markers(this.state.tickets)}
 							minimap={this.state.showMinimap}>
 						<Board board={this.state.board}
 								snap={this.state.snapToGrid}>

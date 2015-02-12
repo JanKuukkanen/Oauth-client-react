@@ -6,6 +6,8 @@ var IScroll = require('iscroll');
 var Cursor  = require('../components/cursor.jsx');
 var Minimap = require('../components/minimap.jsx');
 
+var props = require('../constants/props');
+
 /**
  * Component that is used to wrap another in order to make it scrollable using
  * the 'IScroll' library.
@@ -21,10 +23,7 @@ var Scrollable = React.createClass({
 		 * The size of the scrollable area. This is used to calculate the scale
 		 * for various elements related to the 'Scrollable' component.
 		 */
-		size: React.PropTypes.shape({
-			width:  React.PropTypes.number,
-			height: React.PropTypes.number,
-		}).isRequired,
+		size: props.Size.isRequired,
 
 		/**
 		 * Whether to show or hide the Minimap.
@@ -97,7 +96,8 @@ var Scrollable = React.createClass({
 
 	/**
 	 * Resizes the width and height for the 'cursor' element so that it matches
-	 * the window size and orientation.
+	 * the window size and orientation. Additionally invokes the 'refresh'
+	 * method for the attached 'IScroll' instance.
 	 */
 	_resizeMinimapCursor: function() {
 		if(!this.props.minimap) return;
@@ -109,7 +109,6 @@ var Scrollable = React.createClass({
 			x: $wrapper.clientWidth  / this.props.size.width,
 			y: $wrapper.clientHeight / this.props.size.height,
 		}
-
 		var size = {
 			width:  Math.round(scale.x * $minimap.clientWidth),
 			height: Math.round(scale.y * $minimap.clientHeight),

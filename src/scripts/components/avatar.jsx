@@ -1,28 +1,32 @@
 'use strict';
 
-var React = require('react/addons');
+var React = require('react');
 
+/**
+ * Avatar component.
+ */
 var Avatar = React.createClass({
 	propTypes: {
 		/**
-		 *
+		 * The URL used as a 'src' attribute to the image.
 		 */
 		url: React.PropTypes.string.isRequired,
 
 		/**
-		 *
-		 */
-		onClick: React.PropTypes.func,
-
-		/**
-		 *
+		 * Whether to add a '.lg' class to the component.
 		 */
 		large: React.PropTypes.bool,
 
 		/**
-		 *
+		 * Add either a '.dark' or '.light' class to the component. Defaults to
+		 * the '.dark' class.
 		 */
 		theme: React.PropTypes.oneOf(['dark', 'light']),
+
+		/**
+		 * Callback for clicking the avatar.
+		 */
+		onClick: React.PropTypes.func,
 	},
 
 	getDefaultProps: function() {
@@ -34,12 +38,8 @@ var Avatar = React.createClass({
 	},
 
 	render: function() {
-		var classes = React.addons.classSet({
-			'lg':     this.props.large,
-			'dark':   this.props.theme === 'dark',
-			'light':  this.props.theme === 'light',
-			'avatar': true,
-		});
+		var classes = 'avatar' +
+			(this.props.large ? ' lg ' : ' ') + this.props.theme;
 		return (
 			/* jshint ignore:start */
 			<div className={classes}>

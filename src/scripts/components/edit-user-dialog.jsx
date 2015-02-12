@@ -3,33 +3,33 @@
 var _     = require('lodash');
 var React = require('react');
 
-var UserType  = require('../constants/enums').UserType;
-var UserTypes = _.values(UserType);
-
-var AuthActions = require('../actions/auth');
-
 var Dialog = require('../components/dialog.jsx');
 var Avatar = require('../components/avatar.jsx');
 
+var props       = require('../constants/props');
+var UserType    = require('../constants/enums').UserType;
+var UserTypes   = _.values(UserType);
+var AuthActions = require('../actions/auth');
+
+/**
+ * Displays an overlaid Dialog to edit the given User.
+ */
 var EditUserDialog = React.createClass({
 	propTypes: {
 		/**
-		 *
+		 * Initial state for the User.
 		 */
-		user: React.PropTypes.shape({
-			id:   React.PropTypes.string.isRequired,
-			name: React.PropTypes.string.isRequired,
-			type: React.PropTypes.oneOf(UserTypes).isRequired,
-		}).isRequired,
+		user: props.User.isRequired,
 
 		/**
-		 *
+		 * Callback for dialog dismissal.
 		 */
 		onDismiss: React.PropTypes.func.isRequired,
 	},
 
 	/**
-	 *
+	 * Triggers logging out the user. Note that we do not redirect the user to
+	 * anywhere here, that is up to some other part of our application.
 	 */
 	_logout: function() {
 		return AuthActions.logout();

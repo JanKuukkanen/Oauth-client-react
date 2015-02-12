@@ -26,19 +26,19 @@ function connect(opts) {
 		if(_socket && _socket.connected) {
 			return resolve(_socket);
 		}
-		return io(config.io.url, opts)
-			.on('connect', function() {
-				// We might need to attach the event handlers here... and maybe
-				// it's ok!
-				//
-				// this.on('ticket:edit', _onTicketEdit);
-				// ...
+		// return io(config.io.url, opts)
+		// 	.on('connect', function() {
+		// 	// We might need to attach the event handlers here... and maybe
+		// 	// it's ok!
+		// 	//
+		// 	// this.on('ticket:edit', _onTicketEdit);
+		// 	// ...
 
-				return resolve();
-			})
-			.on('error', function(err) {
-				return reject(err);
-			});
+		// 		return resolve();
+		// 	})
+		// 	.on('error', function(err) {
+		// 		return reject(err);
+		// 	});
 	});
 }
 

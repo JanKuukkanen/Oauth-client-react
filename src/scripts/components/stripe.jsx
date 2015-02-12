@@ -2,8 +2,14 @@
 
 var React = require('react');
 
+/**
+ * Stripe is used to represent the color of a Ticket.
+ */
 var Stripe = React.createClass({
 	propTypes: {
+		/**
+		 * Color of the 'stripe'.
+		 */
 		color: React.PropTypes.string.isRequired,
 	},
 
@@ -11,7 +17,6 @@ var Stripe = React.createClass({
 		var style = {
 			background: this.props.color,
 		}
-
 		return (
 			/* jshint ignore:start */
 			<div className="stripe" style={style} />

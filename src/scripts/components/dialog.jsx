@@ -85,14 +85,6 @@ var Dialog = React.createClass({
 		}
 	},
 
-	render: function() {
-		return (
-			/* jshint ignore:start */
-			<span className="dialog-placeholder" />
-			/* jshint ignore:end */
-		);
-	},
-
 	/**
 	 * Returns the actual Dialog component DOM representation.
 	 */
@@ -116,7 +108,15 @@ var Dialog = React.createClass({
 			</div>
 			/* jshint ignore:end */
 		);
-	}
+	},
+
+	render: function() {
+		return (
+			/* jshint ignore:start */
+			<span className="dialog-placeholder" />
+			/* jshint ignore:end */
+		);
+	},
 });
 
 module.exports = Dialog;

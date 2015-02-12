@@ -4,21 +4,27 @@ var _      = require('lodash');
 var React  = require('react');
 var Hammer = require('hammerjs');
 
-var TicketColor  = require('../constants/enums').TicketColor;
-var TicketColors = _.values(TicketColor);
+var TicketColors = _.values(require('../constants/enums').TicketColor);
 
 /**
- *
+ * Small button representing a single color.
  */
 var ColorButton = React.createClass({
 	propTypes: {
-		color:    React.PropTypes.oneOf(TicketColors).isRequired,
+		/**
+		 * Color of the button.
+		 */
+		color: React.PropTypes.oneOf(TicketColors).isRequired,
+
+		/**
+		 * Callback for when this color is selected or clicked or whatever.
+		 */
 		onSelect: React.PropTypes.func.isRequired,
 	},
 
 	componentDidMount: function() {
 		this.hammer = new Hammer(this.getDOMNode());
-		this.hammer.on('tap', function onTap() {
+		this.hammer.on('tap', function() {
 			return this.props.onSelect(this.props.color);
 		}.bind(this));
 	},
@@ -36,18 +42,25 @@ var ColorButton = React.createClass({
 });
 
 /**
- *
+ * Selector component for color values.
  */
 var ColorSelect = React.createClass({
 	propTypes: {
+		/**
+		 * The 'color' property is a 'ValueLink', which indicates the currently
+		 * selected color.
+		 */
 		color: React.PropTypes.shape({
 			value:         React.PropTypes.oneOf(TicketColors).isRequired,
 			requestChange: React.PropTypes.func.isRequired,
 		}).isRequired,
 	},
 
-	componentDidMount: function() {
-		this.hammer = new Hammer(this.refs.selector.getDOMNode());
+	/**
+	 * Uses the 'this.props.color' ValueLink to update the given color.
+	 */
+	_selectColor: function(newColor) {
+		this.props.color.requestChange(newColor);
 	},
 
 	render: function() {
@@ -58,7 +71,7 @@ var ColorSelect = React.createClass({
 			/* jshint ignore:start */
 			<div className="color-select">
 				<div className="selected" style={selectedColor} />
-				<div ref="selector" className="selector">
+				<div className="selector">
 				{TicketColors.map(function(color) {
 					return (
 						<ColorButton key={color} color={color}
@@ -70,14 +83,6 @@ var ColorSelect = React.createClass({
 			/* jshint ignore:end */
 		);
 	},
-
-	/**
-	 *
-	 */
-	_selectColor: function(newColor) {
-		this.props.color.requestChange(newColor);
-	},
-
 });
 
 module.exports = ColorSelect;

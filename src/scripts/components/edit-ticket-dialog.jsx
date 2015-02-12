@@ -7,32 +7,30 @@ var LinkedStateMixin = React.addons.LinkedStateMixin;
 var Dialog      = require('../components/dialog.jsx');
 var ColorSelect = require('../components/color-select.jsx');
 
-var TicketActions = require('../actions/ticket');
+var props         = require('../constants/props');
 var TicketColors  = _.values(require('../constants/enums').TicketColor);
+var TicketActions = require('../actions/ticket');
 
 /**
- *
+ * Displays an overlaid Dialog to edit the given Ticket.
  */
 var EditTicketDialog = React.createClass({
 	mixins: [React.addons.LinkedStateMixin],
 
 	propTypes: {
 		/**
-		 *
+		 * Initial state for the ticket.
 		 */
-		ticket: React.PropTypes.shape({
-			id:      React.PropTypes.string.isRequired,
-			color:   React.PropTypes.oneOf(TicketColors).isRequired,
-			content: React.PropTypes.string.isRequired,
-		}).isRequired,
+		ticket: props.Ticket.isRequired,
 
 		/**
-		 *
+		 * Since tickets are stored relative to the board they are in, we need
+		 * to know on what board the ticket is in.
 		 */
 		boardID: React.PropTypes.string.isRequired,
 
 		/**
-		 *
+		 * Callback for dialog dismissal.
 		 */
 		onDismiss: React.PropTypes.func.isRequired,
 	},
@@ -45,7 +43,7 @@ var EditTicketDialog = React.createClass({
 	},
 
 	/**
-	 *
+	 * Triggers persisting the edits.
 	 */
 	_submit: function() {
 		var boardID  = this.props.boardID;
@@ -60,7 +58,7 @@ var EditTicketDialog = React.createClass({
 	},
 
 	/**
-	 *
+	 * Triggers removal of the Ticket.
 	 */
 	_remove: function() {
 		var boardID  = this.props.boardID;
