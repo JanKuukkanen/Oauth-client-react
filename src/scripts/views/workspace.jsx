@@ -2,8 +2,9 @@
 
 var React = require('react');
 
-var Sidebar      = require('../components/sidebar.jsx');
-var BoardPreview = require('../components/board-preview.jsx');
+var Sidebar         = require('../components/sidebar.jsx');
+var BoardPreview    = require('../components/board-preview.jsx');
+var NewBoardPreview = require('../components/new-board-preview.jsx');
 
 var AuthStore   = require('../stores/auth');
 var BoardStore   = require('../stores/board');
@@ -51,6 +52,7 @@ var Workspace = React.createClass({
 				<div className="view view-workspace">
 					<div className="board-list">
 						{this.renderBoards()}
+						<NewBoardPreview />
 					</div>
 				</div>
 			</div>
