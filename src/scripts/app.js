@@ -6,10 +6,11 @@ var React = require('react');
 var AuthStore   = require('./stores/auth');
 var AuthActions = require('./actions/auth');
 
-var BoardView     = require('./views/board.jsx');
-var WorkspaceView = require('./views/workspace.jsx');
-var LoginView     = require('./views/login.jsx');
-var RegisterView  = require('./views/register.jsx');
+var BoardView      = require('./views/board.jsx');
+var WorkspaceView  = require('./views/workspace.jsx');
+var LoginView      = require('./views/login.jsx');
+var GuestLoginView = require('./views/guest-login.jsx');
+var RegisterView   = require('./views/register.jsx');
 
 // Fix issues with 300ms delay on touch devices, hopefully!
 require('fastclick')(document.body);
@@ -44,6 +45,25 @@ page('/boards/:id', isLoggedIn, function showBoardView(ctx) {
 	});
 	return React.render(view, document.body);
 });
+
+/**
+ * GuestLoginView
+ */
+page('/boards/:id/access/:code',
+	function isGuest(ctx, next) {
+		var user = AuthStore.getUser();
+		if(user && user.type === 'guest' && user.access === ctx.params.id) {
+			return page.redirect('/boards/' + ctx.params.id + '');
+		}
+		return next();
+	},
+	function showGuestLoginView(ctx) {
+		var view = React.createElement(GuestLoginView, {
+			boardID:    ctx.params.id,
+			accessCode: ctx.params.code,
+		});
+		return React.render(view, document.body);
+	});
 
 /**
  * Default to WorkspaceView.

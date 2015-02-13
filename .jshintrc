@@ -13,6 +13,9 @@
 	"maxlen":   80,
 	"quotmark": "single",
 
+	"indent":    4,
+	"smarttabs": true,
+
 	"undef": true,
 
 	"globals": {

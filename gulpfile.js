@@ -29,8 +29,7 @@ gulp.task('jshint', function() {
 gulp.task('less', function() {
 	return gulp.src('./src/styles/**/*.less')
 		.pipe(less().on('error', console.error))
-		.pipe(gulp.dest('./dist/styles/'))
-
+		.pipe(gulp.dest('./dist/styles/'));
 });
 
 gulp.task('static', function() {

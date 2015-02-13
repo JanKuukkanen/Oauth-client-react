@@ -1,6 +1,10 @@
 'use strict';
 
+var _ = require('lodash');
+
+var uid        = require('../utils/uid');
 var api        = require('../utils/api');
+var build      = require('../utils/action-builder');
 var Action     = require('../constants/actions');
 var Dispatcher = require('../dispatcher');
 
@@ -9,8 +13,6 @@ var BoardStore = require('../stores/board');
 
 /**
  * The methods exported by BoardActions
- *
- * TODO Create an 'action-builder.js'.
  */
 module.exports = {
 	addBoard:    addBoard,
@@ -23,147 +25,119 @@ module.exports = {
  *
  */
 function loadBoards() {
-	Dispatcher.dispatch({ type: Action.LOAD_BOARDS });
+	var opts = {
+		token: AuthStore.getToken(),
+	}
+	var initial = {
+		type: Action.LOAD_BOARDS,
+	}
 
+	/**
+	 * Construct the payload for 'success'.
+	 */
 	function onSuccess(boards) {
-		Dispatcher.dispatch({
-			payload: {
-				boards: boards,
-			},
-			type: Action.LOAD_BOARDS_SUCCESS,
-		});
+		return { boards: boards }
 	}
 
-	function onError(err) {
-		Dispatcher.dispatch({
-			payload: {
-				error: err,
-			},
-			type: Action.LOAD_BOARDS_FAILURE,
-		});
+	/**
+	 * Construct the payload for 'failure'.
+	 */
+	function onFailure(err) {
+		return { error: err }
 	}
 
-	return api.getBoards({ token: AuthStore.getToken() })
-		.then(onSuccess, onError);
+	return build(initial, api.getBoards(opts).then(onSuccess, onFailure));
 }
 
 /**
  *
  * TODO Make the ID generation into its own utility function.
  */
-function addBoard(dirtyBoard) {
-	dirtyBoard.id = Math.random().toString(36).substr(2, 9);
-
-	Dispatcher.dispatch({
-		payload: {
-			board: dirtyBoard,
-		},
-		type: Action.ADD_BOARD,
-	});
-
-	function onSuccess(cleanBoard) {
-		Dispatcher.dispatch({
-			payload: {
-				cleanID: cleanBoard.id,
-				dirtyID: dirtyBoard.id,
-			},
-			type: Action.ADD_BOARD_SUCCESS,
-		});
-	}
-
-	function onError(err) {
-		Dispatcher.dispatch({
-			payload: {
-				error:   err,
-				boardID: dirtyBoard.id,
-			},
-			type: Action.ADD_BOARD_FAILURE,
-		});
-	}
-
+function addBoard(board) {
 	var opts = {
 		token:   AuthStore.getToken(),
-		payload: dirtyBoard,
+		payload: board,
 	}
-	return api.createBoard(opts).then(onSuccess, onError);
+	var initial = {
+		payload: {
+			// We generate a 'mock' id for the board, so we can be optimistic.
+			board: _.assign(board, { id: uid() }),
+		},
+		type: Action.ADD_BOARD,
+	}
+
+	/**
+	 * Construct the payload for 'success'.
+	 */
+	function onSuccess(board) {
+		return {
+			cleanID: board.id,
+			dirtyID: initial.payload.board.id,
+		}
+	}
+
+	/**
+	 * Construct the payload for 'failure'.
+	 */
+	function onFailure(err) {
+		return {
+			error:   err,
+			boardID: initial.payload.board.id,
+		}
+	}
+
+	return build(initial, api.createBoard(opts).then(onSuccess, onFailure));
 }
 
 /**
  *
  */
-function editBoard(boardID, dirtyBoard) {
-	var oldBoard = BoardStore.getBoard(boardID);
-
-	Dispatcher.dispatch({
-		payload: {
-			board:   dirtyBoard,
-			boardID: boardID,
-		},
-		type: Action.EDIT_BOARD,
-	});
-
-	function onSuccess(cleanBoard) {
-		Dispatcher.dispatch({
-			payload: {
-				board:   cleanBoard,
-				boardID: boardID,
-			},
-			type: Action.EDIT_BOARD_SUCCESS,
-		});
-	}
-
-	function onError(err) {
-		Dispatcher.dispatch({
-			payload: {
-				error:   err,
-				board:   oldBoard,
-				boardID: oldBoard.id,
-			},
-			type: Action.EDIT_BOARD_FAILURE,
-		});
-	}
+function editBoard(boardID, board) {
+	// This way we can undo changes if something goes wrong...
+	var old = BoardStore.getBoard(boardID);
 
 	var opts = {
 		id: {
 			board: boardID,
 		},
 		token:   AuthStore.getToken(),
-		payload: dirtyBoard,
+		payload: board,
 	}
-	return api.updateBoard(opts).then(onSuccess, onError);
+	var initial = {
+		payload: {
+			board:   board,
+			boardID: boardID,
+		},
+		type: Action.EDIT_BOARD,
+	}
+
+	/**
+	 * Construct the payload for 'success'.
+	 */
+	function onSuccess(board) {
+		return { board: board, boardID: boardID }
+	}
+
+	/**
+	 * Construct the payload for 'failure'.
+	 */
+	function onFailure(err) {
+		return {
+			error:   err,
+			board:   old,
+			boardID: boardID,
+		}
+	}
+
+	return build(initial, api.updateBoard(opts).then(onSuccess, onFailure));
 }
 
 /**
  *
  */
 function removeBoard(boardID) {
-	var oldBoard = BoardStore.getBoard(boardID);
-
-	Dispatcher.dispatch({
-		payload: {
-			boardID: boardID,
-		},
-		type: Action.REMOVE_BOARD,
-	});
-
-	function onSuccess() {
-		Dispatcher.dispatch({
-			payload: {
-				boardID: boardID,
-			},
-			type: Action.REMOVE_BOARD_SUCCESS,
-		});
-	}
-
-	function onError(err) {
-		Dispatcher.dispatch({
-			payload: {
-				board: oldBoard,
-				error: err,
-			},
-			type: Action.REMOVE_BOARD_FAILURE,
-		});
-	}
+	// This way we can undo changes if something goes wrong...
+	var old = BoardStore.getBoard(boardID);
 
 	var opts = {
 		id: {
@@ -171,5 +145,26 @@ function removeBoard(boardID) {
 		},
 		token: AuthStore.getToken(),
 	}
-	return api.deleteBoard(opts).then(onSuccess, onError);
+	var initial = {
+		payload: {
+			boardID: boardID,
+		},
+		type: Action.REMOVE_BOARD,
+	}
+
+	/**
+	 * Construct the payload for 'success'.
+	 */
+	function onSuccess() {
+		return { boardID: boardID }
+	}
+
+	/**
+	 * Construct the payload for 'failure'.
+	 */
+	function onFailure(err) {
+		return { error: err, board: old }
+	}
+
+	return build(initial, api.deleteBoard(opts).then(onSuccess, onFailure));
 }

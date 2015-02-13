@@ -1,17 +1,17 @@
 'use strict';
 
-var api        = require('../utils/api');
-var build      = require('../utils/action-builder');
-var Action     = require('../constants/actions');
-var Dispatcher = require('../dispatcher');
+var _ = require('lodash');
+
+var uid    = require('../utils/uid');
+var api    = require('../utils/api');
+var build  = require('../utils/action-builder');
+var Action = require('../constants/actions');
 
 var AuthStore   = require('../stores/auth');
 var TicketStore = require('../stores/ticket');
 
 /**
  * The methods exported by TicketActions
- *
- * TODO Create an 'action-builder.js'.
  */
 module.exports = {
 	addTicket:    addTicket,
@@ -25,115 +25,86 @@ module.exports = {
  */
 function loadTickets(boardID) {
 	var opts = {
-		id: {
-			board: boardID,
-		},
+		id:    { board: boardID },
 		token: AuthStore.getToken(),
 	}
-	return build(
-		Action.LOAD_TICKETS,
-		api.getTickets(opts).then(
-			function createSuccessPayload(tickets) {
-				return {
-					boardID: boardID,
-					tickets: tickets,
-				}
-			},
-			function createErrorPayload(err) {
-				return {
-					error: err,
-				}
-			}
-		)
-	);
+	var initial = {
+		type: Action.LOAD_TICKETS,
+	}
+
+	/**
+	 * Construct the payload for 'success'.
+	 */
+	function onSuccess(tickets) {
+		return { boardID: boardID, tickets: tickets }
+	}
+
+	/**
+	 * Construct the payload for 'failure'.
+	 */
+	function onFailure(err) {
+		return { error: err }
+	}
+
+	return build(initial, api.getTickets(opts).then(onSuccess, onFailure));
 }
 
 /**
  *
- * TODO Make the ID generation into its own utility function.
  */
-function addTicket(boardID, dirtyTicket) {
-	dirtyTicket.id        = Math.random().toString(36).substr(2, 9);
-	dirtyTicket.updatedAt = Date.now();
-
-	Dispatcher.dispatch({
-		payload: {
-			ticket:  dirtyTicket,
-			boardID: boardID,
-		},
-		type: Action.ADD_TICKET,
-	});
-
-	function onSuccess(cleanTicket) {
-		Dispatcher.dispatch({
-			payload: {
-				boardID: boardID,
-				dirtyID: dirtyTicket.id,
-				cleanID: cleanTicket.id,
-			},
-			type: Action.ADD_TICKET_SUCCESS,
-		});
-	}
-
-	function onError(err) {
-		Dispatcher.dispatch({
-			payload: {
-				error:    err,
-				boardID:  boardID,
-				ticketID: dirtyTicket.id,
-			},
-			type: Action.ADD_TICKET_FAILURE,
-		});
-	}
-
+function addTicket(boardID, ticket) {
 	var opts = {
 		id: {
 			board: boardID,
 		},
 		token:   AuthStore.getToken(),
-		payload: dirtyTicket,
+		payload: ticket,
 	}
-	return api.createTicket(opts).then(onSuccess, onError);
+	// We generate a 'mock' id for the ticket so we can be optimistic about
+	// adding it to our collection. It is further used to update the ticket's
+	// real id once we receive it from the server.
+	var initial = {
+		payload: {
+			ticket: _.assign(ticket, {
+				id:        uid(),
+				updatedAt: Date.now(),
+			}),
+			boardID: boardID,
+		},
+		type: Action.ADD_TICKET,
+	}
+
+	/**
+	 * Construct the payload for 'success'.
+	 */
+	function onSuccess(ticket) {
+		return {
+			boardID: boardID,
+			dirtyID: initial.payload.ticket.id,
+			cleanID: ticket.id,
+		}
+	}
+
+	/**
+	 * Construct the payload for 'failure'.
+	 */
+	function onFailure(err) {
+		return {
+			error:    err,
+			boardID:  boardID,
+			ticketID: initial.payload.ticket.id,
+		}
+	}
+
+	return build(initial, api.createTicket(opts).then(onSuccess, onFailure));
 }
 
 /**
  *
  */
-function editTicket(boardID, ticketID, dirtyTicket) {
-	var oldTicket             = TicketStore.getTicket(boardID, ticketID);
-	    dirtyTicket.updatedAt = Date.now();
-
-	Dispatcher.dispatch({
-		payload: {
-			ticket:   dirtyTicket,
-			boardID:  boardID,
-			ticketID: ticketID,
-		},
-		type: Action.EDIT_TICKET,
-	});
-
-	function onSuccess(cleanTicket) {
-		Dispatcher.dispatch({
-			payload: {
-				ticket:   cleanTicket,
-				boardID:  boardID,
-				ticketID: ticketID,
-			},
-			type: Action.EDIT_TICKET_SUCCESS,
-		});
-	}
-
-	function onError(err) {
-		Dispatcher.dispatch({
-			payload: {
-				error:    err,
-				boardID:  boardID,
-				ticket:   oldTicket,
-				ticketID: oldTicket.id
-			},
-			type: Action.EDIT_TICKET_FAILURE,
-		});
-	}
+function editTicket(boardID, ticketID, ticket) {
+	// Very simple to roll back changes, if something goes wrong.
+	var old = TicketStore.getTicket(boardID, ticketID);
 
 	var opts = {
 		id: {
@@ -141,45 +112,51 @@ function editTicket(boardID, ticketID, dirtyTicket) {
 			ticket: ticketID,
 		},
 		token:   AuthStore.getToken(),
-		payload: dirtyTicket,
+		payload: ticket,
 	}
-	return api.updateTicket(opts).then(onSuccess, onError);
+	var initial = {
+		payload: {
+			ticket: _.assign(ticket, {
+				updatedAt: Date.now(),
+			}),
+			boardID:  boardID,
+			ticketID: ticketID,
+		},
+		type: Action.EDIT_TICKET,
+	}
+
+	/**
+	 * Construct the payload for 'success'.
+	 */
+	function onSuccess(ticket) {
+		return {
+			ticket:   ticket,
+			boardID:  boardID,
+			ticketID: ticketID,
+		}
+	}
+
+	/**
+	 * Construct the payload for 'failure'.
+	 */
+	function onFailure(err) {
+		return {
+			error:    err,
+			ticket:   old,
+			boardID:  boardID,
+			ticketID: ticketID,
+		}
+	}
+
+	return build(initial, api.updateTicket(opts).then(onSuccess, onFailure));
 }
 
 /**
  *
  */
 function removeTicket(boardID, ticketID) {
-	var oldTicket = TicketStore.getTicket(boardID, ticketID);
-
-	Dispatcher.dispatch({
-		payload: {
-			boardID:  boardID,
-			ticketID: ticketID,
-		},
-		type: Action.REMOVE_TICKET,
-	});
-
-	function onSuccess() {
-		Dispatcher.dispatch({
-			payload: {
-				boardID:  boardID,
-				ticketID: ticketID,
-			},
-			type: Action.REMOVE_TICKET_SUCCESS,
-		});
-	}
-
-	function onError(err) {
-		Dispatcher.dispatch({
-			payload: {
-				error:   err,
-				ticket:  oldTicket,
-				boardID: boardID,
-			},
-			type: Action.REMOVE_TICKET_FAILURE,
-		});
-	}
+	// Very simple to roll back changes, if something goes wrong.
+	var old = TicketStore.getTicket(boardID, ticketID);
 
 	var opts = {
 		id: {
@@ -188,5 +165,34 @@ function removeTicket(boardID, ticketID) {
 		},
 		token: AuthStore.getToken(),
 	}
-	return api.deleteTicket(opts).then(onSuccess, onError);
+	var initial = {
+		payload: {
+			boardID:  boardID,
+			ticketID: ticketID,
+		},
+		type: Action.REMOVE_TICKET,
+	}
+
+	/**
+	 * Construct the payload for 'success'.
+	 */
+	function onSuccess() {
+		return {
+			boardID:  boardID,
+			ticketID: ticketID,
+		}
+	}
+
+	/**
+	 * Construct the payload for 'failure'.
+	 */
+	function onFailure(err) {
+		return {
+			error:   err,
+			ticket:  old,
+			boardID: boardID,
+		}
+	}
+
+	return build(initial, api.deleteTicket(opts).then(onSuccess, onFailure));
 }

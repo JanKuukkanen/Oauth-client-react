@@ -4,3 +4,6 @@ node_modules/
 
 .DS_Store
 .tmp-storage
+
+*.sublime-project
+*.sublime-workspace

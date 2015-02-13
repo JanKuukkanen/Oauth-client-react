@@ -1,47 +1,44 @@
 'use strict';
 
+var Action     = require('../constants/actions');
 var Dispatcher = require('../dispatcher');
 
 var SUCCESS_AFFIX = '_SUCCESS';
 var FAILURE_AFFIX = '_FAILURE';
 
 /**
- *
+ * Used to build 'async' actions with 'success' and 'failure' consequences.
  */
-module.exports = function actionBuilder(action, payload, promise) {
-	if(payload && typeof(payload.then) === 'function') {
-		promise = payload;
-		payload = { };
-	}
+module.exports = function actionBuilder(initialPayload, promise) {
+	var actionSuccess = initialPayload.type + SUCCESS_AFFIX;
+	var actionFailure = initialPayload.type + FAILURE_AFFIX;
 
 	// The initial dispatch is invoked in a timeout, in order to prevent errors
 	// with dispatching while the dispatcher is currently dispatching...
-	setTimeout(function() {
+	setTimeout(Dispatcher.dispatch.bind(Dispatcher, initialPayload));
+
+	/**
+	 * Dispatch the 'success' event.
+	 */
+	function onSuccess(payload) {
 		Dispatcher.dispatch({
-			type:    action,
+			type:    actionSuccess,
 			payload: payload,
 		});
-	});
-
-	/**
-	 *
-	 */
-	function onSuccessPayload(successPayload) {
-		Dispatcher.dispatch({
-			type:    action + SUCCESS_AFFIX,
-			payload: successPayload,
-		});
 	}
 
 	/**
-	 *
+	 * D
 	 */
-	function onErrorPayload(errorPayload) {
+	function onFailure(payload) {
+		if(payload.error && payload.error.statusCode === 401) {
+			Dispatcher.dispatch({ type: Action.AUTHENTICATION_FAILURE });
+		}
 		Dispatcher.dispatch({
-			type:    action + FAILURE_AFFIX,
-			payload: errorPayload,
+			type:    actionFailure,
+			payload: payload,
 		});
 	}
 
-	return promise.then(onSuccessPayload, onErrorPayload);
+	return promise.then(onSuccess, onFailure);
 }

@@ -21,7 +21,7 @@ module.exports = createStore(AuthStoreAPI, function(action) {
 			break;
 
 		case Action.LOAD_USER_SUCCESS:
-			_setUser(action.payload);
+			_setUser(action.payload.user);
 			this.emitChange();
 			break;
 
@@ -30,7 +30,7 @@ module.exports = createStore(AuthStoreAPI, function(action) {
 			this.emitChange();
 			break;
 
-		case Action.AUTH_FAILURE:
+		case Action.AUTHENTICATION_FAILURE:
 			_clear();
 			this.emitChange();
 			break;

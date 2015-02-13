@@ -10,7 +10,12 @@ var _mocks = {
 		name: 'martti@alanen.fi',
 		type: 'user',
 	},
-
+	guest: {
+		id:     '444',
+		name:   'pertti_pasanen',
+		type:   'guest',
+		access: '123ABC',
+	},
 	boards: [
 		{
 			id:   '123ABC',
@@ -84,9 +89,10 @@ var _mocks = {
 var TIMEOUT_MS = (process.env.NODE_ENV === 'test' ? 100 : 0);
 
 module.exports = {
-	login:    login,
-	logout:   logout,
-	register: register,
+	login:      login,
+	logout:     logout,
+	register:   register,
+	loginGuest: loginGuest,
 
 	getUser: getUser,
 
@@ -112,11 +118,17 @@ module.exports = {
 function login(opts) {
 	return new Promise(function(resolve, reject) {
 		setTimeout(function() {
-			return resolve({
-				user:  _mocks.user,
-				token: '1234567ABCDEFG',
-			});
+			return resolve({ user: _mocks.user, token: 'IAMAUSER' });
 		}, TIMEOUT_MS);
+	});
+}
+
+/**
+ *
+ */
+function logout(opts) {
+	return new Promise(function(resolve, reject) {
+		setTimeout(resolve, TIMEOUT_MS);
 	});
 }
 
@@ -134,10 +146,12 @@ function register(opts) {
 /**
  *
  */
-function logout(opts) {
+function loginGuest(opts) {
 	return new Promise(function(resolve, reject) {
-		setTimeout(resolve, TIMEOUT_MS);
-	});
+		setTimeout(function() {
+			return resolve({ user: _mocks.guest, token: 'IAMAGUEST' });
+		});
+	}, TIMEOUT_MS);
 }
 
 /**
