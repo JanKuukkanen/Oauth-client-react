@@ -160,6 +160,9 @@ function loginGuest(opts) {
 function getUser(opts) {
 	return new Promise(function(resolve, reject) {
 		setTimeout(function() {
+			if(opts.token === 'IAMAGUEST') {
+				return resolve(_mocks.guest);
+			}
 			return resolve(_mocks.user);
 		}, TIMEOUT_MS);
 	});

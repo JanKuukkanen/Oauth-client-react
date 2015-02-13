@@ -32,13 +32,13 @@ var GuestLoginView = React.createClass({
 	},
 
 	_onGuestLoginSubmit: function() {
-		return console.log({
+		var credentials ={
 			boardID:    this.props.boardID,
 			username:   this.state.username,
 			accessCode: this.props.accessCode,
-		});
-		// return AuthActions.guestLogin(this.state)
-		// 	.then(page.show.bind(null, '/boards'));
+		}
+		return AuthActions.loginGuest(credentials)
+			.then(page.show.bind(null, '/boards/' + this.props.boardID));
 	},
 
 	render: function() {

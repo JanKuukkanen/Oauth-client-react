@@ -15,6 +15,7 @@ module.exports = createStore(AuthStoreAPI, function(action) {
 	switch(action.type) {
 
 		case Action.LOGIN_SUCCESS:
+		case Action.LOGIN_GUEST_SUCCESS:
 			_setUser(action.payload.user);
 			_setToken(action.payload.token);
 			this.emitChange();
@@ -25,6 +26,7 @@ module.exports = createStore(AuthStoreAPI, function(action) {
 			this.emitChange();
 			break;
 
+		case Action.LOGOUT_GUEST:
 		case Action.LOGOUT_SUCCESS:
 			_clear();
 			this.emitChange();
