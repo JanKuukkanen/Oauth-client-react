@@ -4,6 +4,8 @@ var _     = require('lodash');
 var page  = require('page');
 var React = require('react');
 
+var socket = require('./utils/socket');
+
 var AuthStore   = require('./stores/auth');
 var AuthActions = require('./actions/auth');
 
@@ -41,7 +43,7 @@ AuthStore.addChangeListener(function() {
  * Only users with no active session are able to see this.
  */
 page('/login',
-	notLoggedIn,
+	notLoggedIn, disconnect,
 	function showLoginView(ctx) {
 		return React.render(React.createElement(LoginView), document.body);
 	});
@@ -52,7 +54,7 @@ page('/login',
  * Only users with no active session are able to see this.
  */
 page('/register',
-	notLoggedIn,
+	notLoggedIn, disconnect,
 	function showRegisterView(ctx) {
 		return React.render(React.createElement(RegisterView), document.body);
 	});
@@ -64,7 +66,7 @@ page('/register',
  * board they have access to.
  */
 page('/boards',
-	isLoggedIn,
+	isLoggedIn, connect,
 	function isNotGuest(ctx, next) {
 		if(ctx.user.type === 'guest') {
 			// If the user is a 'guest' and tries to navigate to the workspace,
@@ -98,6 +100,7 @@ page('/boards/:id',
 		}
 		return next();
 	},
+	connect,
 	function showBoardView(ctx) {
 		var view = React.createElement(BoardView, {
 			id: ctx.params.id,
@@ -132,6 +135,7 @@ page('/boards/:id/access/:code',
 		// The user is a regular user, we can show him or her the view.
 		return next();
 	},
+	disconnect,
 	function showGuestLoginView(ctx) {
 		var view = React.createElement(GuestLoginView, {
 			boardID:    ctx.params.id,
@@ -146,6 +150,23 @@ page('/boards/:id/access/:code',
 page('/', function() {
 	page.redirect('/boards');
 });
+
+/**
+ * Simple middleware which opens a socket connection.
+ */
+function connect(ctx, next) {
+	socket.connect({ token: AuthStore.getToken() });
+	return next();
+}
+
+/**
+ * Simple middleware which attempts to close the current socket.
+ */
+function disconnect(ctx, next) {
+	socket.disconnect();
+	return next();
+}
+
 
 /**
  * Middleware for making sure the 'user' is logged in. If the user is not
