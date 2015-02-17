@@ -45,6 +45,7 @@ AuthStore.addChangeListener(function() {
 page('/login',
 	notLoggedIn, disconnect,
 	function showLoginView(ctx) {
+		console.log('showLoginView');
 		return React.render(React.createElement(LoginView), document.body);
 	});
 
@@ -56,6 +57,7 @@ page('/login',
 page('/register',
 	notLoggedIn, disconnect,
 	function showRegisterView(ctx) {
+		console.log('showRegisterView');
 		return React.render(React.createElement(RegisterView), document.body);
 	});
 
@@ -155,16 +157,14 @@ page('/', function() {
  * Simple middleware which opens a socket connection.
  */
 function connect(ctx, next) {
-	socket.connect({ token: AuthStore.getToken() });
-	return next();
+	return socket.connect({ token: AuthStore.getToken() }).then(next);
 }
 
 /**
  * Simple middleware which attempts to close the current socket.
  */
 function disconnect(ctx, next) {
-	socket.disconnect();
-	return next();
+	return socket.disconnect().then(next);
 }
 
 

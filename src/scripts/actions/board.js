@@ -61,7 +61,7 @@ function addBoard(board) {
 	var initial = {
 		payload: {
 			// We generate a 'mock' id for the board, so we can be optimistic.
-			board: _.assign(board, { id: uid() }),
+			board: _.assign(_.clone(board), { id: uid() }),
 		},
 		type: Action.ADD_BOARD,
 	}
@@ -71,8 +71,8 @@ function addBoard(board) {
 	 */
 	function onSuccess(board) {
 		return {
-			cleanID: board.id,
-			dirtyID: initial.payload.board.id,
+			clean: board,
+			dirty: initial.payload.board.id,
 		}
 	}
 

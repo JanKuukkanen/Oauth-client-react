@@ -49,7 +49,25 @@ var BoardPreview = React.createClass({
 	},
 
 	componentDidMount: function() {
-		TicketActions.loadTickets(this.props.board.id);
+		return this._loadTickets();
+	},
+
+	componentDidUpdate: function(prev) {
+		if(prev.board.id !== this.props.board.id) {
+			console.log('new id!');
+			// The 'id' changed, most likely to a clean one, so we need to
+			// fetch the tickets associated with the clean board.
+			this._loadTickets();
+		}
+	},
+
+	/**
+	 *
+	 */
+	_loadTickets: function() {
+		if(this.props.board.id.substring(0, 'dirty'.length) !== 'dirty') {
+			return TicketActions.loadTickets(this.props.board.id);
+		}
 	},
 
 	/**

@@ -13,7 +13,6 @@ var AuthStoreAPI = {
 
 module.exports = createStore(AuthStoreAPI, function(action) {
 	switch(action.type) {
-
 		case Action.LOGIN_SUCCESS:
 		case Action.LOGIN_GUEST_SUCCESS:
 			_setUser(action.payload.user);

@@ -65,7 +65,7 @@ function addTicket(boardID, ticket) {
 	// real id once we receive it from the server.
 	var initial = {
 		payload: {
-			ticket: _.assign(ticket, {
+			ticket: _.assign(_.clone(ticket), {
 				id:        uid(),
 				updatedAt: Date.now(),
 			}),
@@ -80,8 +80,8 @@ function addTicket(boardID, ticket) {
 	function onSuccess(ticket) {
 		return {
 			boardID: boardID,
-			dirtyID: initial.payload.ticket.id,
-			cleanID: ticket.id,
+			clean:   ticket,
+			dirty:   initial.payload.ticket.id,
 		}
 	}
 

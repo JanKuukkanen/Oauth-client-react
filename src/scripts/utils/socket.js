@@ -4,6 +4,10 @@ var _       = require('lodash');
 var io      = require('socket.io-client');
 var Promise = require('promise');
 
+var config     = require('../config');
+var Action     = require('../constants/actions');
+var Dispatcher = require('../dispatcher');
+
 var BoardStore    = require('../stores/board');
 var BoardActions  = require('../actions/board');
 var TicketActions = require('../actions/ticket');
@@ -41,14 +45,12 @@ var DATA_EVENT = 'board:event';
  * so we can join their respective rooms.
  *
  * @param {object} opts        Options for the connection.
- * @param {string} opts.url    URL of the socket service.
  * @param {string} opts.token  Handshake token sent as a query parameter.
  *
  * @returns {Promise}  Resolved when a connection is established. Rejected if
  *                     an error occurs with the connection.
  */
 function connect(opts) {
-	var url = opts.url;
 	var options = {
 		query:    'access-token=' + opts.token + '',
 		multplex: false,
@@ -57,6 +59,9 @@ function connect(opts) {
 		if(_socket && _socket.connected) {
 			return resolve();
 		}
+		_socket = io(config.io, options)
+			.on('error',   onConnectionFailure)
+			.on('connect', onConnectionSuccess);
 
 		/**
 		 *
@@ -65,7 +70,6 @@ function connect(opts) {
 			// Store a reference to the connected socket and attach a listener
 			// to receive any data. Note we only have a single event, see the
 			// implementation of 'teamboard-api' for reasons.
-			_socket = this;
 			_socket.on(DATA_EVENT, _onData);
 
 			// Join the boards we currently have in store. Attach a listener
@@ -80,13 +84,17 @@ function connect(opts) {
 		 *
 		 */
 		function onConnectionFailure(err) {
-			// TODO Handle the error somehow, probably throw it in ErrorStore?
+			// TODO For some reason the 'err' received here is actually a JSON
+			//      string for now... Gotta make sure to parse it...
+			var error     = JSON.parse(err);
+			var errorType = error.statusCode === 401 ?
+				Action.AUTHENTICATION_FAILURE : Action.FAILURE;
+
+			Dispatcher.dispatch({
+				payload: { error: error }, type: errorType,
+			});
 			return reject(err);
 		}
-
-		return io(url, options)
-			.on('error',   onConnectionFailure)
-			.on('connect', onConnectionSuccess);
 	});
 }
 
@@ -94,18 +102,18 @@ function connect(opts) {
  *
  */
 function disconnect() {
-	if(_socket && _socket.connected) {
-		// Don't disconnect if there wasn't a connection in the first place.
-		_socket.disconnect();
-	}
+	return new Promise(function(resolve) {
+		if(_socket && _socket.connected) {
+			_socket.disconnect();
+		}
 
-	// Clear our 'state', or whatever...
-	_rooms  = [ ];
-	_socket = null;
+		_rooms  = [ ];
+		_socket = null;
 
-	// Make sure to clear any listeners... I think it's ok to try and remove a
-	// listener that might not have been attached in the first place?
-	BoardStore.removeChangeListener(_joinBoards);
+		BoardStore.removeChangeListener(_joinBoards);
+
+		return resolve();
+	});
 }
 
 /**
@@ -131,8 +139,7 @@ function _joinBoards() {
 		_rooms.push(id);
 		_socket.emit(JOIN_EVENT, { board: id }, function(err) {
 			if(err) {
-				_rooms = _.without(_rooms, id);
-				return console.error(err);
+				return (_rooms = _.without(_rooms, id));
 			}
 			return console.log('socket:join:', id);
 		});

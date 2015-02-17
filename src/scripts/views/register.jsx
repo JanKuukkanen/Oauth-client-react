@@ -5,6 +5,7 @@ var React            = require('react/addons');
 var LinkedStateMixin = React.addons.LinkedStateMixin;
 
 var Form        = require('../components/form.jsx');
+var ErrorStore  = require('../stores/error');
 var AuthActions = require('../actions/auth');
 
 /**

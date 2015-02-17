@@ -130,8 +130,8 @@ module.exports = createStore(BoardStoreAPI, function(action) {
 			break;
 		case Action.ADD_BOARD_SUCCESS:
 			_boards = _editBoard(
-				action.payload.boardID,
-				{ id: action.payload.cleanID },
+				action.payload.dirty,
+				action.payload.clean,
 				_boards
 			);
 			this.emitChange();

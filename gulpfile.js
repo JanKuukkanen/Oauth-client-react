@@ -47,7 +47,7 @@ gulp.task('browserify', function() {
 
 gulp.task('build', ['less', 'static', 'browserify']);
 
-gulp.task('serve', ['jshint', 'test', 'build'], function() {
+gulp.task('serve', ['jshint', 'build'], function() {
 	return gulp.src('.')
 		.pipe(server({
 			host:       process.env.HOSTNAME || '0.0.0.0',
@@ -58,6 +58,6 @@ gulp.task('serve', ['jshint', 'test', 'build'], function() {
 
 gulp.task('default', ['serve'], function() {
 	gulp.watch('./src/styles/**/*.less', ['less']);
-	gulp.watch('./src/scripts/**/*.js',  ['browserify', 'test', 'jshint']);
-	gulp.watch('./src/scripts/**/*.jsx', ['browserify', 'test', 'jshint']);
+	gulp.watch('./src/scripts/**/*.js',  ['browserify', 'jshint']);
+	gulp.watch('./src/scripts/**/*.jsx', ['browserify', 'jshint']);
 });

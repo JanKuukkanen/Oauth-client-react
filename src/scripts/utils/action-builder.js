@@ -1,5 +1,7 @@
 'use strict';
 
+var Promise = require('promise');
+
 var Action     = require('../constants/actions');
 var Dispatcher = require('../dispatcher');
 
@@ -18,27 +20,24 @@ module.exports = function actionBuilder(initialPayload, promise) {
 	setTimeout(Dispatcher.dispatch.bind(Dispatcher, initialPayload));
 
 	/**
-	 * Dispatch the 'success' event.
+	 * Dispatch the 'success' action.
 	 */
-	function onSuccess(payload) {
+	function onFulfill(payload) {
+		if(payload.error) {
+			if(payload.error.statusCode === 401) {
+				Dispatcher.dispatch({ type: Action.AUTHENTICATION_FAILURE });
+			}
+			Dispatcher.dispatch({
+				type:    actionFailure,
+				payload: payload,
+			});
+			return Promise.reject();
+		}
 		Dispatcher.dispatch({
 			type:    actionSuccess,
 			payload: payload,
 		});
+		return Promise.resolve();
 	}
-
-	/**
-	 * D
-	 */
-	function onFailure(payload) {
-		if(payload.error && payload.error.statusCode === 401) {
-			Dispatcher.dispatch({ type: Action.AUTHENTICATION_FAILURE });
-		}
-		Dispatcher.dispatch({
-			type:    actionFailure,
-			payload: payload,
-		});
-	}
-
-	return promise.then(onSuccess, onFailure);
+	return promise.then(onFulfill);
 }

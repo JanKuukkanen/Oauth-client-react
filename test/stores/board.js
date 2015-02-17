@@ -12,12 +12,7 @@ describe('BoardStore', function() {
 
 	describe('BoardActions', function() {
 		describe('.loadBoards', function() {
-			it('BoardStore should emit change', function(done) {
-				BoardStore.once('change', function() {
-					return done();
-				});
-				return BoardActions.loadBoards();
-			});
+
 		});
 	});
 });

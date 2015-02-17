@@ -2,92 +2,12 @@
 
 var Promise = require('promise');
 
-var TicketColor = require('../constants/enums').TicketColor;
+var config  = require('../config');
+var request = require('../utils/request');
 
-var _mocks = {
-	user: {
-		id:   '123',
-		name: 'martti@alanen.fi',
-		type: 'user',
-	},
-	guest: {
-		id:     '444',
-		name:   'pertti_pasanen',
-		type:   'guest',
-		access: '123ABC',
-	},
-	boards: [
-		{
-			id:   '123ABC',
-			name: 'Mock Board #1',
-
-			size: {
-				width:  10,
-				height: 10,
-			},
-
-			accessCode: '',
-			background: '',
-		},
-		{
-			id:   '234ABC',
-			name: 'Mock Board #2',
-
-			size: {
-				width:  12,
-				height: 18,
-			},
-
-			accessCode: '',
-			background: '',
-		},
-		{
-			id:   '345ABC',
-			name: 'Mock Board #3',
-
-			size: {
-				width:  8,
-				height: 18,
-			},
-
-			accessCode: '',
-			background: '',
-		},
-
-	],
-
-	tickets: [
-		{
-			id: '123ABC',
-
-			position: {
-				x: 100,
-				y: 100,
-			},
-
-			color:   TicketColor.RED,
-			content: 'Mock Ticket #1',
-
-			updatedAt: Date.now(),
-		},
-		{
-			id: '234BCD',
-
-			position: {
-				x: 200,
-				y: 300,
-			},
-
-			color:   TicketColor.BLUE,
-			content: 'Mock Ticket #2',
-
-			updatedAt: Date.now(),
-		}
-	],
-}
-
-var TIMEOUT_MS = (process.env.NODE_ENV === 'test' ? 100 : 0);
-
+/**
+ *
+ */
 module.exports = {
 	login:      login,
 	logout:     logout,
@@ -116,10 +36,15 @@ module.exports = {
  *
  */
 function login(opts) {
-	return new Promise(function(resolve, reject) {
-		setTimeout(function() {
-			return resolve({ user: _mocks.user, token: 'IAMAUSER' });
-		}, TIMEOUT_MS);
+	var options = {
+		url:     config.api + '/auth/login',
+		payload: opts.payload,
+	}
+	return request.post(options).then(function(res) {
+		return {
+			user:  res.body,
+			token: res.headers['x-access-token'],
+		}
 	});
 }
 
@@ -127,19 +52,23 @@ function login(opts) {
  *
  */
 function logout(opts) {
-	return new Promise(function(resolve, reject) {
-		setTimeout(resolve, TIMEOUT_MS);
-	});
+	var options = {
+		url:   config.api + '/auth/logout',
+		token: opts.token,
+	}
+	return request.post(options);
 }
 
 /**
  *
  */
 function register(opts) {
-	return new Promise(function(resolve, reject) {
-		setTimeout(function() {
-			return resolve(_mocks.user);
-		}, TIMEOUT_MS);
+	var options = {
+		url:     config.api + '/auth/register',
+		payload: opts.payload,
+	}
+	return request.post(options).then(function(res) {
+		return { user: res.body }
 	});
 }
 
@@ -147,24 +76,38 @@ function register(opts) {
  *
  */
 function loginGuest(opts) {
-	return new Promise(function(resolve, reject) {
-		setTimeout(function() {
-			return resolve({ user: _mocks.guest, token: 'IAMAGUEST' });
-		});
-	}, TIMEOUT_MS);
+	var options = {
+		url:     config.api + '/boards/' +
+		         opts.id.board + '/access/' + opts.id.code + '',
+		payload: opts.payload,
+	}
+	return request.post(options).then(function(res) {
+		return {
+			user: {
+				id:     res.body.id,
+				type:   res.body.type,
+				name:   res.body.username,
+				access: res.body.access,
+			},
+			token: res.headers['x-access-token'],
+		}
+	});
 }
 
 /**
  *
  */
 function getUser(opts) {
-	return new Promise(function(resolve, reject) {
-		setTimeout(function() {
-			if(opts.token === 'IAMAGUEST') {
-				return resolve(_mocks.guest);
-			}
-			return resolve(_mocks.user);
-		}, TIMEOUT_MS);
+	var options = {
+		url:   config.api + '/auth',
+		token: opts.token,
+	}
+	return request.get(options).then(function(res) {
+		return {
+			id:   res.body.id,
+			type: res.body.type,
+			name: res.body.username,
+		}
 	});
 }
 
@@ -172,10 +115,12 @@ function getUser(opts) {
  *
  */
 function getBoard(opts) {
-	return new Promise(function(resolve, reject) {
-		setTimeout(function() {
-			return resolve(_mocks.boards[0]);
-		}, TIMEOUT_MS);
+	var options = {
+		url:   config.api + '/boards/' + opts.id.board + '',
+		token: opts.token,
+	}
+	return request.get(options).then(function(res) {
+		return res.body;
 	});
 }
 
@@ -183,10 +128,12 @@ function getBoard(opts) {
  *
  */
 function getBoards(opts) {
-	return new Promise(function(resolve, reject) {
-		setTimeout(function() {
-			return resolve(_mocks.boards);
-		}, TIMEOUT_MS);
+	var options = {
+		url:   config.api + '/boards',
+		token: opts.token,
+	}
+	return request.get(options).then(function(res) {
+		return res.body;
 	});
 }
 
@@ -194,10 +141,13 @@ function getBoards(opts) {
  *
  */
 function getTicket(opts) {
-	return new Promise(function(resolve, reject) {
-		setTimeout(function() {
-			return resolve(_mocks.tickets[0]);
-		}, TIMEOUT_MS);
+	var options = {
+		url:   config.api + '/boards/' +
+		       opts.id.board + '/tickets/' + opts.id.ticket + '',
+		token: opts.token,
+	}
+	return request.get(options).then(function(res) {
+		return res.body;
 	});
 }
 
@@ -205,10 +155,12 @@ function getTicket(opts) {
  *
  */
 function getTickets(opts) {
-	return new Promise(function(resolve, reject) {
-		setTimeout(function() {
-			return resolve(_mocks.tickets);
-		}, TIMEOUT_MS);
+	var options = {
+		url:   config.api + '/boards/' + opts.id.board + '/tickets',
+		token: opts.token,
+	}
+	return request.get(options).then(function(res) {
+		return res.body;
 	});
 }
 
@@ -216,11 +168,13 @@ function getTickets(opts) {
  *
  */
 function createBoard(opts) {
-	return new Promise(function(resolve, reject) {
-		setTimeout(function() {
-			opts.payload.id = Math.random().toString(36).substr(2, 9);
-			return resolve(opts.payload);
-		}, TIMEOUT_MS);
+	var options = {
+		url:     config.api + '/boards',
+		token:   opts.token,
+		payload: opts.payload,
+	}
+	return request.post(options).then(function(res) {
+		return res.body;
 	});
 }
 
@@ -228,11 +182,13 @@ function createBoard(opts) {
  *
  */
 function createTicket(opts) {
-	return new Promise(function(resolve, reject) {
-		setTimeout(function() {
-			opts.payload.id = Math.random().toString(36).substr(2, 9);
-			return resolve(opts.payload);
-		}, TIMEOUT_MS);
+	var options = {
+		url:     config.api + '/boards/' + opts.id.board + '/tickets',
+		token:   opts.token,
+		payload: opts.payload,
+	}
+	return request.post(options).then(function(res) {
+		return res.body;
 	});
 }
 
@@ -240,10 +196,13 @@ function createTicket(opts) {
  *
  */
 function updateBoard(opts) {
-	return new Promise(function(resolve, reject) {
-		setTimeout(function() {
-			return resolve(opts.payload);
-		}, TIMEOUT_MS);
+	var options = {
+		url:     config.api + '/boards/' + opts.id.board + '',
+		token:   opts.token,
+		payload: opts.payload,
+	}
+	return request.put(options).then(function(res) {
+		return res.body;
 	});
 }
 
@@ -251,10 +210,14 @@ function updateBoard(opts) {
  *
  */
 function updateTicket(opts) {
-	return new Promise(function(resolve, reject) {
-		setTimeout(function() {
-			return resolve(opts.payload);
-		}, TIMEOUT_MS);
+	var options = {
+		url:     config.api + '/boards/' +
+		         opts.id.board + '/tickets/' + opts.id.ticket + '',
+		token:   opts.token,
+		payload: opts.payload,
+	}
+	return request.put(options).then(function(res) {
+		return res.body;
 	});
 }
 
@@ -262,10 +225,12 @@ function updateTicket(opts) {
  *
  */
 function deleteBoard(opts) {
-	return new Promise(function(resolve, reject) {
-		setTimeout(function() {
-			return resolve(opts.payload);
-		}, TIMEOUT_MS);
+	var options = {
+		url:   config.api + '/boards/' + opts.id.board + '',
+		token: opts.token,
+	}
+	return request.del(options).then(function(res) {
+		return res.body;
 	});
 }
 
@@ -273,9 +238,12 @@ function deleteBoard(opts) {
  *
  */
 function deleteTicket(opts) {
-	return new Promise(function(resolve, reject) {
-		setTimeout(function() {
-			return resolve(opts.payload);
-		}, TIMEOUT_MS);
+	var options = {
+		url:   config.api + '/boards/' +
+		       opts.id.board + '/tickets/' + opts.id.ticket + '',
+		token: opts.token,
+	}
+	return request.del(options).then(function(res) {
+		return res.body;
 	});
 }

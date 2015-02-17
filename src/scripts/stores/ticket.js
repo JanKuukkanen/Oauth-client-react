@@ -163,8 +163,8 @@ module.exports = createStore(TicketStoreAPI, function(action) {
 		case Action.ADD_TICKET_SUCCESS:
 			_ticketMap = _editTicket(
 				action.payload.boardID,
-				action.payload.dirtyID,
-				{ id: action.payload.cleanID },
+				action.payload.dirty,
+				action.payload.clean,
 				_ticketMap
 			);
 			this.emitChange();
