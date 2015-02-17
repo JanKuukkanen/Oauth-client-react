@@ -26,7 +26,6 @@ var Workspace = React.createClass({
 	],
 
 	getState: function() {
-		console.log('getState:');
 		return {
 			user:   AuthStore.getUser(),
 			boards: BoardStore.getBoards().map(resize),

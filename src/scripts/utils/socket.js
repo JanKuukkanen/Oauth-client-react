@@ -141,7 +141,6 @@ function _joinBoards() {
 			if(err) {
 				return (_rooms = _.without(_rooms, id));
 			}
-			return console.log('socket:join:', id);
 		});
 	});
 }

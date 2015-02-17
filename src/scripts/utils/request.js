@@ -17,6 +17,7 @@ module.exports = {
 
 /**
  *
+ * TODO Clean this up...
  */
 function _request(method, opts) {
 	return new Promise(function(resolve, reject) {
@@ -39,17 +40,13 @@ function _request(method, opts) {
 				    error.statusCode = res.statusCode;
 				return reject(error);
 			}
-
 			var data = { }
 			try {
 				data = JSON.parse(body);
 			}
-			finally {}
+			catch(err) {}
 
-			return resolve({
-				body:    data,
-				headers: res.headers,
-			});
+			return resolve({ body: data, headers: res.headers });
 		});
 	});
 }
