@@ -52,14 +52,17 @@ var DATA_EVENT = 'board:event';
  */
 function connect(opts) {
 	var options = {
-		query:    'access-token=' + opts.token + '',
-		multplex: false,
+		'query': 'access-token=' + opts.token + '',
+		// For socket.io to actually force new connections to the same host, we
+		// need to tell it to do so explicitly...
+		'multiplex':            false,
+		'force new connection': true,
 	}
 	return new Promise(function(resolve, reject) {
 		if(_socket && _socket.connected) {
 			return resolve();
 		}
-		_socket = io(config.io, options)
+		return (_socket = io(config.io, options))
 			.on('error',   onConnectionFailure)
 			.on('connect', onConnectionSuccess);
 

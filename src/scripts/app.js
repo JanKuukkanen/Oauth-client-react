@@ -45,7 +45,6 @@ AuthStore.addChangeListener(function() {
 page('/login',
 	notLoggedIn, disconnect,
 	function showLoginView(ctx) {
-		console.log('showLoginView');
 		return React.render(React.createElement(LoginView), document.body);
 	});
 
@@ -57,7 +56,6 @@ page('/login',
 page('/register',
 	notLoggedIn, disconnect,
 	function showRegisterView(ctx) {
-		console.log('showRegisterView');
 		return React.render(React.createElement(RegisterView), document.body);
 	});
 
