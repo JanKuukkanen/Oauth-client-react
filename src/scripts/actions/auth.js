@@ -27,6 +27,10 @@ module.exports = {
  *
  * @alias module:actions/auth.login
  *
+ * @fires LOGIN
+ * @fires LOGIN_SUCCESS
+ * @fires LOGIN_FAILURE
+ *
  * @param {object} credentials
  * @param {string} credentials.email     Email of the user.
  * @param {string} credentials.password  Password of the user.
@@ -57,6 +61,10 @@ function login(credentials) {
  * Login as a guest with the given credentials.
  *
  * @alias module:actions/auth.loginGuest
+ *
+ * @fires LOGIN_GUEST
+ * @fires LOGIN_GUEST_SUCCESS
+ * @fires LOGIN_GUEST_FAILURE
  *
  * @param {object} credentials
  * @param {string} credentials.boardID     The board we are trying to access.
@@ -96,6 +104,10 @@ function loginGuest(credentials) {
  * Terminate the current login session.
  *
  * @alias module:actions/auth.logout
+ *
+ * @fires LOGOUT
+ * @fires LOGOUT_SUCCESS
+ * @fires LOGOUT_FAILURE
  */
 function logout() {
 	var opts = {
@@ -120,6 +132,10 @@ function logout() {
  * Register a new user account.
  *
  * @alias module:actions/auth.register
+ *
+ * @fires REGISTER
+ * @fires REGISTER_SUCCESS
+ * @fires REGISTER_FAILURE
  *
  * @param {object} credentials
  * @param {string} credentials.email     Email of the user.
@@ -148,6 +164,10 @@ function register(credentials) {
  * Loads the user's information based on the currently active access token.
  *
  * @alias module:actions/auth.loadUser
+ *
+ * @fires LOAD_USER
+ * @fires LOAD_USER_SUCCESS
+ * @fires LOAD_USER_FAILURE
  */
 function loadUser() {
 	var opts = {

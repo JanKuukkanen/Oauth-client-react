@@ -4,7 +4,17 @@ var Action      = require('../constants/actions');
 var createStore = require('../utils/create-store');
 
 /**
- * Public API of the AuthStore.
+ * @module stores/auth
+ *
+ * @description
+ * Holds the current user's state. Listens to actions and updates the store's
+ * state accordingly.
+ *
+ * @listens event:LOGIN_SUCCESS
+ * @listens event:LOGOUT_SUCCESS
+ * @listens event:LOAD_USER_SUCCESS
+ * @listens event:LOGIN_GUEST_SUCCESS
+ * @listens event:AUTHENTICATION_FAILURE
  */
 var AuthStoreAPI = {
 	getUser:  getUser,
@@ -25,7 +35,6 @@ module.exports = createStore(AuthStoreAPI, function(action) {
 			this.emitChange();
 			break;
 
-		case Action.LOGOUT_GUEST:
 		case Action.LOGOUT_SUCCESS:
 			_clear();
 			this.emitChange();
@@ -40,6 +49,10 @@ module.exports = createStore(AuthStoreAPI, function(action) {
 
 /**
  * Returns the currently logged in user.
+ *
+ * @alias module:stores/auth.getUser
+ *
+ * @returns {object?} The current user.
  */
 function getUser() {
 	if(localStorage.getItem('user')) {
@@ -49,21 +62,35 @@ function getUser() {
 }
 
 /**
- * Returns the token of the currently logged in user.
+ * Returns the currently logged in user's access token.
+ *
+ * @alias module:stores/auth.getToken
+ *
+ * @returns {string?} The access token.
  */
 function getToken() {
 	return localStorage.getItem('token');
 }
 
 /**
- * Set the user.
+ * Set the current user.
+ *
+ * @alias module:stores/auth._setUser
+ * @private
+ *
+ * @param {object} user  The object to set as the user.
  */
 function _setUser(user) {
 	localStorage.setItem('user', JSON.stringify(user));
 }
 
 /**
- * Set the token.
+ * Set the current access token.
+ *
+ * @alias module:stores/auth._setToken
+ * @private
+ *
+ * @param {string} token  The string to set as the access token.
  */
 function _setToken(token) {
 	localStorage.setItem('token', token);
@@ -71,6 +98,9 @@ function _setToken(token) {
 
 /**
  * Clears the current credentials, effectively logging out the user.
+ *
+ * @alias module:stores/auth._clear
+ * @private
  */
 function _clear() {
 	localStorage.removeItem('user');
