@@ -17,8 +17,37 @@ var BoardStore = require('../stores/board');
 module.exports = {
 	addBoard:    addBoard,
 	editBoard:   editBoard,
-	loadBoards:  loadBoards,
 	removeBoard: removeBoard,
+
+	loadBoard:   loadBoard,
+	loadBoards:  loadBoards,
+
+	revokeAccessCode:   revokeAccessCode,
+	generateAccessCode: generateAccessCode,
+}
+
+/**
+ *
+ */
+function loadBoard(boardID) {
+	var opts = {
+		id: {
+			board: boardID,
+		},
+		token: AuthStore.getToken(),
+	}
+	var initial = {
+		type: Action.LOAD_BOARD,
+	}
+
+	return build(initial, api.getBoard(opts).then(
+		function getSuccessPayload(board) {
+			return { board: board }
+		},
+		function getFailurePayload(err) {
+			return { error: err }
+		}
+	));
 }
 
 /**
@@ -130,6 +159,63 @@ function editBoard(boardID, board) {
 	}
 
 	return build(initial, api.updateBoard(opts).then(onSuccess, onFailure));
+}
+
+/**
+ *
+ */
+function generateAccessCode(boardID) {
+	var opts = {
+		id: {
+			board: boardID,
+		},
+		token: AuthStore.getToken(),
+	}
+	var initial = {
+		type: Action.GENERATE_ACCESS_CODE,
+	}
+	return build(initial, api.generateAccessCode(opts).then(
+		function getSuccessPayload(res) {
+			return { boardID: boardID, accessCode: res.accessCode }
+		},
+		function getFailurePayload(err) {
+			return { error: err }
+		}
+	));
+}
+
+/**
+ *
+ */
+function revokeAccessCode(boardID) {
+	var opts = {
+		id: {
+			board: boardID,
+		},
+		token: AuthStore.getToken(),
+	}
+	var initial = {
+		payload: {
+			boardID: boardID,
+		},
+		type: Action.REVOKE_ACCESS_CODE,
+	}
+
+	var oldBoard      = BoardStore.getBoard(boardID);
+	var oldAccessCode = oldBoard ? oldBoard.accessCode : '';
+
+	return build(initial, api.revokeAccessCode(opts).then(
+		function getSuccessPayload() {
+			return { }
+		},
+		function getFailurePayload(err) {
+			return {
+				error:      err,
+				boardID:    boardID,
+				accessCode: oldAccessCode,
+			}
+		}
+	));
 }
 
 /**

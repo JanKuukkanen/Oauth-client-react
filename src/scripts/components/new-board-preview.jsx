@@ -3,7 +3,9 @@
 var React  = require('react');
 var Hammer = require('hammerjs');
 
-var BoardActions = require('../actions/board');
+var BoardActions  = require('../actions/board');
+var TICKET_WIDTH  = require('../constants').TICKET_WIDTH;
+var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
 
 /**
  * Similar to BoardPreview, allows adding a Board by clicking on it.
@@ -15,8 +17,8 @@ var NewBoardPreview = React.createClass({
 			return BoardActions.addBoard({
 				// TODO We should maybe expose some 'controls', so that we can
 				//      change some values before creating the board.
-				name: 'new',
-				size: { width: 10, height: 10 },
+				name: '',
+				size: { width: 10 * TICKET_WIDTH, height: 10 * TICKET_HEIGHT },
 			});
 		});
 	},

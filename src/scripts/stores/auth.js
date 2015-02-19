@@ -81,6 +81,7 @@ function getToken() {
  * @param {object} user  The object to set as the user.
  */
 function _setUser(user) {
+	console.log('_setUser:', user);
 	localStorage.setItem('user', JSON.stringify(user));
 }
 

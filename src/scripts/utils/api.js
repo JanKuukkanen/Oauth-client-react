@@ -30,6 +30,9 @@ module.exports = {
 
 	deleteBoard:  deleteBoard,
 	deleteTicket: deleteTicket,
+
+	revokeAccessCode:   revokeAccessCode,
+	generateAccessCode: generateAccessCode,
 }
 
 /**
@@ -103,11 +106,15 @@ function getUser(opts) {
 		token: opts.token,
 	}
 	return request.get(options).then(function(res) {
-		return {
+		var user = {
 			id:   res.body.id,
 			type: res.body.type,
 			name: res.body.username,
 		}
+		if(user.type === 'guest') {
+			user.access = res.body.access;
+		}
+		return user;
 	});
 }
 
@@ -241,6 +248,32 @@ function deleteTicket(opts) {
 	var options = {
 		url:   config.api + '/boards/' +
 		       opts.id.board + '/tickets/' + opts.id.ticket + '',
+		token: opts.token,
+	}
+	return request.del(options).then(function(res) {
+		return res.body;
+	});
+}
+
+/**
+ *
+ */
+function generateAccessCode(opts) {
+	var options = {
+		url:   config.api + '/boards/' + opts.id.board + '/access',
+		token: opts.token,
+	}
+	return request.post(options).then(function(res) {
+		return res.body;
+	});
+}
+
+/**
+ *
+ */
+function revokeAccessCode(opts) {
+	var options = {
+		url:   config.api + '/boards/' + opts.id.board + '/access',
 		token: opts.token,
 	}
 	return request.del(options).then(function(res) {

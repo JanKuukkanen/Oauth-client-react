@@ -55,6 +55,11 @@ function _index(id, collection) {
 function _board(payload, defaults) {
 	defaults = _.defaults(defaults || Default.BOARD, Default.BOARD);
 
+	if(payload.accessCode === '') {
+		// Quick hack so we can set the 'accessCode' to null... Not nice!
+		defaults.accessCode = '';
+	}
+
 	return Immutable.Map({
 		id:         payload.id         || defaults.id,
 		name:       payload.name       || defaults.name,
@@ -119,6 +124,11 @@ function _removeBoard(boardID, boards) {
 
 module.exports = createStore(BoardStoreAPI, function(action) {
 	switch(action.type) {
+		case Action.LOAD_BOARD_SUCCESS:
+			_boards = _addBoard(action.payload.board, _boards);
+			this.emitChange();
+			break;
+
 		case Action.LOAD_BOARDS_SUCCESS:
 			_boards = _addBoard(action.payload.boards, _boards);
 			this.emitChange();
@@ -159,5 +169,22 @@ module.exports = createStore(BoardStoreAPI, function(action) {
 			_boards = _addBoard(action.payload.board, _boards);
 			this.emitChange();
 			break;
-		}
+
+		case Action.REVOKE_ACCESS_CODE_FAILURE:
+		case Action.GENERATE_ACCESS_CODE_SUCCESS:
+			_boards = _editBoard(
+				action.payload.boardID,
+				{ accessCode: action.payload.accessCode },
+				_boards
+			);
+			this.emitChange();
+			break;
+
+		case Action.REVOKE_ACCESS_CODE:
+			_boards = _editBoard(
+				action.payload.boardID, { accessCode: '' }, _boards
+			);
+			this.emitChange();
+			break;
+	}
 });

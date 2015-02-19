@@ -47,11 +47,8 @@ var BoardView = React.createClass({
 
 	getState: function() {
 		return {
-			user: AuthStore.getUser(),
-
-			board: resize(
-				BoardStore.getBoard(this.props.id) || Default.BOARD
-			),
+			user:    AuthStore.getUser(),
+			board:   BoardStore.getBoard(this.props.id) || Default.BOARD,
 			tickets: TicketStore.getTickets(this.props.id),
 
 			snapToGrid:   StateStore.getSetting('snapToGrid'),
@@ -69,7 +66,7 @@ var BoardView = React.createClass({
 	},
 
 	componentDidMount: function() {
-		BoardActions.loadBoards();
+		BoardActions.loadBoard(this.props.id);
 		TicketActions.loadTickets(this.props.id);
 
 		return document.addEventListener('touchmove', _preventBounce);

@@ -52,7 +52,40 @@ var EditBoardDialog = React.createClass({
 		return this.props.onDismiss();
 	},
 
+	/**
+	 *
+	 */
+	_generateAccessCode: function() {
+		return BoardActions.generateAccessCode(this.props.board.id);
+	},
+
+	/**
+	 *
+	 */
+	_revokeAccessCode: function() {
+		return BoardActions.revokeAccessCode(this.props.board.id);
+	},
+
 	render: function() {
+		var shareButton = (
+			/* jshint ignore:start */
+			<button className="btn turquoise"
+					onClick={this._generateAccessCode}>
+				Share
+			</button>
+			/* jshint ignore:end */
+		);
+		var code = this.props.board.accessCode;
+		if(code !== null && code.length > 0) {
+			shareButton = (
+				/* jshint ignore:start */
+				<button className="btn red"
+						onClick={this._revokeAccessCode}>
+					Hide
+				</button>
+				/* jshint ignore:end */
+			);
+		}
 		return (
 			/* jshint ignore:start */
 			<Dialog className="edit-board-dialog"
@@ -65,6 +98,11 @@ var EditBoardDialog = React.createClass({
 						valueLink={this.linkState('name')} />
 					<input type="text" placeholder="Background URL"
 						valueLink={this.linkState('background')} />
+					<div className="share">
+						<input type="text" readOnly={true}
+								value={this.props.board.accessCode} />
+						{shareButton}
+					</div>
 				</div>
 				<div className="controls">
 					<button className="btn turquoise" onClick={this._submit}>
