@@ -8,9 +8,9 @@ var config     = require('../config');
 var Action     = require('../constants/actions');
 var Dispatcher = require('../dispatcher');
 
-var BoardStore    = require('../stores/board');
-var BoardActions  = require('../actions/board');
-var TicketActions = require('../actions/ticket');
+var AuthStore   = require('../stores/auth');
+var BoardStore  = require('../stores/board');
+var TicketStore = require('../stores/ticket');
 
 /**
  * Public interface.
@@ -158,11 +158,35 @@ function _onData(data) {
 			break;
 		case 'BOARD_REMOVE':
 			break;
-		case 'TICKET_ADD':
+		case 'TICKET_CREATE':
+			if(!TicketStore.getTicket(data.board, data.data.id)) {
+				Dispatcher.dispatch({
+					payload: {
+						ticket:  data.data,
+						boardID: data.board,
+					},
+					type: Action.ADD_TICKET,
+				});
+			}
 			break;
 		case 'TICKET_EDIT':
+			Dispatcher.dispatch({
+				payload: {
+					ticket:   data.data.newAttributes,
+					boardID:  data.board,
+					ticketID: data.data.id,
+				},
+				type: Action.EDIT_TICKET,
+			});
 			break;
 		case 'TICKET_REMOVE':
+			Dispatcher.dispatch({
+				payload: {
+					boardID:  data.board,
+					ticketID: data.data.id,
+				},
+				type: Action.REMOVE_TICKET,
+			});
 			break;
 	}
 }

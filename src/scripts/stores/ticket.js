@@ -69,7 +69,7 @@ function _ticket(payload, defaults) {
 			y: payload.position ? payload.position.y : defaults.position.y,
 		}),
 
-		updatedAt: payload.updatedAt || defaults.updatedAt,
+		updatedAt: payload.updatedAt || Date.now(),
 	});
 }
 
