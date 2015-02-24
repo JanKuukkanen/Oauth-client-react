@@ -18,7 +18,7 @@ var NewBoardPreview = React.createClass({
 				// TODO We should maybe expose some 'controls', so that we can
 				//      change some values before creating the board.
 				name: '',
-				size: { width: 10 * TICKET_WIDTH, height: 10 * TICKET_HEIGHT },
+				size: { width: 10, height: 10 },
 			});
 		});
 	},
