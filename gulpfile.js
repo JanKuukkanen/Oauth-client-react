@@ -7,6 +7,7 @@ var mocha      = require('gulp-mocha');
 var jshint     = require('gulp-jshint');
 var server     = require('gulp-webserver');
 var source     = require('vinyl-source-stream');
+var envify     = require('envify');
 var reactify   = require('reactify');
 var browserify = require('browserify');
 
@@ -40,6 +41,7 @@ gulp.task('static', function() {
 gulp.task('browserify', function() {
 	return browserify('./src/scripts/app.js')
 		.transform(reactify)
+		.transform(envify)
 		.bundle()
 		.pipe(source('app.js'))
 		.pipe(gulp.dest('./dist/scripts/'));
