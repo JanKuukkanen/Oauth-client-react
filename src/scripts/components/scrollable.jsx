@@ -92,14 +92,14 @@ var Scrollable = React.createClass({
 		// If the 'minimap' is toggled to be shown, we need to recalculate it.
 		// Note that this will 'refresh' the scrollable area, so we don't need
 		// to calculate the refresh below.
-		if(this.props.minimap) {
+		if(!prev.minimap && this.props.minimap) {
 			return this._resizeMinimapCursor();
 		}
 		// If the size of the board changes, we need to refresh the scroller.
 		var deltaWidth  = prev.size.width  - this.props.size.width;
 		var deltaHeight = prev.size.height - this.props.size.height;
 		if(deltaWidth !== 0 || deltaHeight !== 0) {
-			this.scroller.refresh();
+			return this._resizeMinimapCursor();
 		}
 	},
 

@@ -47,8 +47,10 @@ var BoardView = React.createClass({
 
 	getState: function() {
 		return {
-			user:    AuthStore.getUser(),
-			board:   BoardStore.getBoard(this.props.id) || Default.BOARD,
+			user: AuthStore.getUser(),
+			board: resize(
+				BoardStore.getBoard(this.props.id) || Default.BOARD
+			),
 			tickets: TicketStore.getTickets(this.props.id),
 
 			snapToGrid:   StateStore.getSetting('snapToGrid'),

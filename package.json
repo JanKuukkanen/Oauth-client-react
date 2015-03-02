@@ -25,6 +25,7 @@
   "devDependencies": {
     "babelify": "^5.0.3",
     "browserify": "8.1.1",
+    "envify": "^3.2.0",
     "gulp": "3.8.10",
     "gulp-jshint": "1.9.2",
     "gulp-less": "2.0.1",
