@@ -158,12 +158,10 @@ function _onData(data) {
 			break;
 		case 'TICKET_CREATE':
 			if(!TicketStore.getTicket(data.board, data.data.id)) {
-				// Quick hax, not very pretty!
-				var ticket = data.data;
-				ticket.content = utf8.decode(ticket.content);
+				data.data.content = utf8.decode(data.data.content);
 				Dispatcher.dispatch({
 					payload: {
-						ticket:  ticket,
+						ticket:  data.data,
 						boardID: data.board,
 					},
 					type: Action.ADD_TICKET,
@@ -171,11 +169,12 @@ function _onData(data) {
 			}
 			break;
 		case 'TICKET_EDIT':
-			var ticket = data.data.newAttributes;
-			ticket.content = utf8.decode(ticket.content);
+			data.data.newAttributes.content = utf8.decode(
+				data.data.newAttributes.content
+			);
 			Dispatcher.dispatch({
 				payload: {
-					ticket:   ticket,
+					ticket:   data.data.newAttributes,
 					boardID:  data.board,
 					ticketID: data.data.id,
 				},
