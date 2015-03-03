@@ -2,6 +2,7 @@
 
 var _       = require('lodash');
 var io      = require('socket.io-client');
+var utf8    = require('utf8');
 var Promise = require('promise');
 
 var config     = require('../config');
@@ -157,9 +158,12 @@ function _onData(data) {
 			break;
 		case 'TICKET_CREATE':
 			if(!TicketStore.getTicket(data.board, data.data.id)) {
+				// Quick hax, not very pretty!
+				var ticket = data.data;
+				ticket.content = utf8.decode(ticket.content);
 				Dispatcher.dispatch({
 					payload: {
-						ticket:  data.data,
+						ticket:  ticket,
 						boardID: data.board,
 					},
 					type: Action.ADD_TICKET,
@@ -167,9 +171,11 @@ function _onData(data) {
 			}
 			break;
 		case 'TICKET_EDIT':
+			var ticket = data.data.newAttributes;
+			ticket.content = utf8.decode(ticket.content);
 			Dispatcher.dispatch({
 				payload: {
-					ticket:   data.data.newAttributes,
+					ticket:   ticket,
 					boardID:  data.board,
 					ticketID: data.data.id,
 				},
