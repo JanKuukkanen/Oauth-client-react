@@ -46,7 +46,7 @@ function _request(method, opts) {
 				data = JSON.parse(body);
 			}
 			catch(err) {
-				return reject(err);
+				console.error(err);
 			}
 
 			return resolve({ body: data, headers: res.headers });
