@@ -160,7 +160,7 @@ module.exports = {
 	 * @see event:REGISTER_SUCCESS
 	 * @see event:REGISTER_FAILURE
 	 */
-	REGISTER:         'REGISTER',
+	REGISTER: 'REGISTER',
 
 	/**
 	 * @event REGISTER_SUCCESS
@@ -177,4 +177,12 @@ module.exports = {
 	 * @property {Error} error  The error object.
 	 */
 	REGISTER_FAILURE: 'REGISTER_FAILURE',
+
+	/**
+	 * @event ERROR_MARK_AS_SEEN
+	 *
+	 * @type {object}
+	 * @property {Error} error The error object.
+	 */
+	ERROR_MARK_AS_SEEN: 'ERROR_MARK_AS_SEEN',
 }
