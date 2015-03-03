@@ -1,17 +1,18 @@
 'use strict';
 
-var page             = require('page');
-var React            = require('react/addons');
-var LinkedStateMixin = React.addons.LinkedStateMixin;
+var page  = require('page');
+var React = require('react/addons');
 
-var Form        = require('../components/form.jsx');
 var AuthActions = require('../actions/auth');
+
+var Form     = require('../components/form.jsx');
+var AlertBox = require('../components/alert-box.jsx');
 
 /**
  * View that displays a GuestLogin form.
  */
 var GuestLoginView = React.createClass({
-	mixins: [LinkedStateMixin],
+	mixins: [React.addons.LinkedStateMixin],
 
 	propTypes: {
 		/**
@@ -45,6 +46,7 @@ var GuestLoginView = React.createClass({
 		return (
 			/* jshint ignore:start */
 			<div className="application">
+				<AlertBox />
 				<div className="view view-guest-login">
 					<Form title="Login as Guest"
 							onSubmit={this._onGuestLoginSubmit}>

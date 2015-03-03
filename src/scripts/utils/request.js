@@ -35,7 +35,8 @@ function _request(method, opts) {
 			if(err) {
 				return reject(err);
 			}
-			if(res.statusCode >= 300) {
+
+			if(res.statusCode === 0 || res.statusCode >= 300) {
 				var error            = new Error(res.message);
 				    error.statusCode = res.statusCode;
 				return reject(error);
@@ -44,7 +45,9 @@ function _request(method, opts) {
 			try {
 				data = JSON.parse(body);
 			}
-			catch(err) {}
+			catch(err) {
+				return reject(err);
+			}
 
 			return resolve({ body: data, headers: res.headers });
 		});

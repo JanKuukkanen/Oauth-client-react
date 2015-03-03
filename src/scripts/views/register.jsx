@@ -1,17 +1,18 @@
 'use strict';
 
-var page             = require('page');
-var React            = require('react/addons');
-var LinkedStateMixin = React.addons.LinkedStateMixin;
+var page  = require('page');
+var React = require('react/addons');
 
-var Form        = require('../components/form.jsx');
 var AuthActions = require('../actions/auth');
+
+var Form     = require('../components/form.jsx');
+var AlertBox = require('../components/alert-box.jsx');
 
 /**
  * View that displays a Register form.
  */
 var RegisterView = React.createClass({
-	mixins: [LinkedStateMixin],
+	mixins: [React.addons.LinkedStateMixin],
 
 	getInitialState: function() {
 		return {
@@ -33,6 +34,7 @@ var RegisterView = React.createClass({
 		return (
 			/* jshint ignore:start */
 			<div className="application">
+				<AlertBox />
 				<div className="view view-login">
 					<Form title="Register" color="violet"
 							onSubmit={this._onRegisterSubmit}>

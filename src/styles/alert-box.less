@@ -1,0 +1,30 @@
+@import "variables.less";
+
+.alert-box {
+	top:      0;
+	left:     0;
+	width:    100%;
+	z-index:  9001;
+	position: fixed;
+
+	.alert {
+		color:  @white;
+		cursor: pointer;
+
+		width:     80%;
+		max-width: 512px;
+
+		margin:  8px auto;
+		border:  2px solid;
+		padding: 8px 4px;
+
+		border-radius: 5px;
+
+		border-color:     @red-dark;
+		background-color: @red;
+
+		&:hover {
+			background-color: @red-dark;
+		}
+	}
+}

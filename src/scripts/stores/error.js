@@ -70,16 +70,16 @@ function getUnseen() {
 function _addError(payload, type) {
 	var error      = payload.error || new Error();
 	    error.type = type;
-	return (_unseen = _unseen.push(error));
+	_unseen.push(error);
 }
 
 /**
  * Moves the given Error from 'unseen' to 'seen'. Keep in mind that we use
  * referential equality to find the Error.
  */
-function _markAsSeen(err) {
-	if(_unseen.indexOf(err) >= 0) {
-		_seen.push(_unseen.splice(_unseen.indexOf(err), 1)[0]);
+function _markAsSeen(payload) {
+	if(_unseen.indexOf(payload.error) >= 0) {
+		_seen.push(_unseen.splice(_unseen.indexOf(payload.error), 1)[0]);
 	}
 }
 

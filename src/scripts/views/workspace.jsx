@@ -3,10 +3,11 @@
 var React = require('react');
 
 var Sidebar         = require('../components/sidebar.jsx');
+var AlertBox        = require('../components/alert-box.jsx');
 var BoardPreview    = require('../components/board-preview.jsx');
 var NewBoardPreview = require('../components/new-board-preview.jsx');
 
-var AuthStore   = require('../stores/auth');
+var AuthStore    = require('../stores/auth');
 var BoardStore   = require('../stores/board');
 var BoardActions = require('../actions/board');
 
@@ -48,6 +49,7 @@ var Workspace = React.createClass({
 		return (
 			/* jshint ignore:start */
 			<div className="application">
+				<AlertBox />
 				<Sidebar user={this.state.user} />
 				<div className="view view-workspace">
 					<div className="board-list">

@@ -87,9 +87,7 @@ function connect(opts) {
 		 *
 		 */
 		function onConnectionFailure(err) {
-			// TODO For some reason the 'err' received here is actually a JSON
-			//      string for now... Gotta make sure to parse it...
-			var error     = JSON.parse(err);
+			var error     = new Error(err);
 			var errorType = error.statusCode === 401 ?
 				Action.AUTHENTICATION_FAILURE : Action.FAILURE;
 
@@ -114,7 +112,6 @@ function disconnect() {
 		_socket = null;
 
 		BoardStore.removeChangeListener(_joinBoards);
-
 		return resolve();
 	});
 }
