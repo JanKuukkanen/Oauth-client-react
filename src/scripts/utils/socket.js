@@ -151,44 +151,55 @@ function _joinBoards() {
  * TODO Move 'type' to constants.
  */
 function _onData(data) {
-	switch(data.type) {
-		case 'BOARD_EDIT':
-			break;
-		case 'BOARD_REMOVE':
-			break;
-		case 'TICKET_CREATE':
-			if(!TicketStore.getTicket(data.board, data.data.id)) {
-				data.data.content = utf8.decode(data.data.content);
+	/**
+	 * Wrap the Dispatch in a timeout to avoid weird shenanigans with socket
+	 * based events succeeding before the HTTP events, in other words, to
+	 * prevent the following scenario:
+	 *
+	 * TICKET_ADD (http) -> TICKET_ADD (socket) -> TICKET_ADD_SUCCESS (http)
+	 *
+	 * This is a dirty hack and not cool at all...
+	 */
+	setTimeout(function() {
+		switch(data.type) {
+			case 'BOARD_EDIT':
+				break;
+			case 'BOARD_REMOVE':
+				break;
+			case 'TICKET_CREATE':
+				if(!TicketStore.getTicket(data.board, data.data.id)) {
+					data.data.content = utf8.decode(data.data.content);
+					Dispatcher.dispatch({
+						payload: {
+							ticket:  data.data,
+							boardID: data.board,
+						},
+						type: Action.ADD_TICKET,
+					});
+				}
+				break;
+			case 'TICKET_EDIT':
+				data.data.newAttributes.content = utf8.decode(
+					data.data.newAttributes.content
+				);
 				Dispatcher.dispatch({
 					payload: {
-						ticket:  data.data,
-						boardID: data.board,
+						ticket:   data.data.newAttributes,
+						boardID:  data.board,
+						ticketID: data.data.id,
 					},
-					type: Action.ADD_TICKET,
+					type: Action.EDIT_TICKET,
 				});
-			}
-			break;
-		case 'TICKET_EDIT':
-			data.data.newAttributes.content = utf8.decode(
-				data.data.newAttributes.content
-			);
-			Dispatcher.dispatch({
-				payload: {
-					ticket:   data.data.newAttributes,
-					boardID:  data.board,
-					ticketID: data.data.id,
-				},
-				type: Action.EDIT_TICKET,
-			});
-			break;
-		case 'TICKET_REMOVE':
-			Dispatcher.dispatch({
-				payload: {
-					boardID:  data.board,
-					ticketID: data.data.id,
-				},
-				type: Action.REMOVE_TICKET,
-			});
-			break;
-	}
+				break;
+			case 'TICKET_REMOVE':
+				Dispatcher.dispatch({
+					payload: {
+						boardID:  data.board,
+						ticketID: data.data.id,
+					},
+					type: Action.REMOVE_TICKET,
+				});
+				break;
+		}
+	}, 0);
 }

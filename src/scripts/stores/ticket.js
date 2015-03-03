@@ -110,7 +110,6 @@ function _editTicket(boardID, ticketID, ticket, ticketMap) {
 	if(ticketMap.has(boardID)) {
 		var tickets     = ticketMap.get(boardID);
 		var ticketIndex = _index(ticketID, tickets);
-
 		// If the ticket is not found in the specified collection, do nothing.
 		if(ticketIndex < 0) {
 			return ticketMap;
@@ -130,7 +129,6 @@ function _removeTicket(boardID, ticketID, ticketMap) {
 	if(ticketMap.has(boardID)) {
 		var tickets     = ticketMap.get(boardID);
 		var ticketIndex = _index(ticketID, tickets);
-
 		// If the ticket is not found in the specified collection, do nothing.
 		if(ticketIndex < 0) {
 			return ticketMap;
