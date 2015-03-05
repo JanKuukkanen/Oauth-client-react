@@ -203,5 +203,10 @@ module.exports = createStore(TicketStoreAPI, function(action) {
 			);
 			this.emitChange();
 			break;
+
+		case Action.LOGOUT_SUCCESS:
+			_ticketMap = Immutable.Map({});
+			this.emitChange();
+			break;
 	}
 });

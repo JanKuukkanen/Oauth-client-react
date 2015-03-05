@@ -186,5 +186,10 @@ module.exports = createStore(BoardStoreAPI, function(action) {
 			);
 			this.emitChange();
 			break;
+
+		case Action.LOGOUT_SUCCESS:
+			_boards = Immutable.List([]);
+			this.emitChange();
+			break;
 	}
 });
