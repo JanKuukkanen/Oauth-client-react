@@ -67,6 +67,7 @@ var EditBoardDialog = React.createClass({
 	},
 
 	render: function() {
+		var shareURL = '';
 		var shareButton = (
 			/* jshint ignore:start */
 			<button className="btn turquoise"
@@ -75,8 +76,12 @@ var EditBoardDialog = React.createClass({
 			</button>
 			/* jshint ignore:end */
 		);
+
 		var code = this.props.board.accessCode;
+
 		if(code !== null && code.length > 0) {
+			shareURL = location.host + '/boards/' + this.props.board.id +
+				'/access/' + code + '';
 			shareButton = (
 				/* jshint ignore:start */
 				<button className="btn red"
@@ -99,8 +104,7 @@ var EditBoardDialog = React.createClass({
 					<input type="text" placeholder="Background URL"
 						valueLink={this.linkState('background')} />
 					<div className="share">
-						<input type="text" readOnly={true}
-								value={this.props.board.accessCode} />
+						<input type="text" readOnly={true} value={shareURL} />
 						{shareButton}
 					</div>
 				</div>
