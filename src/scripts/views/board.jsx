@@ -2,12 +2,13 @@
 
 var React = require('react');
 
-var Board      = require('../components/board.jsx');
-var Ticket     = require('../components/ticket.jsx');
-var Setting    = require('../components/setting.jsx');
-var Sidebar    = require('../components/sidebar.jsx');
-var AlertBox   = require('../components/alert-box.jsx');
-var Scrollable = require('../components/scrollable.jsx');
+var Board            = require('../components/board.jsx');
+var Ticket           = require('../components/ticket.jsx');
+var Setting          = require('../components/setting.jsx');
+var Sidebar          = require('../components/sidebar.jsx');
+var AlertBox         = require('../components/alert-box.jsx');
+var Scrollable       = require('../components/scrollable.jsx');
+var UserVoiceTrigger = require('../components/user-voice-trigger.jsx');
 
 var AuthStore     = require('../stores/auth');
 var StateStore    = require('../stores/state');
@@ -98,6 +99,7 @@ var BoardView = React.createClass({
 						</Board>
 					</Scrollable>
 				</div>
+				<UserVoiceTrigger />
 			</div>
 			/* jshint ignore:end */
 		);

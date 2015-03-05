@@ -2,10 +2,11 @@
 
 var React = require('react');
 
-var Sidebar         = require('../components/sidebar.jsx');
-var AlertBox        = require('../components/alert-box.jsx');
-var BoardPreview    = require('../components/board-preview.jsx');
-var NewBoardPreview = require('../components/new-board-preview.jsx');
+var Sidebar          = require('../components/sidebar.jsx');
+var AlertBox         = require('../components/alert-box.jsx');
+var BoardPreview     = require('../components/board-preview.jsx');
+var NewBoardPreview  = require('../components/new-board-preview.jsx');
+var UserVoiceTrigger = require('../components/user-voice-trigger.jsx');
 
 var AuthStore    = require('../stores/auth');
 var BoardStore   = require('../stores/board');
@@ -57,6 +58,7 @@ var Workspace = React.createClass({
 						<NewBoardPreview />
 					</div>
 				</div>
+				<UserVoiceTrigger />
 			</div>
 			/* jshint ignore:end */
 		);
