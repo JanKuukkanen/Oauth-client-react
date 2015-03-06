@@ -21,9 +21,6 @@ module.exports = {
  */
 function markAsSeen(err) {
 	Dispatcher.dispatch({
-		payload: {
-			error: err,
-		},
-		type: Action.ERROR_MARK_AS_SEEN,
+		payload: { error: err }, type: Action.ERROR_MARK_AS_SEEN,
 	});
 }

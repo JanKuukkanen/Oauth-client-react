@@ -9,9 +9,11 @@ var config     = require('../config');
 var Action     = require('../constants/actions');
 var Dispatcher = require('../dispatcher');
 
-var AuthStore   = require('../stores/auth');
-var BoardStore  = require('../stores/board');
-var TicketStore = require('../stores/ticket');
+var AuthStore     = require('../stores/auth');
+var BoardStore    = require('../stores/board');
+var TicketStore   = require('../stores/ticket');
+var BoardActions  = require('../actions/board');
+var TicketActions = require('../actions/ticket');
 
 /**
  * Public interface.
@@ -82,6 +84,20 @@ function connect(opts) {
 			BoardStore.addChangeListener(_joinBoards);
 
 			return resolve();
+		}
+
+		/**
+		 * When we receive a 'reconnect' event, we should reload our data from
+		 * the server, to make sure we have not missed any events.
+		 *
+		 * NOTE This has not been attached anywhere, since we can't really test
+		 *      this currently.
+		 */
+		function onReconnect() {
+			BoardStore.getBoards().map(function(board) {
+				TicketActions.loadTickets(board.id);
+			});
+			return BoardActions.loadBoards();
 		}
 
 		/**
