@@ -7,9 +7,9 @@ var TweenState      = require('react-tween-state');
 var PureRenderMixin = React.addons.PureRenderMixin;
 
 var Stripe           = require('./stripe.jsx');
-var EditTicketDialog = require('./edit-ticket-dialog.jsx');
+var EditTicketDialog = require('./dialog/edit-ticket');
 
-var props           = require('../constants/props');
+var Property        = require('../constants/property');
 var gridify         = require('../utils/gridify');
 var StateActions    = require('../actions/state');
 var TicketActions   = require('../actions/ticket');
@@ -38,7 +38,7 @@ var Ticket = React.createClass({
 		/**
 		 * The initial state of the ticket.
 		 */
-		ticket: props.Ticket.isRequired,
+		ticket: Property.Ticket.isRequired,
 
 		/**
 		 * The 'id' of the board the Ticket belongs to.

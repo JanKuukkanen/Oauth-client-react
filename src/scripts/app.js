@@ -9,11 +9,9 @@ var socket = require('./utils/socket');
 var AuthStore   = require('./stores/auth');
 var AuthActions = require('./actions/auth');
 
-var BoardView      = require('./views/board.jsx');
-var WorkspaceView  = require('./views/workspace.jsx');
-var LoginView      = require('./views/login.jsx');
-var GuestLoginView = require('./views/guest-login.jsx');
-var RegisterView   = require('./views/register.jsx');
+var FormView      = require('./views/form.jsx');
+var BoardView     = require('./views/board.jsx');
+var WorkspaceView = require('./views/workspace.jsx');
 
 // Fix issues with 300ms delay on touch devices, hopefully!
 require('fastclick')(document.body);
@@ -42,22 +40,56 @@ AuthStore.addChangeListener(function() {
  *
  * Only users with no active session are able to see this.
  */
-page('/login',
-	notLoggedIn, disconnect,
-	function showLoginView(ctx) {
-		return React.render(React.createElement(LoginView), document.body);
-	});
+page('/login', notLoggedIn, disconnect, function showLoginView(ctx) {
+	return React.render(
+		React.createElement(FormView, {
+			fields: [
+				{ name: 'email',    type: 'email',    label: 'Email'    },
+				{ name: 'password', type: 'password', label: 'Password' },
+			],
+			secondary: {
+				submit: function() {
+					return page.show('/register');
+				},
+				action:      'Register',
+				description: 'Not registered?'
+			},
+			submit: function(state) {
+				return AuthActions.login(state)
+					.then(page.show.bind(null, '/boards'));
+			},
+			action: 'Login'
+		}),
+		document.getElementById('application'));
+});
 
 /**
  * RegisterView.
  *
  * Only users with no active session are able to see this.
  */
-page('/register',
-	notLoggedIn, disconnect,
-	function showRegisterView(ctx) {
-		return React.render(React.createElement(RegisterView), document.body);
-	});
+page('/register', notLoggedIn, disconnect, function() {
+	return React.render(
+		React.createElement(FormView, {
+			fields: [
+				{ name: 'email',    type: 'email',    label: 'Email'    },
+				{ name: 'password', type: 'password', label: 'Password' },
+			],
+			secondary: {
+				submit: function() {
+					return page.show('/login');
+				},
+				action:      'Login',
+				description: 'Already registered?'
+			},
+			submit: function(state) {
+				return AuthActions.register(state)
+					.then(page.show.bind(null, '/login'));
+			},
+			action: 'Register'
+		}),
+		document.getElementById('application'));
+});
 
 /**
  * WorkspaceView.
@@ -77,7 +109,12 @@ page('/boards',
 		return next();
 	},
 	function showWorkspaceView(ctx) {
-		return React.render(React.createElement(WorkspaceView), document.body);
+		console.log(document.getElementById('application'));
+
+		return React.render(
+			React.createElement(WorkspaceView),
+			document.getElementById('application')
+		);
 	});
 
 /**

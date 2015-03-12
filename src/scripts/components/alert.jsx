@@ -28,7 +28,7 @@ var Alert = React.createClass({
 	render: function() {
 		return (
 			/* jshint ignore:start */
-			<div className="alert">
+			<div className="item error">
 				{
 					'[' + this.props.error.statusCode + ']' +
 					' ' + this.props.error.type + ''

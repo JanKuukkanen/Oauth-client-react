@@ -17,7 +17,6 @@ module.exports = {
 
 /**
  *
- * TODO Clean this up...
  */
 function _request(method, opts) {
 	return new Promise(function(resolve, reject) {
@@ -46,7 +45,7 @@ function _request(method, opts) {
 				data = JSON.parse(body);
 			}
 			catch(err) {
-				console.error(err);
+				console.error(err, body);
 			}
 
 			return resolve({ body: data, headers: res.headers });

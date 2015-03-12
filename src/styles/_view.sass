@@ -1,0 +1,51 @@
+/**
+ *
+ */
+.view
+	@include position(relative)
+
+	@include display(flex)
+	@include flex-direction(column)
+
+	.controls
+		@include position(absolute, 16px null null 16px)
+
+		@include display(flex)
+		@include flex-direction(row)
+
+		.control
+			@include flex(1)
+
+			width:  48px
+			height: 48px
+			margin: 0px 8px
+			cursor: pointer
+
+			.icon
+				width:       100%
+				height:      100%
+				font-size:   20px !important
+				line-height: 48px
+
+			&:first-child
+				margin-left: 0px
+
+			&:last-child
+				margin-right: 0px
+
+			@include transition(color            0.2s)
+			@include transition(background-color 0.2s)
+
+			color:            $neptune
+			background-color: transparent
+
+			border:        1px solid $neptune
+			border-radius: 50%
+
+			&.active
+				color:            $white
+				background-color: $neptune
+
+			&:hover
+				color:            $white
+				background-color: $patina

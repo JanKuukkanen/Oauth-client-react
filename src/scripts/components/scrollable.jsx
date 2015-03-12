@@ -6,7 +6,7 @@ var IScroll = require('iscroll');
 var Cursor  = require('../components/cursor.jsx');
 var Minimap = require('../components/minimap.jsx');
 
-var props = require('../constants/props');
+var Property = require('../constants/property');
 
 /**
  * Component that is used to wrap another in order to make it scrollable using
@@ -15,15 +15,16 @@ var props = require('../constants/props');
 var Scrollable = React.createClass({
 	propTypes: {
 		/**
-		 * The element that will become the area that is scrollable.
-		 */
-		children: React.PropTypes.element.isRequired,
-
-		/**
 		 * The size of the scrollable area. This is used to calculate the scale
 		 * for various elements related to the 'Scrollable' component.
 		 */
-		size: props.Size.isRequired,
+		size: Property.Size.isRequired,
+
+		/**
+		 * The markers displayed in the Minimap. Refer to the Minimap component
+		 * for a more detailed property definition.
+		 */
+		markers: React.PropTypes.array,
 
 		/**
 		 * Whether to show or hide the Minimap.
@@ -31,10 +32,9 @@ var Scrollable = React.createClass({
 		minimap: React.PropTypes.bool,
 
 		/**
-		 * The markers displayed in the Minimap. Refer to the Minimap component
-		 * for a more detailed property definition.
+		 * The element that will become the area that is scrollable.
 		 */
-		markers: React.PropTypes.array,
+		children: React.PropTypes.element.isRequired,
 	},
 
 	getDefaultProps: function() {
@@ -109,28 +109,18 @@ var Scrollable = React.createClass({
 	 * method for the attached 'IScroll' instance.
 	 */
 	_resizeMinimapCursor: function() {
-		if(!this.props.minimap) return;
-
-		var $wrapper = this.refs.wrapper.getDOMNode();
-		var $minimap = this.refs.minimap.getDOMNode();
-
-		var scale = {
-			x: $wrapper.clientWidth  / this.props.size.width,
-			y: $wrapper.clientHeight / this.props.size.height,
+		if(this.props.minimap) {
+			this.refs.minimap.resizeCursor({
+				width:  this.refs.wrapper.clientWidth,
+				height: this.refs.wrapper.clientHeight,
+			});
+			return this.scroller.refresh();
 		}
-		var size = {
-			width:  Math.round(scale.x * $minimap.clientWidth),
-			height: Math.round(scale.y * $minimap.clientHeight),
-		}
-
-		this.refs.cursor.resize(size);
-		this.scroller.refresh();
 	},
 
 	render: function() {
 		var props = {
 			minimap: {
-				ref:     'minimap',
 				area:    this.props.size,
 				show:    this.props.minimap,
 				markers: this.props.markers,
@@ -142,9 +132,7 @@ var Scrollable = React.createClass({
 				<div ref="wrapper" className="wrapper">
 					{this.renderScrollable()}
 				</div>
-				<Minimap {...props.minimap}>
-					<Cursor ref="cursor" />
-				</Minimap>
+				<Minimap ref="minimap" {...props.minimap} />
 			</div>
 			/* jshint ignore:end */
 		);

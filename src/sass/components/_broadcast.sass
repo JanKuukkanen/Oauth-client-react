@@ -1,0 +1,37 @@
+/**
+ *
+ */
+.broadcast
+	width: 100%
+
+	z-index:  10000
+	position: fixed
+
+	.item
+		width:     80%
+		max-width: 256px
+
+		margin:  16px auto
+		padding: 8px
+
+		color:     $gallery
+		cursor:    pointer
+		font-size: 11px
+
+		border:        2px solid transparent
+		border-radius: 2px
+
+		&.hover
+			color: $white
+
+		&::after
+			float:       right
+			content:     "\f00d"
+			font-family: "FontAwesome"
+
+		&.error
+			border-color:     $stiletto
+			background-color: $burnt-sienna
+
+			&:hover
+				background-color: $stiletto

@@ -1,0 +1,31 @@
+/**
+ *
+ */
+.ticket
+	width:  192px
+	height: 108px
+
+	@include position(absolute, 128px null null 128px)
+
+	&:hover
+		@include layer(100)
+
+	border:        1px solid $white
+	border-radius: 2px
+
+	cursor:           pointer
+	font-size:        12px
+	background-color: $white
+
+	.color
+		height: 16px
+		margin: -1px
+
+		background-color: $wedgewood
+
+		border-top-left-radius:  2px
+		border-top-right-radius: 2px
+
+	.content
+		margin:   4px 4px
+		overflow: hidden

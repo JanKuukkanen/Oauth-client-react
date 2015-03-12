@@ -5,8 +5,8 @@ var React = require('react');
 var Board            = require('../components/board.jsx');
 var Ticket           = require('../components/ticket.jsx');
 var Setting          = require('../components/setting.jsx');
-var Sidebar          = require('../components/sidebar.jsx');
-var AlertBox         = require('../components/alert-box.jsx');
+var Sidebar          = require('../components/navigation.jsx');
+var AlertBox         = require('../components/broadcast.jsx');
 var Scrollable       = require('../components/scrollable.jsx');
 var UserVoiceTrigger = require('../components/user-voice-trigger.jsx');
 

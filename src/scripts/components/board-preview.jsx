@@ -3,15 +3,16 @@
 var page  = require('page');
 var React = require('react');
 
-var Minimap         = require('../components/minimap.jsx');
-var EditBoardDialog = require('../components/edit-board-dialog.jsx');
+var Minimap           = require('../components/minimap.jsx');
+var EditBoardDialog   = require('../components/dialog/edit-board');
+var RemoveBoardDialog = require('../components/dialog/remove-board');
 
 var TicketStore   = require('../stores/ticket');
 var TicketActions = require('../actions/ticket');
 
-var props     = require('../constants/props');
-var markers   = require('../utils/create-markers');
-var listener  = require('../mixins/listener');
+var markers  = require('../utils/create-markers');
+var listener = require('../mixins/listener');
+var Property = require('../constants/property');
 
 /**
  * Preview component for Boards. Based on the 'Minimap' component.
@@ -22,10 +23,7 @@ var BoardPreview = React.createClass({
 	],
 
 	propTypes: {
-		/**
-		 * The board being previewed.
-		 */
-		board: props.Board.isRequired,
+		board: Property.Board.isRequired,
 	},
 
 	getDefaultProps: function() {
@@ -37,8 +35,9 @@ var BoardPreview = React.createClass({
 
 	getInitialState: function() {
 		return {
-			tickets:   TicketStore.getTickets(this.props.board.id),
-			isEditing: false,
+			tickets: TicketStore.getTickets(this.props.board.id),
+			showEditBoardDialog:   false,
+			showRemoveBoardDialog: false,
 		}
 	},
 
@@ -54,60 +53,64 @@ var BoardPreview = React.createClass({
 
 	componentDidUpdate: function(prev) {
 		if(prev.board.id !== this.props.board.id) {
-			console.log('new id!');
 			// The 'id' changed, most likely to a clean one, so we need to
 			// fetch the tickets associated with the clean board.
-			this._loadTickets();
+			return this._loadTickets();
 		}
 	},
 
-	/**
-	 *
-	 */
 	_loadTickets: function() {
 		if(this.props.board.id.substring(0, 'dirty'.length) !== 'dirty') {
 			return TicketActions.loadTickets(this.props.board.id);
 		}
 	},
 
-	/**
-	 * Navigate to the corresponding BoardView.
-	 */
-	_navigate: function() {
-		return page.show('/boards/' + this._currentElement.key + '');
+	_showBoard: function() {
+		return page.show('/boards/' + this.props.board.id + '');
 	},
 
-	/**
-	 * Toggles the 'isEditing' state. Practically showing or hiding the dialog
-	 * for editing the board.
-	 */
-	_toggleEdit: function() {
-		return this.setState({ isEditing: !this.state.isEditing });
+	_showEditBoardDialog: function() {
+		return this.setState({
+			showEditBoardDialog: !this.state.showEditBoardDialog
+		});
+	},
+
+	_showRemoveBoardDialog: function() {
+		return this.setState({
+			showRemoveBoardDialog: !this.state.showRemoveBoardDialog
+		});
 	},
 
 	render: function() {
-		if(this.state.isEditing) {
-			var editBoardDialog = (
-				/* jshint ignore:start */
-				<EditBoardDialog board={this.props.board}
-					onDismiss={this._toggleEdit} />
-				/* jshint ignore:end */
-			);
-		}
+		var editBoardDialog = !this.state.showEditBoardDialog ? null : (
+			/* jshint ignore:start */
+			<EditBoardDialog board={this.props.board} onDismiss={this._showEditBoardDialog} />
+			/* jshint ignore:end */
+		);
+		var removeBoardDialog = !this.state.showRemoveBoardDialog ? null : (
+			/* jshint ignore:start */
+			<RemoveBoardDialog board={this.props.board} onDismiss={this._showRemoveBoardDialog} />
+			/* jshint ignore:end */
+		);
 		return (
 			/* jshint ignore:start */
 			<div className="board-preview">
-				<div className="minimap-container" onClick={this._navigate}>
-					<Minimap show={true} area={this.props.board.size}
-						markers={markers(this.state.tickets)} />
+				<div className="minimap-container" onClick={this._showBoard}>
+					<Minimap size={this.props.board.size} markers={markers(this.state.tickets)} />
 				</div>
-				<div className="controls" onClick={this._toggleEdit}>
-					<span className="name">
-						{this.props.board.name}
-					</span>
-					<i className="fa fa-lg fa-pencil" />
+				<div className="name" onClick={this._showBoard}>
+					{this.props.board.name}
+				</div>
+				<div className="controls">
+					<div className="control" onClick={this._showRemoveBoardDialog}>
+						<span className="fa fa-lg fa-trash" />
+					</div>
+					<div className="control" onClick={this._showEditBoardDialog}>
+						<span className="fa fa-lg fa-pencil" />
+					</div>
 				</div>
 				{editBoardDialog}
+				{removeBoardDialog}
 			</div>
 			/* jshint ignore:end */
 		);

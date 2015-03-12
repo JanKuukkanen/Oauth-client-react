@@ -1,7 +1,7 @@
 'use strict';
 
 var gulp       = require('gulp');
-var less       = require('gulp-less');
+var sass       = require('gulp-sass');
 var react      = require('gulp-react');
 var mocha      = require('gulp-mocha');
 var jshint     = require('gulp-jshint');
@@ -27,10 +27,13 @@ gulp.task('jshint', function() {
 		.pipe(jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('less', function() {
-	return gulp.src('./src/styles/**/*.less')
-		.pipe(less().on('error', console.error))
-		.pipe(gulp.dest('./dist/styles/'));
+gulp.task('sass', function() {
+	return gulp.src('src/sass/app.sass')
+		.pipe(sass({
+			indentedSyntax:  true,
+			errLogToConsole: true,
+		}))
+		.pipe(gulp.dest('dist'));
 });
 
 gulp.task('static', function() {
@@ -43,11 +46,10 @@ gulp.task('browserify', function() {
 		.transform(reactify)
 		.transform(envify)
 		.bundle()
-		.pipe(source('app.js'))
-		.pipe(gulp.dest('./dist/scripts/'));
+		.pipe(source('app.js')).pipe(gulp.dest('dist'));
 });
 
-gulp.task('build', ['less', 'static', 'browserify']);
+gulp.task('build', ['sass', 'static', 'browserify']);
 
 gulp.task('serve', ['jshint', 'build'], function() {
 	return gulp.src('.')
@@ -59,7 +61,7 @@ gulp.task('serve', ['jshint', 'build'], function() {
 });
 
 gulp.task('default', ['serve'], function() {
-	gulp.watch('./src/styles/**/*.less', ['less']);
+	gulp.watch('./src/sass/**/*.sass',   ['sass']);
 	gulp.watch('./src/scripts/**/*.js',  ['browserify', 'jshint']);
 	gulp.watch('./src/scripts/**/*.jsx', ['browserify', 'jshint']);
 });

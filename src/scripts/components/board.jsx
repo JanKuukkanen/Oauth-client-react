@@ -3,7 +3,7 @@
 var React  = require('react');
 var Hammer = require('hammerjs');
 
-var props         = require('../constants/props');
+var Property      = require('../constants/property');
 var gridify       = require('../utils/gridify');
 var TicketColor   = require('../constants/enums').TicketColor;
 var TicketActions = require('../actions/ticket');
@@ -20,7 +20,7 @@ var Board = React.createClass({
 		/**
 		 * The 'board' we are representing.
 		 */
-		board: props.Board.isRequired,
+		board: Property.Board.isRequired,
 
 		/**
 		 * The 'snap' property indicates whether to snap created tickets to a

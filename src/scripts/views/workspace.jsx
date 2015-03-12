@@ -2,11 +2,11 @@
 
 var React = require('react');
 
-var Sidebar          = require('../components/sidebar.jsx');
-var AlertBox         = require('../components/alert-box.jsx');
-var BoardPreview     = require('../components/board-preview.jsx');
-var NewBoardPreview  = require('../components/new-board-preview.jsx');
-var UserVoiceTrigger = require('../components/user-voice-trigger.jsx');
+var Broadcast    = require('../components/broadcast.jsx');
+var Navigation   = require('../components/navigation.jsx');
+var BoardPreview = require('../components/board-preview.jsx');
+// var NewBoardPreview  = require('../components/new-board-preview.jsx');
+// var UserVoiceTrigger = require('../components/user-voice-trigger.jsx');
 
 var AuthStore    = require('../stores/auth');
 var BoardStore   = require('../stores/board');
@@ -24,12 +24,11 @@ var listener = require('../mixins/listener');
  */
 var Workspace = React.createClass({
 	mixins: [
-		listener([ AuthStore, BoardStore ]),
+		listener(BoardStore),
 	],
 
 	getState: function() {
 		return {
-			user:   AuthStore.getUser(),
 			boards: BoardStore.getBoards().map(resize),
 		}
 	},
@@ -46,19 +45,23 @@ var Workspace = React.createClass({
 		return BoardActions.loadBoards();
 	},
 
+	_addBoard: function() {
+		return BoardActions.addBoard({});
+	},
+
 	render: function() {
 		return (
 			/* jshint ignore:start */
-			<div className="application">
-				<AlertBox />
-				<Sidebar user={this.state.user} />
-				<div className="view view-workspace">
-					<div className="board-list">
-						{this.renderBoards()}
-						<NewBoardPreview />
+			<div className="view view-workspace">
+				<Broadcast />
+				<Navigation title="Contriboard" />
+				<div className="content">
+					<div className="board-preview new-board"
+							onClick={this._addBoard}>
+						<span className="fa fa-fw fa-plus" />
 					</div>
+					{this.renderBoards()}
 				</div>
-				<UserVoiceTrigger />
 			</div>
 			/* jshint ignore:end */
 		);
