@@ -19,10 +19,12 @@ var BoardActions  = require('../actions/board');
 var StateActions  = require('../actions/state');
 var TicketActions = require('../actions/ticket');
 
-var resize   = require('../utils/resize');
-var markers  = require('../utils/create-markers');
-var listener = require('../mixins/listener');
-var Default  = require('../constants/defaults');
+var Default = require('../constants/defaults');
+
+var resize     = require('../utils/resize');
+var markers    = require('../utils/create-markers');
+var listener   = require('../mixins/listener');
+var background = require('../utils/background');
 
 /**
  * Fix issues with iOS and scrolling causing bouncing.
@@ -89,6 +91,10 @@ var BoardView = React.createClass({
 	},
 
 	render: function() {
+		var minimapOpts = {
+			show:       this.state.showMinimap,
+			background: background(this.state.board),
+		}
 		var editBoardDialog = !this.state.showEditBoardDialog ? null : (
 			/* jshint ignore:start */
 			<EditBoardDialog board={this.state.board} onDismiss={this._showEditBoardDialog} />
@@ -100,7 +106,7 @@ var BoardView = React.createClass({
 				<Navigation title={this.state.board.name} />
 				<div className="content">
 					<Scrollable size={this.state.board.size} markers={markers(this.state.tickets)}
-							minimap={this.state.showMinimap}>
+							minimap={minimapOpts}>
 						<Board board={this.state.board} snap={this.state.snapToGrid}>
 							{this.renderTickets()}
 						</Board>

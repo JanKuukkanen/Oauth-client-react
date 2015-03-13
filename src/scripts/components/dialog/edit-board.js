@@ -2,7 +2,8 @@
 
 var React = require('react/addons');
 
-var Dialog = require('.');
+var Dialog           = require('.');
+var BackgroundSelect = require('../../components/background-select');
 
 var Property     = require('../../constants/property');
 var BoardActions = require('../../actions/board');
@@ -67,6 +68,7 @@ var EditBoardDialog = React.createClass({
 					Edit Board
 				</section>
 				<section className="dialog-content">
+
 					<label htmlFor="board-name">Board Name</label>
 					<input name="board-name" placeholder="Board Name" valueLink={this.linkState('name')} />
 
@@ -76,20 +78,7 @@ var EditBoardDialog = React.createClass({
 						{shareButton}
 					</section>
 
-					<div className="background-select">
-						<div className="value">
-							<img src="http://www.placecage.com/c/256/256" />
-						</div>
-						<label htmlFor="board-background">Board Background</label>
-						<div className="select">
-							<select name="board-background">
-								<option>None</option>
-								<option>SWOT</option>
-								<option>Business Shit</option>
-							</select>
-							<span className="caret fa fa-arrow-down"></span>
-						</div>
-					</div>
+					<BackgroundSelect background={this.linkState('background')} />
 
 				</section>
 				<section className="dialog-footer">

@@ -8,12 +8,12 @@ var Minimap           = require('../components/minimap.jsx');
 var EditBoardDialog   = require('../components/dialog/edit-board');
 var RemoveBoardDialog = require('../components/dialog/remove-board');
 
+var markers       = require('../utils/create-markers');
+var background    = require('../utils/background');
+var listener      = require('../mixins/listener');
+var Property      = require('../constants/property');
 var TicketStore   = require('../stores/ticket');
 var TicketActions = require('../actions/ticket');
-
-var markers  = require('../utils/create-markers');
-var listener = require('../mixins/listener');
-var Property = require('../constants/property');
 
 /**
  * Preview component for Boards. Based on the 'Minimap' component.
@@ -97,7 +97,8 @@ var BoardPreview = React.createClass({
 			/* jshint ignore:start */
 			<div className="board-preview">
 				<div className="minimap-container" onClick={this._showBoard}>
-					<Minimap size={this.props.board.size} markers={markers(this.state.tickets)} />
+					<Minimap size={this.props.board.size} markers={markers(this.state.tickets)}
+						background={background(this.props.board)} />
 				</div>
 				<div className="name" onClick={this._showBoard}>
 					{this.props.board.name}

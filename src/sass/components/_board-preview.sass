@@ -35,7 +35,10 @@
 		padding: 12px
 
 		.minimap
-			cursor: pointer
+			cursor:          pointer
+			background-size: cover
+
+			padding: 0px
 
 			border:        1px solid $gallery
 			border-radius: 2px
@@ -45,11 +48,6 @@
 			&:hover
 				border-color: $silver-chalice
 
-			&::before
-				margin:     0px
-				padding:    0px
-				content:    ""
-				box-shadow: none
 
 			@include position(relative, 0px null null 0px)
 

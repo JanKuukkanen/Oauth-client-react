@@ -27,7 +27,10 @@ var Scrollable = React.createClass({
 		/**
 		 * Whether to show or hide the Minimap.
 		 */
-		minimap: React.PropTypes.bool,
+		minimap: React.PropTypes.shape({
+			show:       React.PropTypes.bool,
+			background: React.PropTypes.string
+		}),
 
 		/**
 		 * The element that will become the area that is scrollable.
@@ -37,7 +40,10 @@ var Scrollable = React.createClass({
 
 	getDefaultProps: function() {
 		return {
-			minimap: false,
+			minimap: {
+				show:       false,
+				background: null,
+			},
 			markers: [ ],
 		}
 	},
@@ -90,7 +96,7 @@ var Scrollable = React.createClass({
 		// If the 'minimap' is toggled to be shown, we need to recalculate it.
 		// Note that this will 'refresh' the scrollable area, so we don't need
 		// to calculate the refresh below.
-		if(!prev.minimap && this.props.minimap) {
+		if(!prev.minimap.show && this.props.minimap.show) {
 			return this._resizeMinimapCursor();
 		}
 		// If the size of the board changes, we need to refresh the scroller.
@@ -107,7 +113,7 @@ var Scrollable = React.createClass({
 	 * method for the attached 'IScroll' instance.
 	 */
 	_resizeMinimapCursor: function() {
-		if(this.props.minimap) {
+		if(this.props.minimap.show) {
 			this.refs.minimap.resizeCursor({
 				width:  this.getDOMNode().clientWidth,
 				height: this.getDOMNode().clientHeight,
@@ -119,9 +125,10 @@ var Scrollable = React.createClass({
 	render: function() {
 		var props = {
 			minimap: {
-				size:    this.props.size,
-				show:    this.props.minimap,
-				markers: this.props.markers,
+				size:       this.props.size,
+				show:       this.props.minimap.show,
+				markers:    this.props.markers,
+				background: this.props.minimap.background,
 			},
 		}
 		return (

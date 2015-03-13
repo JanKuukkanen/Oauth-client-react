@@ -17,3 +17,13 @@ module.exports.UserType = {
 	USER:  'user',
 	GUEST: 'guest',
 }
+
+/**
+ *
+ */
+module.exports.Background = {
+	/* jshint ignore:start */
+	none:          { description: 'Blank',           url: null                                 },
+	keep_drop_try: { description: 'Keep, Drop, Try', url: '/dist/assets/img/keep_drop_try.png' },
+	/* jshint ignore:end */
+}

@@ -21,6 +21,11 @@ var Minimap = React.createClass({
 		size: Property.Size.isRequired,
 
 		/**
+		 * If specified, will be used as the background image.
+		 */
+		background: React.PropTypes.string,
+
+		/**
 		 * Whether or not to show the minimap. Please note that setting this
 		 * to false does not actually 'hide' the minimap, it just appends a
 		 * '.hidden' css-class to the element, so it can be hidden easily.
@@ -53,8 +58,9 @@ var Minimap = React.createClass({
 
 	getDefaultProps: function() {
 		return {
-			show:    true,
-			markers: [ ],
+			show:       true,
+			markers:    [ ],
+			background: null,
 		}
 	},
 
@@ -89,10 +95,10 @@ var Minimap = React.createClass({
 		var scale  = (height > MAX_SIZE) ? (MAX_SIZE / height) : 1.0;
 
 		var style = {
-			width:  scale * width,
-			height: scale * height,
+			width:           scale * width,
+			height:          scale * height,
+			backgroundImage: this.props.background,
 		}
-
 		return (
 			/* jshint ignore:start */
 			<div className={classes} style={style}>

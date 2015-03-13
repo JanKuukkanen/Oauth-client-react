@@ -3,9 +3,12 @@
 var React  = require('react');
 var Hammer = require('hammerjs');
 
-var Property      = require('../constants/property');
+var Property    = require('../constants/property');
+var Background  = require('../constants/enums').Background;
+var TicketColor = require('../constants/enums').TicketColor;
+
 var gridify       = require('../utils/gridify');
-var TicketColor   = require('../constants/enums').TicketColor;
+var background    = require('../utils/background');
 var TicketActions = require('../actions/ticket');
 
 var TICKET_WIDTH  = require('../constants').TICKET_WIDTH;
@@ -78,9 +81,14 @@ var Board = React.createClass({
 	},
 
 	render: function() {
+		var style = {
+			width:           this.props.board.size.width,
+			height:          this.props.board.size.height,
+			backgroundImage: background(this.props.board),
+		}
 		return (
 			/* jshint ignore:start */
-			<div className="board" style={this.props.board.size}>
+			<div className="board" style={style}>
 				{this.props.children}
 			</div>
 			/* jshint ignore:end */
