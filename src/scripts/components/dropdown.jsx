@@ -7,7 +7,7 @@ var React = require('react');
  */
 var Item = React.createClass({
 	propTypes: {
-		icon:     React.PropTypes.string.isRequired,
+		icon:     React.PropTypes.string,
 		onClick:  React.PropTypes.func,
 		disabled: React.PropTypes.bool,
 	},
@@ -24,13 +24,16 @@ var Item = React.createClass({
 			item:     true,
 			disabled: this.props.disabled,
 		});
-		var iconClasses = 'fa fa-fw fa-' + this.props.icon + '';
 
+		var icon = !this.props.icon ? null : (
+			/* jshint ignore:start */
+			<span className={"fa fa-fw fa-" + this.props.icon + ""} />
+			/* jshint ignore:end */
+		);
 		return (
 			/* jshint ignore:start */
 			<li className={itemClasses} onClick={this.props.onClick}>
-				<span className={iconClasses}></span>
-				{this.props.content}
+				{icon}{this.props.content}
 			</li>
 			/* jshint ignore:end */
 		);

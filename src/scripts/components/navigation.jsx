@@ -41,9 +41,16 @@ var Navigation = React.createClass({
 		var items = [
 			{ icon: 'user',     content: 'Profile',      disabled: true  },
 			{ icon: 'language', content: 'Localization', disabled: true  },
-			/* jshint ignore:start */
-			{ icon: 'bullhorn', content: <UserVoice><span>Feedback</span></UserVoice> },
-			/* jshint ignore:end */
+			{
+				content: (
+					/* jshint ignore:start */
+					<UserVoice>
+						<span className="fa fa-fw fa-bullhorn" />
+						Feedback
+					</UserVoice>
+					/* jshint ignore:end */
+				)
+			},
 			{
 				onClick: function() {
 					AuthActions.logout().then(page.show.bind(null, '/'));
