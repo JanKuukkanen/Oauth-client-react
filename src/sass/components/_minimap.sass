@@ -9,6 +9,9 @@
 
 	background-color: $white
 
+	&.hidden
+		display: none
+
 	&::before
 		@include position(absolute)
 
@@ -26,24 +29,15 @@
 		box-shadow: 2px 2px 4px $dove-gray
 
 	.cursor
-		width:  120px
-		height: 60px
-
-		cursor:   pointer
-
-		border-radius: 2px
-
-		background-color: rgba($silver-chalice, 0.25)
+		cursor:           pointer
+		border-radius:    2px
+		background-color: #CCCCCC
 
 	.marker
-		@include position(absolute, 12.8px null null 12.8px)
-
-		width:  19.2px
-		height: 10.8px
-
 		pointer-events: none
+
+		@include position(absolute)
+		@include transition(all, 0.2s)
 
 		border:        1px solid $white
 		border-radius: 2px
-
-		background-color: $wedgewood

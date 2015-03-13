@@ -9,7 +9,15 @@ var Item = React.createClass({
 	propTypes: {
 		icon:     React.PropTypes.string.isRequired,
 		content:  React.PropTypes.string.isRequired,
-		disabled: React.PropTypes.bool.isRequired,
+		onClick:  React.PropTypes.func,
+		disabled: React.PropTypes.bool,
+	},
+
+	getDefaultProps: function() {
+		return {
+			onClick:  function() {},
+			disabled: false,
+		}
 	},
 
 	render: function() {
@@ -20,10 +28,12 @@ var Item = React.createClass({
 		var iconClasses = 'fa fa-fw fa-' + this.props.icon + '';
 
 		return (
+			/* jshint ignore:start */
 			<li className={itemClasses} onClick={this.props.onClick}>
 				<span className={iconClasses}></span>
 				{this.props.content}
 			</li>
+			/* jshint ignore:end */
 		);
 	}
 });
@@ -54,7 +64,9 @@ module.exports = React.createClass({
 	renderItems: function() {
 		return this.props.items.map(function(item, index) {
 			return (
+				/* jshint ignore:start */
 				<Item key={index} {...item} />
+				/* jshint ignore:end */
 			);
 		});
 	}

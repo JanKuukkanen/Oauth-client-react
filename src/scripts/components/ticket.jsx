@@ -6,7 +6,6 @@ var Hammer          = require('hammerjs');
 var TweenState      = require('react-tween-state');
 var PureRenderMixin = React.addons.PureRenderMixin;
 
-var Stripe           = require('./stripe.jsx');
 var EditTicketDialog = require('./dialog/edit-ticket');
 
 var Property        = require('../constants/property');
@@ -174,7 +173,7 @@ var Ticket = React.createClass({
 		return (
 			/* jshint ignore:start */
 			<div className={classes} style={style}>
-				<Stripe color={this.props.ticket.color} />
+				<div className="color" style={{ backgroundColor: this.props.ticket.color }} />
 				<div className="content">
 					{this.props.ticket.content}
 				</div>

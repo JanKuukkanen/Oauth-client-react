@@ -35,7 +35,7 @@ var ColorButton = React.createClass({
 		}
 		return (
 			/* jshint ignore:start */
-			<div className="color-button" style={style} />
+			<div className="option" style={style} />
 			/* jshint ignore:end */
 		);
 	},
@@ -70,8 +70,8 @@ var ColorSelect = React.createClass({
 		return (
 			/* jshint ignore:start */
 			<div className="color-select">
-				<div className="selected" style={selectedColor} />
-				<div className="selector">
+				<div className="value" style={selectedColor} />
+				<div className="options">
 				{TicketColors.map(function(color) {
 					return (
 						<ColorButton key={color} color={color}

@@ -62,7 +62,7 @@ var Minimap = React.createClass({
 	 *
 	 */
 	resizeCursor: function(screen) {
-		if(this.show) {
+		if(this.props.show) {
 			var $this   = this.getDOMNode();
 			var $cursor = this.refs.cursor.getDOMNode();
 
@@ -70,6 +70,7 @@ var Minimap = React.createClass({
 				x: screen.width  / this.props.size.width,
 				y: screen.height / this.props.size.height,
 			}
+
 			$cursor.style.width  = Math.round(scale.x * $this.clientWidth);
 			$cursor.style.height = Math.round(scale.y * $this.clientHeight);
 		}

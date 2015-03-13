@@ -139,10 +139,10 @@ page('/boards/:id',
 	},
 	connect,
 	function showBoardView(ctx) {
-		var view = React.createElement(BoardView, {
-			id: ctx.params.id,
-		});
-		return React.render(view, document.body);
+		return React.render(
+			React.createElement(BoardView, { id: ctx.params.id }),
+			document.getElementById('application')
+		);
 	});
 
 /**

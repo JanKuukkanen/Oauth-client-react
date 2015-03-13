@@ -1,20 +1,22 @@
 'use strict';
 
+var _     = require('lodash');
+var page  = require('page');
 var React = require('react');
 
-var Board            = require('../components/board.jsx');
-var Ticket           = require('../components/ticket.jsx');
-var Setting          = require('../components/setting.jsx');
-var Sidebar          = require('../components/navigation.jsx');
-var AlertBox         = require('../components/broadcast.jsx');
-var Scrollable       = require('../components/scrollable.jsx');
-var UserVoiceTrigger = require('../components/user-voice-trigger.jsx');
+var Board           = require('../components/board.jsx');
+var Ticket          = require('../components/ticket.jsx');
+var Control         = require('../components/control');
+var Broadcast       = require('../components/broadcast.jsx');
+var Navigation      = require('../components/navigation.jsx');
+var Scrollable      = require('../components/scrollable.jsx');
+var EditBoardDialog = require('../components/dialog/edit-board');
 
-var AuthStore     = require('../stores/auth');
 var StateStore    = require('../stores/state');
 var BoardStore    = require('../stores/board');
 var TicketStore   = require('../stores/ticket');
 var BoardActions  = require('../actions/board');
+var StateActions  = require('../actions/state');
 var TicketActions = require('../actions/ticket');
 
 var resize   = require('../utils/resize');
@@ -40,7 +42,7 @@ function _preventBounce(ev) {
  */
 var BoardView = React.createClass({
 	mixins: [
-		listener([ AuthStore, StateStore, BoardStore, TicketStore ]),
+		listener([ StateStore, BoardStore, TicketStore ]),
 	],
 
 	propTypes: {
@@ -49,7 +51,6 @@ var BoardView = React.createClass({
 
 	getState: function() {
 		return {
-			user: AuthStore.getUser(),
 			board: resize(
 				BoardStore.getBoard(this.props.id) || Default.BOARD
 			),
@@ -62,7 +63,9 @@ var BoardView = React.createClass({
 	},
 
 	getInitialState: function() {
-		return this.getState();
+		return _.extend(this.getState(), {
+			showEditBoardDialog: false
+		});
 	},
 
 	onChange: function() {
@@ -72,7 +75,6 @@ var BoardView = React.createClass({
 	componentDidMount: function() {
 		BoardActions.loadBoard(this.props.id);
 		TicketActions.loadTickets(this.props.id);
-
 		return document.addEventListener('touchmove', _preventBounce);
 	},
 
@@ -80,52 +82,84 @@ var BoardView = React.createClass({
 		return document.removeEventListener('touchmove', _preventBounce);
 	},
 
+	_showEditBoardDialog: function() {
+		return this.setState({
+			showEditBoardDialog: !this.state.showEditBoardDialog
+		});
+	},
+
 	render: function() {
+		var editBoardDialog = !this.state.showEditBoardDialog ? null : (
+			/* jshint ignore:start */
+			<EditBoardDialog board={this.state.board} onDismiss={this._showEditBoardDialog} />
+			/* jshint ignore:end */
+		);
 		return (
 			/* jshint ignore:start */
-			<div className="application">
-				<AlertBox />
-				<Sidebar user={this.state.user} />
-				<div className="view view-board">
-					<div className="options">
-						{this.renderSettings()}
-					</div>
-					<Scrollable size={this.state.board.size}
-							markers={markers(this.state.tickets)}
+			<div className="view view-board">
+				<Navigation title={this.state.board.name} />
+				<div className="content">
+					<Scrollable size={this.state.board.size} markers={markers(this.state.tickets)}
 							minimap={this.state.showMinimap}>
-						<Board board={this.state.board}
-								snap={this.state.snapToGrid}>
+						<Board board={this.state.board} snap={this.state.snapToGrid}>
 							{this.renderTickets()}
 						</Board>
 					</Scrollable>
 				</div>
-				<UserVoiceTrigger />
+				{editBoardDialog}
+				{this.renderControls()}
 			</div>
 			/* jshint ignore:end */
 		);
 	},
 
-	renderSettings: function() {
-		var settings = [{
-			key:   'snapToGrid',
-			icon:  'th',
-			value: this.state.snapToGrid,
+	/**
+	 * NOTE This is a clusterfuck beyond any control holy hell should this be
+	 *      cleaned up or what. It Just Works.
+	 */
+	renderControls: function() {
+		var controls = [{
+			icon: 'arrow-left',
+			onClick: function() {
+				return page.back('/boards');
+			}
 		}, {
-			key:   'showMinimap',
-			icon:  'globe',
-			value: this.state.showMinimap,
+			icon: 'pencil',
+			active: this.state.showEditBoardDialog,
+			onClick: this._showEditBoardDialog,
+		}, {
+			icon: 'magnet',
+			active: this.state.snapToGrid,
+			onClick: function() {
+				StateActions.setSetting(
+					'snapToGrid', !this.state.snapToGrid
+				);
+			}.bind(this)
+		}, {
+			icon: 'globe',
+			active: this.state.showMinimap,
+			onClick: function() {
+				StateActions.setSetting(
+					'showMinimap', !this.state.showMinimap
+				);
+			}.bind(this)
 		}];
-		return settings.map(function(setting) {
-			return (
-				/* jshint ignore:start */
-				<Setting key={setting.key}
-					icon={setting.icon}
-					value={setting.value} />
-				/* jshint ignore:end */
-			);
-		});
+		return (
+			/* jshint ignore:start */
+			<div className="controls">
+				{controls.map(function(ctrl, index) {
+					return (
+						<Control key={index} {...ctrl} />
+					);
+				})}
+			</div>
+			/* jshint ignore:end */
+		);
 	},
 
+	/**
+	 *
+	 */
 	renderTickets: function() {
 		return this.state.tickets.map(function(ticket) {
 			return (

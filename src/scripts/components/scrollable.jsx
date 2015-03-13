@@ -53,7 +53,7 @@ var Scrollable = React.createClass({
 	componentDidMount: function() {
 		// Attach 'IScroll' to this element. Note that we also attach a Minimap
 		// in the form of 'indicators', with an interactive Cursor.
-		this.scroller = new IScroll(this.refs.wrapper.getDOMNode(), {
+		this.scroller = new IScroll(this.getDOMNode(), {
 			scrollX:    true,
 			scrollY:    true,
 			freeScroll: true,
@@ -111,8 +111,8 @@ var Scrollable = React.createClass({
 	_resizeMinimapCursor: function() {
 		if(this.props.minimap) {
 			this.refs.minimap.resizeCursor({
-				width:  this.refs.wrapper.clientWidth,
-				height: this.refs.wrapper.clientHeight,
+				width:  this.getDOMNode().clientWidth,
+				height: this.getDOMNode().clientHeight,
 			});
 			return this.scroller.refresh();
 		}
@@ -121,7 +121,7 @@ var Scrollable = React.createClass({
 	render: function() {
 		var props = {
 			minimap: {
-				area:    this.props.size,
+				size:    this.props.size,
 				show:    this.props.minimap,
 				markers: this.props.markers,
 			},
@@ -129,9 +129,7 @@ var Scrollable = React.createClass({
 		return (
 			/* jshint ignore:start */
 			<div className="scrollable">
-				<div ref="wrapper" className="wrapper">
-					{this.renderScrollable()}
-				</div>
+				{this.renderScrollableElement()}
 				<Minimap ref="minimap" {...props.minimap} />
 			</div>
 			/* jshint ignore:end */
@@ -142,7 +140,7 @@ var Scrollable = React.createClass({
 	 * Renders the 'scrollable' element. The child is enhanced with an 'offset'
 	 * property.
 	 */
-	renderScrollable: function() {
+	renderScrollableElement: function() {
 		return React.Children.map(this.props.children, function(child) {
 			return React.addons.cloneWithProps(child, {
 				offset: this.state.offset,

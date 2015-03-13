@@ -3,6 +3,7 @@
 var page  = require('page');
 var React = require('react');
 
+var Control           = require('../components/control');
 var Minimap           = require('../components/minimap.jsx');
 var EditBoardDialog   = require('../components/dialog/edit-board');
 var RemoveBoardDialog = require('../components/dialog/remove-board');
@@ -101,16 +102,32 @@ var BoardPreview = React.createClass({
 				<div className="name" onClick={this._showBoard}>
 					{this.props.board.name}
 				</div>
-				<div className="controls">
-					<div className="control" onClick={this._showRemoveBoardDialog}>
-						<span className="fa fa-lg fa-trash" />
-					</div>
-					<div className="control" onClick={this._showEditBoardDialog}>
-						<span className="fa fa-lg fa-pencil" />
-					</div>
-				</div>
 				{editBoardDialog}
 				{removeBoardDialog}
+				{this.renderControls()}
+			</div>
+			/* jshint ignore:end */
+		);
+	},
+
+	renderControls: function() {
+		var controls = [{
+			icon:    'trash',
+			active:  this.state.showRemoveBoardDialog,
+			onClick: this._showRemoveBoardDialog,
+		}, {
+			icon:    'pencil',
+			active:  this.state.showEditBoardDialog,
+			onClick: this._showEditBoardDialog,
+		}];
+		return (
+			/* jshint ignore:start */
+			<div className="controls">
+				{controls.map(function(ctrl, index) {
+					return (
+						<Control key={index} {...ctrl} />
+					);
+				})}
 			</div>
 			/* jshint ignore:end */
 		);

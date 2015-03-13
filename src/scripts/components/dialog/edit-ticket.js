@@ -1,37 +1,22 @@
 'use strict';
 
-var _                = require('lodash');
-var React            = require('react/addons');
-var LinkedStateMixin = React.addons.LinkedStateMixin;
+var React = require('react/addons');
 
 var Dialog      = require('.');
 var ColorSelect = require('../../components/color-select.jsx');
 
 var Property      = require('../../constants/property');
-var TicketColors  = _.values(require('../../constants/enums').TicketColor);
 var TicketActions = require('../../actions/ticket');
 
 /**
- * Displays an overlaid Dialog to edit the given Ticket.
+ *
  */
 var EditTicketDialog = React.createClass({
-	mixins: [React.addons.LinkedStateMixin],
+	mixins: [ React.addons.LinkedStateMixin ],
 
 	propTypes: {
-		/**
-		 * Initial state for the ticket.
-		 */
-		ticket: Property.Ticket.isRequired,
-
-		/**
-		 * Since tickets are stored relative to the board they are in, we need
-		 * to know on what board the ticket is in.
-		 */
-		boardID: React.PropTypes.string.isRequired,
-
-		/**
-		 * Callback for dialog dismissal.
-		 */
+		ticket:    Property.Ticket.isRequired,
+		boardID:   React.PropTypes.string.isRequired,
 		onDismiss: React.PropTypes.func.isRequired,
 	},
 
@@ -42,9 +27,6 @@ var EditTicketDialog = React.createClass({
 		}
 	},
 
-	/**
-	 * Triggers persisting the edits.
-	 */
 	_submit: function() {
 		var boardID  = this.props.boardID;
 		var ticketID = this.props.ticket.id;
@@ -57,9 +39,6 @@ var EditTicketDialog = React.createClass({
 		return this.props.onDismiss();
 	},
 
-	/**
-	 * Triggers removal of the Ticket.
-	 */
 	_remove: function() {
 		var boardID  = this.props.boardID;
 		var ticketID = this.props.ticket.id;
@@ -71,20 +50,21 @@ var EditTicketDialog = React.createClass({
 	render: function() {
 		return (
 			/* jshint ignore:start */
-			<Dialog className="edit-ticket-dialog"
-					onDismiss={this.props.onDismiss}>
-				<ColorSelect color={this.linkState('color')} />
-				<div className="form">
+			<Dialog className="edit-ticket-dialog" onDismiss={this.props.onDismiss}>
+				<section className="dialog-header">
+					<ColorSelect color={this.linkState('color')} />
+				</section>
+				<section className="dialog-content">
 					<textarea valueLink={this.linkState('content')} />
-				</div>
-				<div className="controls">
-					<button className="btn turquoise" onClick={this._submit}>
-						Done
-					</button>
-					<button className="btn red" onClick={this._remove}>
+				</section>
+				<section className="dialog-footer">
+					<button className="btn-danger" onClick={this._remove}>
 						Delete
 					</button>
-				</div>
+					<button className="btn-primary" onClick={this._submit}>
+						Done
+					</button>
+				</section>
 			</Dialog>
 			/* jshint ignore:end */
 		);

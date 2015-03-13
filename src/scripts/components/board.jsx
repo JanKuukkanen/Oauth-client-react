@@ -18,27 +18,20 @@ var TICKET_HEIGHT = require('../constants').TICKET_HEIGHT;
 var Board = React.createClass({
 	propTypes: {
 		/**
-		 * The 'board' we are representing.
-		 */
-		board: Property.Board.isRequired,
-
-		/**
 		 * The 'snap' property indicates whether to snap created tickets to a
 		 * grid of 'ticket.width' x 'ticket.height'.
 		 */
 		snap: React.PropTypes.bool,
 
 		/**
-		 * The 'sidebarWidth' property indicates the current width of the
-		 * sidebar. Used for calculating the absolute position of new tickets.
+		 * The 'board' we are representing.
 		 */
-		sidebarWidth: React.PropTypes.number,
+		board: Property.Board.isRequired,
 	},
 
 	getDefaultProps: function() {
 		return {
-			snap:         false,
-			sidebarWidth: 80,
+			snap: false,
 		}
 	},
 
@@ -49,26 +42,24 @@ var Board = React.createClass({
 		// Setup a listener for our custom 'doubletap' event, which is used
 		// here to add new tickets.
 		this.hammer.on('doubletap', function addTicket(ev) {
-			// We need to take into account the static sidebar when calculating
-			// the pointer position.
-			ev.center.x = ev.center.x - this.props.sidebarWidth;
+			// Take into account the height of the Navigation bar...
+			ev.center.y = ev.center.y - 64;
 
 			// Calculate the position to be at the center of the ticket. Since
 			// the 'Board' component is wrapped by a 'Scrollable', we receive
 			// an 'offset' property.
 			// If the user has enabled snapping, we also need to make sure to
 			// snap the position to a grid.
-
 			var pos = {
 				x: (ev.center.x - this.props.offset.x) - (TICKET_WIDTH / 2),
 				y: (ev.center.y - this.props.offset.y) - (TICKET_HEIGHT / 2),
 			}
-			var endpos = this.props.snap ? gridify(pos) : pos;
+
+			var endpos    = this.props.snap ? gridify(pos) : pos;
+			var boardSize = this.props.board.size;
 
 			// Finally we need to clamp the position so that it does not go
 			// over the bounds of the board.
-
-			var boardSize = this.props.board.size;
 
 			endpos.x = endpos.x < 0 ?
 				0 : ((endpos.x + TICKET_WIDTH) > boardSize.width ?

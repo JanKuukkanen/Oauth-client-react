@@ -56,8 +56,7 @@ var Workspace = React.createClass({
 				<Broadcast />
 				<Navigation title="Contriboard" />
 				<div className="content">
-					<div className="board-preview new-board"
-							onClick={this._addBoard}>
+					<div className="board-preview new-board" onClick={this._addBoard}>
 						<span className="fa fa-fw fa-plus" />
 					</div>
 					{this.renderBoards()}
