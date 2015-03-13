@@ -109,8 +109,6 @@ page('/boards',
 		return next();
 	},
 	function showWorkspaceView(ctx) {
-		console.log(document.getElementById('application'));
-
 		return React.render(
 			React.createElement(WorkspaceView),
 			document.getElementById('application')
@@ -174,11 +172,21 @@ page('/boards/:id/access/:code',
 	},
 	disconnect,
 	function showGuestLoginView(ctx) {
-		var view = React.createElement(GuestLoginView, {
-			boardID:    ctx.params.id,
-			accessCode: ctx.params.code,
-		});
-		return React.render(view, document.body);
+		return React.render(React.createElement(FormView, {
+			fields: [
+				{ name: 'username', type: 'text', label: 'Username' },
+			],
+			submit: function(state) {
+				var credentials = _.extend(state, {
+					boardID:    ctx.params.id,
+					accessCode: ctx.params.code,
+				});
+				return AuthActions.loginGuest(credentials).then(
+					page.show.bind(null, '/boards/' + ctx.params.id + ''));
+			},
+			action: 'Login as Guest'
+		}),
+		document.getElementById('application'));
 	});
 
 /**

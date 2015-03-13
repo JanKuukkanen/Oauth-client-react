@@ -29,7 +29,7 @@ module.exports = createStore(ErrorStoreAPI, function(action) {
 		_markAsSeen(action.payload);
 		return this.emitChange();
 	}
-	if(_isFailure(action)) {
+	if(action.payload && action.payload.error) {
 		_addError(action.payload, action.type);
 		return this.emitChange();
 	}
@@ -70,7 +70,7 @@ function getUnseen() {
 function _addError(payload, type) {
 	var error      = payload.error || new Error();
 	    error.type = type;
-	_unseen.push(error);
+	return _unseen.push(error);
 }
 
 /**
@@ -81,12 +81,4 @@ function _markAsSeen(payload) {
 	if(_unseen.indexOf(payload.error) >= 0) {
 		_seen.push(_unseen.splice(_unseen.indexOf(payload.error), 1)[0]);
 	}
-}
-
-/**
- * Check if the given action has a 'FAILURE' suffix.
- */
-function _isFailure(action) {
-	return (action.type.indexOf('FAILURE',
-		(action.type.length - 'FAILURE'.length)) !== -1);
 }

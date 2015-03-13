@@ -25,7 +25,9 @@ module.exports = function actionBuilder(initialPayload, promise) {
 	function onFulfill(payload) {
 		if(payload.error) {
 			if(payload.error.statusCode === 401) {
-				Dispatcher.dispatch({ type: Action.AUTHENTICATION_FAILURE });
+				Dispatcher.dispatch({
+					type: Action.AUTHENTICATION_FAILURE, payload: { },
+				});
 			}
 			Dispatcher.dispatch({
 				type:    actionFailure,

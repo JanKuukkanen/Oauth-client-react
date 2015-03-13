@@ -3,9 +3,7 @@
 var React   = require('react');
 var IScroll = require('iscroll');
 
-var Cursor  = require('../components/cursor.jsx');
-var Minimap = require('../components/minimap.jsx');
-
+var Minimap  = require('../components/minimap.jsx');
 var Property = require('../constants/property');
 
 /**

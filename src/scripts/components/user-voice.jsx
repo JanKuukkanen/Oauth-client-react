@@ -6,7 +6,7 @@ var Hammer = require('hammerjs');
 /**
  *
  */
-var UserVoiceTrigger = React.createClass({
+var UserVoice = React.createClass({
 	propTypes: {
 		mode: React.PropTypes.string,
 	},
@@ -17,10 +17,10 @@ var UserVoiceTrigger = React.createClass({
 
 	componentWillMount: function() {
 		if(!window.UserVoice) {
-			var uvScriptTag       = document.createElement('script');
-			    uvScriptTag.src   = '//widget.uservoice.com/eXKxE4WzstJy0DTpmrepAA.js';
-			    uvScriptTag.async = true;
-			return document.head.appendChild(uvScriptTag);
+			var uvst   = document.createElement('script');
+			uvst.src   = '//widget.uservoice.com/eXKxE4WzstJy0DTpmrepAA.js';
+			uvst.async = true;
+			return document.head.appendChild(uvst);
 		}
 	},
 
@@ -37,11 +37,11 @@ var UserVoiceTrigger = React.createClass({
 		return (
 			/* jshint ignore:start */
 			<div className="user-voice-trigger">
-				UserVoiceTrigger
+				{this.props.children}
 			</div>
 			/* jshint ignore:end */
 		);
 	}
 });
 
-module.exports = UserVoiceTrigger;
+module.exports = UserVoice;

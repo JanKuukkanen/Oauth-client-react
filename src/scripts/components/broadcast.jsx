@@ -58,7 +58,7 @@ var Broadcast = React.createClass({
 	},
 
 	onChange: function() {
-		this.setState(this.getState());
+		return this.setState(this.getState());
 	},
 
 	render: function() {

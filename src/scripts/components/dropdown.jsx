@@ -8,7 +8,6 @@ var React = require('react');
 var Item = React.createClass({
 	propTypes: {
 		icon:     React.PropTypes.string.isRequired,
-		content:  React.PropTypes.string.isRequired,
 		onClick:  React.PropTypes.func,
 		disabled: React.PropTypes.bool,
 	},

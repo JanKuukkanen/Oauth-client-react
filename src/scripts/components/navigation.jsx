@@ -8,21 +8,8 @@ var Property    = require('../constants/property');
 var AuthStore   = require('../stores/auth');
 var AuthActions = require('../actions/auth');
 
-var Dropdown = require('../components/dropdown.jsx');
-
-/**
- *
- */
-var items = [
-	{ icon: 'user',     content: 'Profile',      disabled: true },
-	{ icon: 'language', content: 'Localization', disabled: true },
-	{
-		onClick: function() {
-			AuthActions.logout().then(page.show.bind(null, '/'));
-		},
-		icon: 'sign-out', content: 'Logout', disabled: false,
-	}
-];
+var Dropdown  = require('../components/dropdown.jsx');
+var UserVoice = require('../components/user-voice.jsx');
 
 /**
  *
@@ -38,6 +25,7 @@ var Navigation = React.createClass({
 		return {
 			user:     AuthStore.getUser(),
 			dropdown: false,
+			feedback: false,
 		}
 	},
 
@@ -50,6 +38,19 @@ var Navigation = React.createClass({
 	},
 
 	render: function() {
+		var items = [
+			{ icon: 'user',     content: 'Profile',      disabled: true  },
+			{ icon: 'language', content: 'Localization', disabled: true  },
+			/* jshint ignore:start */
+			{ icon: 'bullhorn', content: <UserVoice><span>Feedback</span></UserVoice> },
+			/* jshint ignore:end */
+			{
+				onClick: function() {
+					AuthActions.logout().then(page.show.bind(null, '/'));
+				},
+				icon: 'sign-out', content: 'Logout'
+			}
+		];
 		return (
 			/* jshint ignore:start */
 			<nav className="nav">
