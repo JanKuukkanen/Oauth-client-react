@@ -16,7 +16,11 @@ var CHANGE_EVENT = 'change';
  * @returns {object}  Store object, which is also an EventEmitter.
  */
 function createStore(exports, callback) {
-	var store = assign(new EventEmitter(), {
+	// Make sure EventEmitter has unlimited listeners!
+	var emitter = new EventEmitter();
+	    emitter.setMaxListeners(0);
+
+	var store = assign(emitter, {
 		emitChange: function() {
 			this.emit(CHANGE_EVENT);
 		},
