@@ -84,7 +84,7 @@ function _addBoard(board, boards) {
 	 */
 	function _add(board, boards) {
 		if(_index(board.id, boards) < 0) {
-			return boards.push(_board(board));
+			return boards.unshift(_board(board));
 		}
 		return _editBoard(board.id, board, boards);
 	}
