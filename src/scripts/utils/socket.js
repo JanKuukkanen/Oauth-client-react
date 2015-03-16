@@ -179,6 +179,13 @@ function _onData(data) {
 	setTimeout(function() {
 		switch(data.type) {
 			case 'BOARD_EDIT':
+				Dispatcher.dispatch({
+					payload: {
+						board:   data.data.newAttributes,
+						boardID: data.board,
+					},
+					type: Action.EDIT_BOARD,
+				});
 				break;
 			case 'BOARD_REMOVE':
 				break;
