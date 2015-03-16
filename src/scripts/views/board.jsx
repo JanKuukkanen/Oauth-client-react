@@ -12,6 +12,7 @@ var Navigation      = require('../components/navigation.jsx');
 var Scrollable      = require('../components/scrollable.jsx');
 var EditBoardDialog = require('../components/dialog/edit-board');
 
+var AuthStore     = require('../stores/auth');
 var StateStore    = require('../stores/state');
 var BoardStore    = require('../stores/board');
 var TicketStore   = require('../stores/ticket');
@@ -44,7 +45,7 @@ function _preventBounce(ev) {
  */
 var BoardView = React.createClass({
 	mixins: [
-		listener([ StateStore, BoardStore, TicketStore ]),
+		listener([ AuthStore, StateStore, BoardStore, TicketStore ]),
 	],
 
 	propTypes: {
@@ -53,6 +54,7 @@ var BoardView = React.createClass({
 
 	getState: function() {
 		return {
+			user: AuthStore.getUser(),
 			board: resize(
 				BoardStore.getBoard(this.props.id) || Default.BOARD
 			),
@@ -103,7 +105,7 @@ var BoardView = React.createClass({
 		return (
 			/* jshint ignore:start */
 			<div className="view view-board">
-				<Navigation title={this.state.board.name} />
+				<Navigation user={this.state.user} title={this.state.board.name} />
 				<div className="content">
 					<Scrollable size={this.state.board.size} markers={markers(this.state.tickets)}
 							minimap={minimapOpts}>
@@ -125,15 +127,6 @@ var BoardView = React.createClass({
 	 */
 	renderControls: function() {
 		var controls = [{
-			icon: 'arrow-left',
-			onClick: function() {
-				return page.back('/boards');
-			}
-		}, {
-			icon: 'pencil',
-			active: this.state.showEditBoardDialog,
-			onClick: this._showEditBoardDialog,
-		}, {
 			icon: 'magnet',
 			active: this.state.snapToGrid,
 			onClick: function() {
@@ -150,6 +143,18 @@ var BoardView = React.createClass({
 				);
 			}.bind(this)
 		}];
+		if(this.state.user && this.state.user.type === 'user') {
+			controls.unshift({
+				icon: 'arrow-left',
+				onClick: function() {
+					return page.back('/boards');
+				}
+			}, {
+				icon: 'pencil',
+				active: this.state.showEditBoardDialog,
+				onClick: this._showEditBoardDialog,
+			});
+		}
 		return (
 			/* jshint ignore:start */
 			<div className="controls">
