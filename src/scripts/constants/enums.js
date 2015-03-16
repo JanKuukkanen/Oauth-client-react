@@ -23,7 +23,13 @@ module.exports.UserType = {
  */
 module.exports.Background = {
 	/* jshint ignore:start */
-	none:          { description: 'Blank',           url: null                                 },
-	keep_drop_try: { description: 'Keep, Drop, Try', url: '/dist/assets/img/keep_drop_try.png' },
+	NONE:                  { description: 'Blank',                 url: null                                            },
+	PLAY:                  { description: 'Play!',                 url: '/dist/assets/img/bg/play.png'                  },
+	SWOT:                  { description: 'SWOT',                  url: '/dist/assets/img/bg/swot.png'                  },
+	SCRUM:                 { description: 'Scrum',                 url: '/dist/assets/img/bg/scrum.png'                 },
+	KANBAN:                { description: 'Kanban',                url: '/dist/assets/img/bg/kanban.png'                },
+	KEEP_DROP_TRY:         { description: 'Keep, Drop, Try',       url: '/dist/assets/img/bg/keep_drop_try.png'         },
+	CUSTOMER_JOURNEY_MAP:  { description: 'Customer Journey Map',  url: '/dist/assets/img/bg/customer_journey_map.png'  },
+	BUSINESS_MODEL_CANVAS: { description: 'Business Model Canvas', url: '/dist/assets/img/bg/business_model_canvas.png' },
 	/* jshint ignore:end */
 }

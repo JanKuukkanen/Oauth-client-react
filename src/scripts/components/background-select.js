@@ -24,8 +24,8 @@ var BackgroundSelect = React.createClass({
 
 	render: function() {
 		/* jshint ignore:start */
-		var url     = Background[this.props.background.value].url;
-		var preview = url ? <img src={url} /> : <div className="blanko" />;
+		var bg      = Background[this.props.background.value];
+		var preview = bg && bg.url ? <img src={bg.url} /> : <div className="blanko" />;
 		/* jshint ignore:end */
 
 		return (
