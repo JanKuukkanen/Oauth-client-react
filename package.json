@@ -1,55 +1,44 @@
 {
-  "name": "contriboard-client",
-  "version": "0.0.0",
-  "scripts": {
-    "serve": "http-server",
-    "build-js": "browserify src/scripts/app.js -t envify -t babelify -o dist/app.js",
-    "watch-js": "watchify src/scripts/app.js -t envify -t babelify -o dist/app.js -dv",
-    "build-css": "sass src/sass/app.sass dist/app.css",
-    "watch-css": "sass --watch src/sass/app.sass:dist/app.css",
-    "build": "npm run build-js && npm run build-css",
-    "watch": "npm run watch-js & npm run watch-css",
-    "livereload": "livereload dist/"
-  },
+  "name":    "contriboard",
+  "author":  "taneli.hartikainen@jamk.fi",
+  "license": "MIT",
+
   "dependencies": {
-    "draggabilly": "1.1.1",
-    "fastclick": "1.0.6",
-    "flux": "2.0.1",
-    "hammerjs": "2.0.4",
+    "flux":      "2.0.1",
     "immutable": "3.6.2",
-    "iscroll": "5.1.3",
-    "lodash": "3.0.0",
-    "object-assign": "2.0.0",
-    "page": "1.6.0",
-    "promise": "6.1.0",
-    "react": "0.12.2",
+
+    "react":             "0.12.2",
     "react-tween-state": "0.0.4",
-    "request": "2.53.0",
-    "socket.io-client": "1.3.3",
-    "utf8": "^2.1.0"
+
+    "iscroll":     "5.1.3",
+    "hammerjs":    "2.0.4",
+    "fastclick":   "1.0.6",
+    "draggabilly": "1.1.1",
+
+    "utf8":          "2.1.0",
+    "lodash":        "3.0.0",
+    "promise":       "6.1.0",
+    "object-assign": "2.0.0",
+
+    "page":             "1.6.0",
+    "request":          "2.53.0",
+    "socket.io-client": "1.3.3"
   },
+
   "devDependencies": {
-    "babelify": "^5.0.3",
-    "browserify": "^9.0.3",
-    "envify": "^3.2.0",
-    "gulp": "3.8.10",
-    "gulp-jshint": "1.9.2",
-    "gulp-less": "^3.0.1",
-    "gulp-mocha": "2.0.0",
-    "gulp-react": "2.0.0",
-    "gulp-sass": "^1.3.3",
+    "gulp":           "3.8.10",
+    "gulp-sass":      "1.3.3",
+    "gulp-mocha":     "2.0.0",
+    "gulp-jshint":    "1.9.2",
     "gulp-webserver": "0.9.0",
-    "http-server": "^0.7.4",
-    "jshint-stylish": "1.0.0",
-    "less": "^2.4.0",
-    "livereload": "^0.3.6",
-    "node-localstorage": "0.5.0",
-    "purdy": "1.3.0",
-    "reactify": "1.0.0",
-    "should": "4.6.1",
+
+    "should":              "4.6.1",
+    "jshint-stylish":      "1.0.0",
     "vinyl-source-stream": "1.0.0",
-    "watchify": "^2.4.0"
-  },
-  "author": "taneli.hartikainen@jamk.fi",
-  "license": "MIT"
+
+    "envify":     "3.2.0",
+    "watchify":   "2.4.0",
+    "babelify":   "5.0.3",
+    "browserify": "9.0.3"
+  }
 }

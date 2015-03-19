@@ -1,11 +1,9 @@
 'use strict'
 
-var purdy = require('purdy');
-
 var gridify = require('../../src/scripts/utils/gridify');
 
 /**
- * Testing gridify.js if it can take the ticket's coordinates and snap it to 
+ * Testing gridify.js if it can take the ticket's coordinates and snap it to
  * the grid properly. Ticket size is x=192 and y=108
  */
 describe('Gridify', function() {
