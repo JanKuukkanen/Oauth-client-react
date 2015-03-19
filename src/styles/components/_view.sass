@@ -1,0 +1,48 @@
+/**
+ *
+ */
+.view
+	height: 100%
+
+	@include display(flex)
+	@include flex-direction(column)
+
+	.content
+		@include flex(1)
+
+	.controls
+		@include layer(1000)
+		@include display(flex)
+		@include position(absolute, 80px null null 16px)
+		@include flex-direction(column)
+
+		padding: 2px
+
+		border-radius:    2px
+		background-color: $neptune
+
+		.control
+			@include flex(1)
+			@include position(relative)
+			@include transition(all, 0.2s)
+
+			width:  48px
+			height: 48px
+
+			color:            $patina
+			background-color: $neptune
+
+			cursor:        pointer
+			border-radius: 2px
+
+			span
+				width:       100%
+				line-height: 48px
+
+			&:hover
+				color:            $neptune
+				background-color: $patina
+
+			&.active
+				color: $white
+

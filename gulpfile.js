@@ -51,7 +51,7 @@ gulp.task('build-js', function() {
  * Build the CSS source.
  */
 gulp.task('build-css', function() {
-	return gulp.src('src/sass/app.sass')
+	return gulp.src('src/styles/app.sass')
 		.pipe(sass({
 			indentedSyntax:  true,
 			errLogToConsole: true,
@@ -88,8 +88,8 @@ gulp.task('serve', ['build'], function() {
  * Keep track of the source files and rebuild as necessary.
  */
 gulp.task('default', ['serve'], function() {
-	gulp.watch('./src/sass/**/*.sass',   ['build-css']);
 	gulp.watch('./src/assets/**/*',      ['build-assets']);
+	gulp.watch('./src/styles/**/*.sass', ['build-css']);
 	gulp.watch('./src/scripts/**/*.js',  ['lint', 'build-js']);
 	gulp.watch('./src/scripts/**/*.jsx', ['lint', 'build-js']);
 });
