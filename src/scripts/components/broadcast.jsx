@@ -7,6 +7,8 @@ var listener     = require('../mixins/listener');
 var ErrorStore   = require('../stores/error');
 var ErrorActions = require('../actions/error');
 
+var ERROR_TIMEOUT = 5000;
+
 /**
  *
  */
@@ -20,11 +22,19 @@ var ErrorItem = React.createClass({
 	},
 
 	componentDidMount: function() {
-		this.hammer = new Hammer(this.getDOMNode());
+		this.timeout = setTimeout(this.remove, ERROR_TIMEOUT);
 
-		this.hammer.on('tap', function() {
-			return ErrorActions.markAsSeen(this.props.error);
-		}.bind(this));
+		this.hammer = new Hammer(this.getDOMNode());
+		this.hammer.on('tap', this.remove);
+	},
+
+	componentWillUnmount: function() {
+		clearTimeout(this.timeout);
+	},
+
+	remove: function() {
+		clearTimeout(this.timeout);
+		ErrorActions.markAsSeen(this.props.error);
 	},
 
 	render: function() {
