@@ -24,6 +24,7 @@ var FormView = React.createClass({
 			action:      React.PropTypes.string.isRequired,
 			description: React.PropTypes.string,
 		}),
+		help:   React.PropTypes.string,
 		submit: React.PropTypes.func.isRequired,
 		action: React.PropTypes.string.isRequired,
 	},
@@ -74,7 +75,10 @@ var FormView = React.createClass({
 						<button className="btn-primary" onClick={this._submit}>
 							{this.props.action}
 						</button>
-						{secondaryContent}
+						<article className="help">{this.props.help}</article>
+						<section className="secondary-content">
+							{secondaryContent}
+						</section>
 					</div>
 				</div>
 			</div>

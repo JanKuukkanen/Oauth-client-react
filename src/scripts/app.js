@@ -57,6 +57,7 @@ page('/login', notLoggedIn, disconnect, function showLoginView(ctx) {
 				return AuthActions.login(state)
 					.then(page.show.bind(null, '/boards'));
 			},
+			help:   'Passwords must be at least 8 characters long.',
 			action: 'Login'
 		}),
 		document.getElementById('application'));
@@ -85,6 +86,7 @@ page('/register', notLoggedIn, disconnect, function() {
 				return AuthActions.register(state)
 					.then(page.show.bind(null, '/login'));
 			},
+			help:   'Passwords must be at least 8 characters long.',
 			action: 'Register'
 		}),
 		document.getElementById('application'));
