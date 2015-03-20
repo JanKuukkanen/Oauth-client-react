@@ -178,11 +178,6 @@ module.exports = {
 	 */
 	REGISTER_FAILURE: 'REGISTER_FAILURE',
 
-	/**
-	 * @event ERROR_MARK_AS_SEEN
-	 *
-	 * @type {object}
-	 * @property {Error} error The error object.
-	 */
-	ERROR_MARK_AS_SEEN: 'ERROR_MARK_AS_SEEN',
+	NEW_BROADCAST: 'NEW_BROADCAST',
+	MARK_BROADCAST_AS_SEEN: 'MARK_BROADCAST_AS_SEEN',
 }

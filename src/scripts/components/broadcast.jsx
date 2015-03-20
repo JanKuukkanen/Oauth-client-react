@@ -3,26 +3,25 @@
 var React  = require('react');
 var Hammer = require('hammerjs');
 
-var listener     = require('../mixins/listener');
-var ErrorStore   = require('../stores/error');
-var ErrorActions = require('../actions/error');
+var listener         = require('../mixins/listener');
+var BroadcastStore   = require('../stores/broadcast');
+var BroadcastActions = require('../actions/broadcast');
 
-var ERROR_TIMEOUT = 5000;
+var BROADCAST_TIMEOUT = 5000;
 
 /**
  *
  */
-var ErrorItem = React.createClass({
+var BroadcastItem = React.createClass({
 	propTypes: {
-		error: function(props) {
-			if(!(props.error instanceof Error)) {
-				return new Error('Must be instanceof Error!');
-			}
-		}
+		broadcast: React.PropTypes.shape({
+			type:    React.PropTypes.oneOf(['error', 'broadcast']).isRequired,
+			content: React.PropTypes.string.isRequired,
+		}).isRequired,
 	},
 
 	componentDidMount: function() {
-		this.timeout = setTimeout(this.remove, ERROR_TIMEOUT);
+		this.timeout = setTimeout(this.remove, BROADCAST_TIMEOUT);
 
 		this.hammer = new Hammer(this.getDOMNode());
 		this.hammer.on('tap', this.remove);
@@ -34,14 +33,14 @@ var ErrorItem = React.createClass({
 
 	remove: function() {
 		clearTimeout(this.timeout);
-		ErrorActions.markAsSeen(this.props.error);
+		BroadcastActions.see(this.props.broadcast);
 	},
 
 	render: function() {
 		return (
 			/* jshint ignore:start */
-			<div className="item error">
-				{this.props.error.description}
+			<div className={'item ' + this.props.broadcast.type + ''}>
+				{this.props.broadcast.content}
 			</div>
 			/* jshint ignore:end */
 		);
@@ -52,11 +51,11 @@ var ErrorItem = React.createClass({
  *
  */
 var Broadcast = React.createClass({
-	mixins: [ listener(ErrorStore) ],
+	mixins: [ listener(BroadcastStore) ],
 
 	getState: function() {
 		return {
-			errors: ErrorStore.getUnseen(),
+			broadcasts: BroadcastStore.getBroadcasts(),
 		}
 	},
 
@@ -71,18 +70,18 @@ var Broadcast = React.createClass({
 	render: function() {
 		return (
 			/* jshint ignore:start */
-			<div className="broadcast">
-				{this.renderErrors()}
+			<div className="broadcast-container">
+				{this.renderBroadcasts()}
 			</div>
 			/* jshint ignore:end */
 		);
 	},
 
-	renderErrors: function() {
-		return this.state.errors.map(function(error, index) {
+	renderBroadcasts: function() {
+		return this.state.broadcasts.map(function(broadcast, index) {
 			return (
 				/* jshint ignore:start */
-				<ErrorItem key={index} error={error} />
+				<BroadcastItem key={index} broadcast={broadcast} />
 				/* jshint ignore:end */
 			);
 		});

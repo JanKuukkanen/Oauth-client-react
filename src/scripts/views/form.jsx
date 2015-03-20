@@ -3,7 +3,7 @@
 var page  = require('page');
 var React = require('react/addons');
 
-var ErrorBox = require('../components/broadcast.jsx');
+var Broadcast = require('../components/broadcast.jsx');
 
 /**
  *
@@ -73,7 +73,7 @@ var FormView = React.createClass({
 		return (
 			/* jshint ignore:start */
 			<div className="view view-form">
-				<ErrorBox />
+				<Broadcast />
 				<div className="view-content">
 					<form className="form" onSubmit={this._submit}>
 						<div className="logo">

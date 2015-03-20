@@ -6,8 +6,9 @@ var React = require('react');
 
 var socket = require('./utils/socket');
 
-var AuthStore   = require('./stores/auth');
-var AuthActions = require('./actions/auth');
+var AuthStore        = require('./stores/auth');
+var AuthActions      = require('./actions/auth');
+var BroadcastActions = require('./actions/broadcast');
 
 var FormView      = require('./views/form.jsx');
 var BoardView     = require('./views/board.jsx');
@@ -98,8 +99,11 @@ page('/register', notLoggedIn, disconnect, function() {
 				description: 'Already registered?'
 			},
 			submit: function(state) {
-				return AuthActions.register(state)
-					.then(page.show.bind(null, '/login'));
+				return AuthActions.register(state).then(function() {
+					BroadcastActions.add('Welcome!');
+					return AuthActions.login(state)
+						.then(page.show.bind(null, '/boards'));
+				});
 			},
 			help:   'Passwords must be at least 8 characters long.',
 			action: 'Register'
