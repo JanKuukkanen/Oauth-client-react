@@ -10,6 +10,7 @@ var EditTicketDialog = require('./dialog/edit-ticket');
 
 var Property        = require('../constants/property');
 var gridify         = require('../utils/gridify');
+var doubletap       = require('../utils/doubletap');
 var StateActions    = require('../actions/state');
 var TicketActions   = require('../actions/ticket');
 var DraggableMixin  = require('../mixins/draggable');
@@ -66,8 +67,7 @@ var Ticket = React.createClass({
 
 	componentDidMount: function() {
 		// Setup HammerJS for our custom 'doubletap' event.
-		this.hammer = new Hammer.Manager(this.getDOMNode());
-		this.hammer.add(new Hammer.Tap({ event: 'doubletap', taps: 2 }));
+		this.hammer = doubletap(this.getDOMNode());
 
 		// Setup a listener for our custom 'doubletap' event, which will toggle
 		// the ticket's 'showEditDialog' state when invoked.

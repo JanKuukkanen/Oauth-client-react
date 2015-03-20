@@ -8,6 +8,7 @@ var Background  = require('../constants/enums').Background;
 var TicketColor = require('../constants/enums').TicketColor;
 
 var gridify       = require('../utils/gridify');
+var doubletap     = require('../utils/doubletap');
 var background    = require('../utils/background');
 var TicketActions = require('../actions/ticket');
 
@@ -39,8 +40,7 @@ var Board = React.createClass({
 	},
 
 	componentDidMount: function() {
-		this.hammer = new Hammer.Manager(this.getDOMNode());
-		this.hammer.add(new Hammer.Tap({ event: 'doubletap', taps: 2 }));
+		this.hammer = doubletap(this.getDOMNode());
 
 		// Setup a listener for our custom 'doubletap' event, which is used
 		// here to add new tickets.
