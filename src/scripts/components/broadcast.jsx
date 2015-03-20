@@ -41,10 +41,7 @@ var ErrorItem = React.createClass({
 		return (
 			/* jshint ignore:start */
 			<div className="item error">
-				{
-					'[' + this.props.error.statusCode + ']' +
-					' ' + this.props.error.type + ''
-				}
+				{this.props.error.description}
 			</div>
 			/* jshint ignore:end */
 		);

@@ -53,13 +53,18 @@ var FormView = React.createClass({
 		return ev.preventDefault();
 	},
 
+	_submitSecondary: function(ev) {
+		this.props.secondary.submit();
+		return ev.preventDefault();
+	},
+
 	render: function() {
 		var secondaryContent = !this.props.secondary ? null : (
 			/* jshint ignore:start */
 			<section className="secondary">
 				<p>{this.props.secondary.description}</p>
 				<button className="btn-secondary"
-						onClick={this.props.secondary.submit}>
+						onClick={this._submitSecondary}>
 					{this.props.secondary.action}
 				</button>
 			</section>
@@ -91,6 +96,11 @@ var FormView = React.createClass({
 
 	renderFields: function(fields) {
 		return fields.map(function(field, index) {
+			var controlattrs = {
+				title:    field.title,
+				pattern:  field.pattern,
+				required: field.required,
+			}
 			return (
 				/* jshint ignore:start */
 				<section key={field.name} className="input">
@@ -98,7 +108,7 @@ var FormView = React.createClass({
 						{field.label}
 					</label>
 					<input autoFocus={index === 0} name={field.name} type={field.type}
-						title={field.title} pattern={field.pattern} required={field.required}
+						{...controlattrs}
 						valueLink={this.linkState(field.name)} />
 				</section>
 				/* jshint ignore:end */

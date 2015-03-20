@@ -51,8 +51,6 @@ page('/login', notLoggedIn, disconnect, function showLoginView(ctx) {
 				name:     'password',
 				type:     'password',
 				label:    'Password',
-				title:    'Minimum of 8 characters required.',
-				pattern:  '.{8,}',
 				required: true,
 			}],
 			secondary: {

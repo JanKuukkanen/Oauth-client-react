@@ -3,6 +3,30 @@
 var Action      = require('../constants/actions');
 var createStore = require('../utils/create-store');
 
+/**
+ * Error descriptions are laid out first by failure type, and then by the error
+ * specific status code, if any.
+ */
+var ErrorDescription = {
+	LOGIN_FAILURE: {
+		status: {
+			400: 'Bad credentials.',
+			401: 'Authentication failed. Check your credentials.',
+		},
+		default: 'Login failed.',
+	},
+	REGISTER_FAILURE: {
+		status: {
+			400: 'Bad username or password.',
+			409: 'User already exists.',
+		},
+		default: 'Registration failed.',
+	},
+	AUTHENTICATION_FAILURE: {
+		default: 'Login session expired or invalid.',
+	},
+}
+
 var _seen   = [ ];
 var _unseen = [ ];
 
@@ -30,7 +54,24 @@ module.exports = createStore(ErrorStoreAPI, function(action) {
 		return this.emitChange();
 	}
 	if(action.payload && action.payload.error) {
-		_addError(action.payload, action.type);
+		var error      = action.payload.error || new Error();
+		    error.type = action.type;
+
+		if(ErrorDescription[action.type]) {
+			var errorDescription = ErrorDescription[action.type];
+
+			if(error.statusCode) {
+				error.description = errorDescription.status[error.statusCode];
+			}
+			else {
+				error.description = errorDescription.default;
+			}
+		}
+		else {
+			error.description = action.type;
+		}
+
+		_addError(error);
 		return this.emitChange();
 	}
 });
@@ -67,9 +108,7 @@ function getUnseen() {
  * Adds the given error to 'unseen', and enhances it with a 'type' property,
  * which will tell us from what type of event the Error originated from.
  */
-function _addError(payload, type) {
-	var error      = payload.error || new Error();
-	    error.type = type;
+function _addError(error) {
 	return _unseen.push(error);
 }
 
