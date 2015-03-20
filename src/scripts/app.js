@@ -42,10 +42,19 @@ AuthStore.addChangeListener(function() {
 page('/login', notLoggedIn, disconnect, function showLoginView(ctx) {
 	return React.render(
 		React.createElement(FormView, {
-			fields: [
-				{ name: 'email',    type: 'email',    label: 'Email'    },
-				{ name: 'password', type: 'password', label: 'Password' },
-			],
+			fields: [{
+				name:     'email',
+				type:     'email',
+				label:    'Email',
+				required: true,
+			}, {
+				name:     'password',
+				type:     'password',
+				label:    'Password',
+				title:    'Minimum of 8 characters required.',
+				pattern:  '.{8,}',
+				required: true,
+			}],
 			secondary: {
 				submit: function() {
 					return page.show('/register');
@@ -70,10 +79,19 @@ page('/login', notLoggedIn, disconnect, function showLoginView(ctx) {
 page('/register', notLoggedIn, disconnect, function() {
 	return React.render(
 		React.createElement(FormView, {
-			fields: [
-				{ name: 'email',    type: 'email',    label: 'Email'    },
-				{ name: 'password', type: 'password', label: 'Password' },
-			],
+			fields: [{
+				name:     'email',
+				type:     'email',
+				label:    'Email',
+				required: true,
+			}, {
+				name:     'password',
+				type:     'password',
+				label:    'Password',
+				title:    'Minimum of 8 characters required.',
+				pattern:  '.{8,}',
+				required: true,
+			}],
 			secondary: {
 				submit: function() {
 					return page.show('/login');
@@ -173,9 +191,14 @@ page('/boards/:id/access/:code',
 	disconnect,
 	function showGuestLoginView(ctx) {
 		return React.render(React.createElement(FormView, {
-			fields: [
-				{ name: 'username', type: 'text', label: 'Username' },
-			],
+			fields: [{
+				name:     'username',
+				type:     'text',
+				label:    'Username',
+				title:    'Username must be at least 3 characters.',
+				pattern:  '.{3,}',
+				required: true,
+			}],
 			submit: function(state) {
 				var credentials = _.extend(state, {
 					boardID:    ctx.params.id,

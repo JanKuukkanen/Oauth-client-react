@@ -16,8 +16,11 @@ var FormView = React.createClass({
 			type: React.PropTypes.oneOf([
 				'text', 'email', 'password'
 			]).isRequired,
-			name:  React.PropTypes.string.isRequired,
-			label: React.PropTypes.string.isRequired
+			name:     React.PropTypes.string.isRequired,
+			label:    React.PropTypes.string.isRequired,
+			title:    React.PropTypes.string,
+			pattern:  React.PropTypes.string,
+			required: React.PropTypes.bool,
 		})),
 		secondary: React.PropTypes.shape({
 			submit:      React.PropTypes.func.isRequired,
@@ -45,8 +48,9 @@ var FormView = React.createClass({
 	/**
 	 *
 	 */
-	_submit: function() {
-		return this.props.submit(this.state);
+	_submit: function(ev) {
+		this.props.submit(this.state);
+		return ev.preventDefault();
 	},
 
 	render: function() {
@@ -66,20 +70,19 @@ var FormView = React.createClass({
 			<div className="view view-form">
 				<ErrorBox />
 				<div className="view-content">
-					<div className="form">
+					<form className="form" onSubmit={this._submit}>
 						<div className="logo">
 							<img src="/dist/assets/img/logo.svg" />
 							<h1>Contriboard</h1>
 						</div>
 						{this.renderFields(this.props.fields)}
-						<button className="btn-primary" onClick={this._submit}>
-							{this.props.action}
-						</button>
+						<input type="submit" className="btn-primary"
+						       value={this.props.action} />
 						<article className="help">{this.props.help}</article>
 						<section className="secondary-content">
 							{secondaryContent}
 						</section>
-					</div>
+					</form>
 				</div>
 			</div>
 			/* jshint ignore:end */
@@ -87,14 +90,15 @@ var FormView = React.createClass({
 	},
 
 	renderFields: function(fields) {
-		return fields.map(function(field) {
+		return fields.map(function(field, index) {
 			return (
 				/* jshint ignore:start */
 				<section key={field.name} className="input">
 					<label htmlFor={field.name}>
 						{field.label}
 					</label>
-					<input name={field.name} type={field.type}
+					<input autoFocus={index === 0} name={field.name} type={field.type}
+						title={field.title} pattern={field.pattern} required={field.required}
 						valueLink={this.linkState(field.name)} />
 				</section>
 				/* jshint ignore:end */
