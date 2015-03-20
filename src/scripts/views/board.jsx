@@ -172,6 +172,15 @@ var BoardView = React.createClass({
 	 *
 	 */
 	renderTickets: function() {
+		if(this.state.tickets.length === 0) {
+			return (
+				/* jshint ignore:start */
+				<div className="board-helper">
+					Doubletap anywhere to create a Ticket!
+				</div>
+				/* jshint ignore:end */
+			);
+		}
 		return this.state.tickets.map(function(ticket) {
 			return (
 				/* jshint ignore:start */

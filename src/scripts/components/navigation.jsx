@@ -33,22 +33,25 @@ var Navigation = React.createClass({
 		this.setState({ user: AuthStore.getUser() });
 	},
 
+	home: function() {
+		return page.show('/');
+	},
+
 	dropdown: function() {
 		this.setState({ dropdown: !this.state.dropdown });
 	},
 
 	render: function() {
+		/* jshint ignore:start */
 		var items = [
 			{ icon: 'user',     content: 'Profile',      disabled: true  },
 			{ icon: 'language', content: 'Localization', disabled: true  },
 			{
 				content: (
-					/* jshint ignore:start */
 					<UserVoice>
 						<span className="fa fa-fw fa-bullhorn" />
 						Feedback
 					</UserVoice>
-					/* jshint ignore:end */
 				)
 			},
 			{
@@ -59,10 +62,9 @@ var Navigation = React.createClass({
 			}
 		];
 		return (
-			/* jshint ignore:start */
 			<nav className="nav">
 				<section className="title">
-					<img src="/dist/assets/img/logo.svg" />
+					<img src="/dist/assets/img/logo.svg" onClick={this.home} />
 					<h1>{this.props.title}</h1>
 				</section>
 				<section className="profile">
@@ -72,8 +74,8 @@ var Navigation = React.createClass({
 					<Dropdown show={this.state.dropdown} items={items} />
 				</section>
 			</nav>
-			/* jshint ignore:end */
 		);
+		/* jshint ignore:end */
 	}
 });
 
