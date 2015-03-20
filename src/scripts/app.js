@@ -34,7 +34,6 @@ AuthStore.addChangeListener(function() {
 	}
 });
 
-
 /**
  * LoginView.
  *
