@@ -1,5 +1,6 @@
 'use strict';
 
+var args       = require('minimist')(process.argv);
 var gulp       = require('gulp');
 var sass       = require('gulp-sass');
 var mocha      = require('gulp-mocha');
@@ -11,10 +12,13 @@ var babelify   = require('babelify');
 var watchify   = require('watchify');
 var browserify = require('browserify');
 
-// Setup our Browserify transform, so that it supports watchify.
-var bundler = watchify(browserify('./src/scripts/app.js', watchify.args))
-	.transform(envify)
-	.transform(babelify);
+// We need to setup browserify. For regular builds we use 'browserify' by
+// itself, but for builds that keep repeating, we use 'watchify'.
+var bundler = args.watchify
+	? watchify(browserify('./src/scripts/app.js', watchify.args))
+		.transform(envify).transform(babelify)
+	: browserify('./src/scripts/app.js')
+		.transform(envify).transform(babelify);
 
 /**
  * Unit tests.
