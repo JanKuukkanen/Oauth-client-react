@@ -5,6 +5,7 @@
 	"browser": true,
 
 	"newcap":    true,
+	"laxbreak":  true,
 	"camelcase": true,
 
 	"eqnull": true,

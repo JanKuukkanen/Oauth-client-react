@@ -59,10 +59,14 @@ function _index(id, collection) {
 function _ticket(payload, defaults) {
 	defaults = _.defaults(defaults || Default.TICKET, Default.TICKET);
 
+	var content = payload.content !== null && payload.content !== undefined
+		? payload.content
+		: defaults.content;
+
 	return Immutable.Map({
 		id:      payload.id      || defaults.id,
 		color:   payload.color   || defaults.color,
-		content: payload.content || defaults.content,
+		content: content,
 
 		position: Immutable.Map({
 			x: payload.position ? payload.position.x : defaults.position.x,
