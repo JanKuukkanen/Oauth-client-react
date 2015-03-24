@@ -1,21 +1,35 @@
-'use strict';
+import flux from '../utils/flux';
 
-var Action     = require('../constants/actions');
-var Dispatcher = require('../dispatcher');
+import Action    from '../actions';
+import Broadcast from '../models/broadcast';
 
-module.exports = {
-	add: add,
-	see: see,
-}
+/**
+ *
+ */
+export default flux.actionCreator({
 
-function add(message) {
-	Dispatcher.dispatch({
-		payload: { content: message }, type: Action.NEW_BROADCAST,
-	});
-}
+	/**
+	 * Add a 'broadcast' item! If the given 'broadcast' is an Error, special
+	 * measures will be taken...
+	 */
+	add(broadcast, action = null) {
+		if(broadcast instanceof Error) {
+			broadcast.type    = Broadcast.Type.Error;
+			broadcast.content = Broadcast.Type.Error.Message.From(broadcast, action);
 
-function see(broadcast) {
-	Dispatcher.dispatch({
-		payload: broadcast, type: Action.MARK_BROADCAST_AS_SEEN,
-	});
-}
+			// Having this here is a bit hackish, but whatever tbh...
+			if(broadcast.statusCode === 401) {
+				this.dispatch(Action.User.Logout);
+			}
+		}
+		this.dispatch(Action.Broadcast.Add, broadcast);
+	},
+
+	/**
+	 * Remove the given broadcast, usually you want to do this when the user
+	 * dismisses that.
+	 */
+	remove(broadcast) {
+		this.dispatch(Action.Broadcast.Remove, broadcast);
+	}
+});

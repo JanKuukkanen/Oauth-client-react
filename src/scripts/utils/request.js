@@ -1,54 +1,44 @@
-'use strict';
-
-var request = require('request');
-var Promise = require('promise');
-
-var config = require('../config');
+import request from 'request';
 
 /**
- *
+ * Simple helper module to make HTTP requests.
  */
-module.exports = {
-	get:  _request.bind(null, request.get),
-	put:  _request.bind(null, request.put),
-	del:  _request.bind(null, request.del),
-	post: _request.bind(null, request.post),
+export default {
+	get:  customRequest.bind(null, request.get),
+	put:  customRequest.bind(null, request.put),
+	del:  customRequest.bind(null, request.del),
+	post: customRequest.bind(null, request.post)
 }
 
 /**
- *
+ * Simple helper function to make HTTP requests. Note that you don't call this
+ * directly but instead use one of the pre-bound methods above.
  */
-function _request(method, opts) {
-	return new Promise(function(resolve, reject) {
-		var options = {
+function customRequest(requestMethod, options = {}) {
+	return new Promise((resolve, reject) => {
+		let requestOptions = {
 			withCredentials: false,
 			headers: {
 				'Accept':        'application/json',
 				'Content-Type':  'application/json',
-				'Authorization': 'Bearer ' + opts.token + '',
+				'Authorization': `Bearer ${options.token}`
 			},
-			url:  opts.url,
-			body: opts.payload ? JSON.stringify(opts.payload) : null,
+			url:  options.url,
+			body: options.payload ? JSON.stringify(options.payload) : null
 		}
-		return method(options, function(err, res, body) {
+		requestMethod(requestOptions, (err, res, body) => {
 			if(err) {
 				return reject(err);
 			}
-
-			if(res.statusCode === 0 || res.statusCode >= 300) {
+			if(res.statusCode === 0 || res.statusCode >= 400) {
 				var error            = new Error(res.message);
 				    error.statusCode = res.statusCode;
 				return reject(error);
 			}
-			var data = { }
-			try {
-				data = JSON.parse(body);
+			if(res.headers['content-type'].includes('application/json')) {
+				body = JSON.parse(body);
 			}
-			catch(err) {
-				console.error(err, body);
-			}
-
-			return resolve({ body: data, headers: res.headers });
+			return resolve({ body, headers: res.headers });
 		});
 	});
 }

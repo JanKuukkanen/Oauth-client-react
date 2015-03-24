@@ -1,15 +1,11 @@
-'use strict';
-
-var _     = require('lodash');
-var React = require('react');
-
-var Property   = require('../constants/property');
-var Background = require('../constants/enums').Background;
+import React from 'react/addons';
+import Board from '../models/board';
 
 /**
  *
  */
-var BackgroundSelect = React.createClass({
+export default React.createClass({
+	mixins: [ React.addons.PureRenderMixin ],
 
 	propTypes: {
 		background: React.PropTypes.shape({
@@ -18,18 +14,19 @@ var BackgroundSelect = React.createClass({
 		}).isRequired,
 	},
 
-	onChange: function(ev) {
-		this.props.background.requestChange(ev.target.value);
+	onChange(event) {
+		this.props.background.requestChange(event.target.value);
 	},
 
-	render: function() {
-		/* jshint ignore:start */
-		var bg      = Background[this.props.background.value];
-		var preview = bg && bg.url ? <img src={bg.url} /> : <div className="blanko" />;
-		/* jshint ignore:end */
+	render() {
+		console.debug('components/background-select::render');
+
+		let background = Board.Background[this.props.background.value];
+		let preview    = background.url !== null
+			? <img src={background.url} />
+			: <div className="blanko" />;
 
 		return (
-			/* jshint ignore:start */
 			<div className="background-select">
 				<div className="value">
 					{preview}
@@ -42,21 +39,18 @@ var BackgroundSelect = React.createClass({
 					<span className="caret fa fa-arrow-down"></span>
 				</div>
 			</div>
-			/* jshint ignore:end */
 		);
 	},
 
 	renderOptions: function() {
-		return _.keys(Background).map(function(bg) {
+		console.debug('components/background-select::renderOptions');
+
+		return Object.keys(Board.Background).map(function(key) {
 			return (
-				/* jshint ignore:start */
-				<option key={bg} value={bg}>
-					{Background[bg].description}
+				<option key={key} value={key}>
+					{Board.Background[key].description}
 				</option>
-				/* jshint ignore:end */
 			);
 		});
 	}
 });
-
-module.exports = BackgroundSelect;

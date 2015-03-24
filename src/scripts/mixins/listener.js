@@ -1,26 +1,20 @@
-'use strict';
-
 /**
  *
  */
-module.exports = function(stores) {
-	if(!(stores instanceof Array)) {
-		stores = [ stores ];
-	}
+export default function(...stores) {
 	return {
-		componentDidMount: function() {
+		componentDidMount() {
 			if(!this.onChange || typeof(this.onChange) !== 'function') {
 				throw new Error('\'onChange\' must exist and be a function.');
 			}
-
-			return stores.forEach(function(store) {
-				return store.addChangeListener(this.onChange);
-			}.bind(this));
+			return stores.forEach((store) => {
+				store.addChangeListener(this.onChange);
+			});
 		},
-		componentWillUnmount: function() {
-			return stores.forEach(function(store) {
-				return store.removeChangeListener(this.onChange);
-			}.bind(this));
+		componentWillUnmount() {
+			return stores.forEach((store) => {
+				store.removeChangeListener(this.onChange);
+			});
 		}
 	}
 }

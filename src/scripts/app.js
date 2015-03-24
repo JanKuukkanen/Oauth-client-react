@@ -1,271 +1,147 @@
-'use strict';
+import 'babelify/polyfill';
 
-var _     = require('lodash');
-var page  = require('page');
-var React = require('react');
+import page      from 'page';
+import React     from 'react';
+import fastclick from 'fastclick';
 
-var socket = require('./utils/socket');
+import socket    from './utils/socket';
+import UserStore from './stores/user';
 
-var AuthStore        = require('./stores/auth');
-var AuthActions      = require('./actions/auth');
-var BroadcastActions = require('./actions/broadcast');
+import BoardView      from './views/board';
+import WorkspaceView  from './views/workspace';
+import LoginView      from './views/form/login';
+import RegisterView   from './views/form/register';
+import GuestLoginView from './views/form/guest-login';
 
-var FormView      = require('./views/form.jsx');
-var BoardView     = require('./views/board.jsx');
-var WorkspaceView = require('./views/workspace.jsx');
+// This should fix some of the issues with clicking and touch enabled devices.
+fastclick(document.body);
 
-// Fix issues with 300ms delay on touch devices, hopefully!
-require('fastclick')(document.body);
+// Define middleware to be used with 'page' routes (or pages, whatever).
+const middleware = {
+	user: {
+		is: (...types) => {
+			return function(ctx, next) {
+				if((ctx.user = UserStore.getUser())) {
+					// Make sure the user has at least one of the types
+					// specified.
+					let userHasType = types.reduce((has, type) => {
+						return has || ctx.user.type === type;
+					}, false);
 
-/**
- * The router, in a sense, is also a view. Thus it should be able to listen to
- * stores the same as other views.
- *
- * We listen to changes in the AuthStore, so that when the user is logged out
- * for various reasons, we can redirect the user to the 'login' page. This in
- * a sense works very similarly to the AngularJS '$http.interceptor'.
- *
- * TODO Once we have a ErrorStore, we might want to listen to that instead,
- *      specifically 401 and 403 errors. On a 401 error we should redirect to
- *      the 'login' view, but what to do on a 403 error? Redirect? Show a page?
- */
-AuthStore.addChangeListener(function() {
-	if(!AuthStore.getUser() && !AuthStore.getToken()) {
+					// If the user is a regular 'user', we can access anything!
+					if(userHasType && ctx.user.type === 'user') {
+						return next();
+					}
+
+					// If the user is a guest, we need to make sure he or she
+					// has access to the resource being accessed. Guests only
+					// have access to a specific board.
+					if(userHasType && ctx.user.type === 'guest') {
+						if(ctx.params.hasOwnProperty('id')) {
+							if(ctx.params.id === ctx.user.access) {
+								return next();
+							}
+						}
+						return page.redirect(`/boards/${ctx.user.access}`);
+					}
+				}
+				return page.redirect('/login');
+			}
+		},
+
+		notGuest: (ctx, next) => {
+			if(ctx.user = UserStore.getUser()) {
+				if(ctx.user.type === 'guest') {
+					if(ctx.params.hasOwnProperty('id')) {
+						if(ctx.params.id === ctx.user.access) {
+							return page.redirect(`/boards/${ctx.user.access}`);
+						}
+					}
+				}
+			}
+			return next();
+		},
+
+		loggedOut: (ctx, next) => {
+			if(ctx.user = UserStore.getUser()) {
+				return page.redirect('/boards');
+			}
+			return next();
+		}
+	},
+	socket: {
+		connect: (ctx, next) => {
+			socket.connect({ token: UserStore.getToken() }).then(next);
+		},
+		disconnect: (ctx, next) => {
+			socket.disconnect().then(next);
+		}
+	}
+}
+
+// The router, in a sense, is also a view. Thus it should be able to listen to
+// stores the same as other views.
+// We listen to changes to the UserStore, so that when the user is logged out
+// for various reasons, we can redirect the user to the 'login' page. This, in
+// a sense, works very similarly to the AngularJS '$http.interceptor'.
+UserStore.addChangeListener(() => {
+	if(!UserStore.getUser() || !UserStore.getToken()) {
 		return page.redirect('/login');
 	}
 });
 
-/**
- * LoginView.
- *
- * Only users with no active session are able to see this.
- */
-page('/login', notLoggedIn, disconnect, function showLoginView(ctx) {
-	return React.render(
-		React.createElement(FormView, {
-			fields: [{
-				name:     'email',
-				type:     'email',
-				label:    'Email',
-				required: true,
-			}, {
-				name:     'password',
-				type:     'password',
-				label:    'Password',
-				required: true,
-			}],
-			secondary: {
-				submit: function() {
-					return page.show('/register');
-				},
-				action:      'Register',
-				description: 'Not registered?'
-			},
-			submit: function(state) {
-				return AuthActions.login(state)
-					.then(page.show.bind(null, '/boards'));
-			},
-			action: 'Login'
-		}),
-		document.getElementById('application'));
-});
-
-/**
- * RegisterView.
- *
- * Only users with no active session are able to see this.
- */
-page('/register', notLoggedIn, disconnect, function() {
-	return React.render(
-		React.createElement(FormView, {
-			fields: [{
-				name:     'email',
-				type:     'email',
-				label:    'Email',
-				required: true,
-			}, {
-				name:     'password',
-				type:     'password',
-				label:    'Password',
-				title:    'Minimum of 8 characters required.',
-				pattern:  '.{8,}',
-				required: true,
-			}],
-			secondary: {
-				submit: function() {
-					return page.show('/login');
-				},
-				action:      'Login',
-				description: 'Already registered?'
-			},
-			submit: function(state) {
-				return AuthActions.register(state).then(function() {
-					BroadcastActions.add('Welcome!');
-					return AuthActions.login(state)
-						.then(page.show.bind(null, '/boards'));
-				});
-			},
-			help:   'Passwords must be at least 8 characters long.',
-			action: 'Register'
-		}),
-		document.getElementById('application'));
-});
-
-/**
- * WorkspaceView.
- *
- * Users that are logged in should see this. Guests are redirected back to the
- * board they have access to.
- */
-page('/boards',
-	isLoggedIn, connect,
-	function isNotGuest(ctx, next) {
-		if(ctx.user.type === 'guest') {
-			// If the user is a 'guest' and tries to navigate to the workspace,
-			// we just redirect him or her to the board she belongs to...
-			return page.redirect('/boards/' + ctx.user.access + '');
-		}
-		// User was not a 'guest', so we can show the Workspace.
-		return next();
-	},
-	function showWorkspaceView(ctx) {
+page('/login',
+	middleware.user.loggedOut,
+	middleware.socket.disconnect,
+	(ctx) => {
 		return React.render(
-			React.createElement(WorkspaceView),
+			<LoginView />,
 			document.getElementById('application')
 		);
 	});
 
-/**
- * BoardView.
- *
- * Users that are logged in and have access should see this. Guests that do not
- * have access to this board are redirected to the board they have access to.
- */
-page('/boards/:id',
-	isLoggedIn,
-	function hasGuestAccess(ctx, next) {
-		if(ctx.user.type === 'guest') {
-			// The user is a guest, so we need to make sure he or she has
-			// access to this board. If the user does not have access to this
-			// board, we redirect him or her to the board he or she can access.
-			if(ctx.user.access === ctx.params.id) {
-				return next();
-			}
-			return page.redirect('/boards/' + ctx.user.access + '');
-		}
-		return next();
-	},
-	connect,
-	function showBoardView(ctx) {
+page('/register',
+	middleware.user.loggedOut,
+	middleware.socket.disconnect,
+	(ctx) => {
 		return React.render(
-			React.createElement(BoardView, { id: ctx.params.id }),
+			<RegisterView />,
 			document.getElementById('application')
 		);
 	});
 
-/**
- * GuestLoginView
- *
- * Users that do not have active guest sessions should see this. Additionally
- * users that have active guest sessions but to a different board should also
- * see this.
- * Guests with an active guest session on this board will be redirected to the
- * corresponding BoardView.
- */
 page('/boards/:id/access/:code',
-	function doesNotHaveGuestAccess(ctx, next) {
-		if(!(ctx.user = AuthStore.getUser())) {
-			// The user is not even logged in, so we can safely show the him or
-			// her the view.
-			return next();
-		}
-		if(ctx.user.type === 'guest') {
-			// The user is a guest, now we must check if the user has guest
-			// access to this board already.
-			if(ctx.user.access === ctx.params.id) {
-				// The user has access to this board already, redirect!
-				return page.redirect('/boards/' + ctx.params.id + '');
-			}
-		}
-		// The user is a regular user, we can show him or her the view.
-		return next();
-	},
-	disconnect,
-	function showGuestLoginView(ctx) {
-		return React.render(React.createElement(FormView, {
-			fields: [{
-				name:     'username',
-				type:     'text',
-				label:    'Username',
-				title:    'Username must be at least 3 characters.',
-				pattern:  '.{3,}',
-				required: true,
-			}],
-			submit: function(state) {
-				var credentials = _.extend(state, {
-					boardID:    ctx.params.id,
-					accessCode: ctx.params.code,
-				});
-				return AuthActions.loginGuest(credentials).then(
-					page.show.bind(null, '/boards/' + ctx.params.id + ''));
-			},
-			action: 'Login as Guest'
-		}),
-		document.getElementById('application'));
+	middleware.user.notGuest,
+	middleware.socket.disconnect,
+	(ctx) => {
+		return React.render(
+			<GuestLoginView boardID={ctx.params.id}
+				accessCode={ctx.params.code} />,
+			document.getElementById('application')
+		);
 	});
 
-/**
- * Default to WorkspaceView.
- */
-page('/', function() {
-	page.redirect('/boards');
-});
+page('/boards',
+	middleware.user.is('user'),
+	middleware.socket.connect,
+	(ctx) => {
+		return React.render(
+			<WorkspaceView user={ctx.user} />,
+			document.getElementById('application')
+		);
+	});
 
-/**
- * Simple middleware which opens a socket connection.
- */
-function connect(ctx, next) {
-	return socket.connect({ token: AuthStore.getToken() }).then(next);
-}
+page('/boards/:id',
+	middleware.user.is('user', 'guest'),
+	middleware.socket.connect,
+	(ctx) => {
+		return React.render(
+			<BoardView id={ctx.params.id} user={ctx.user} />,
+			document.getElementById('application')
+		);
+	});
 
-/**
- * Simple middleware which attempts to close the current socket.
- */
-function disconnect(ctx, next) {
-	return socket.disconnect().then(next);
-}
-
-
-/**
- * Middleware for making sure the 'user' is logged in. If the user is not
- * logged in, we redirect to the 'login' page. If the user is logged in, we
- * also refresh the profile by loading the user from the server async.
- */
-function isLoggedIn(ctx, next) {
-	if((ctx.user = AuthStore.getUser())) {
-		return AuthActions.loadUser() && next();
-	}
-	return page.redirect('/login');
-}
-
-/**
- * Middleware for making sure the 'user' is not logged in. If the user is
- * logged in, we just go back to the previous page, or the Workspace if there
- * is no 'previous' page.
- */
-function notLoggedIn(ctx, next) {
-	if(!(ctx.user = AuthStore.getUser())) {
-		// The user is not logged in, show the view.
-		return next();
-	}
-	if(ctx.user.type === 'guest') {
-		// The user is a guest, we redirect him or her to the board he or she
-		// has access to.
-		return page.redirect('/boards/' + ctx.user.access + '');
-	}
-	// The user is a regular user, so we go back in location, with Workspace as
-	// the fallback location.
-	return page.back('/boards');
-}
-
+// Make sure requests to root get redirected to Workspace. Here we also start
+// listening to changes to the URL.
+page('/', () => page.redirect('/boards'));
 page.start();

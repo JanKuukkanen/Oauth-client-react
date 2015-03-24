@@ -1,68 +1,66 @@
-'use strict';
+import React from 'react/addons';
 
-var React = require('react/addons');
+import Board       from '../../models/board';
+import BoardAction from '../../actions/board';
 
-var Dialog           = require('.');
-var BackgroundSelect = require('../../components/background-select');
-
-var Property     = require('../../constants/property');
-var BoardActions = require('../../actions/board');
+import Dialog           from '../../components/dialog';
+import BackgroundSelect from '../../components/background-select';
 
 /**
- * Displays an overlaid Dialog to edit the given Board.
+ *
  */
-var EditBoardDialog = React.createClass({
-	mixins: [ React.addons.LinkedStateMixin ],
+export default React.createClass({
+	mixins: [ React.addons.PureRenderMixin, React.addons.LinkedStateMixin ],
 
 	propTypes: {
-		board:     Property.Board.isRequired,
+		board: (props) => {
+			if(!props.board instanceof Board) throw new Error();
+		},
 		onDismiss: React.PropTypes.func.isRequired,
 	},
 
-	getInitialState: function() {
+	getInitialState() {
 		return {
 			name:       this.props.board.name,
-			background: this.props.board.background,
+			background: this.props.board.background
 		}
 	},
 
-	_submit: function() {
-		BoardActions.editBoard(this.props.board.id, {
+	submit() {
+		BoardAction.update({
+			id:         this.props.board.id,
 			name:       this.state.name,
 			background: this.state.background,
 		});
 		return this.props.onDismiss();
 	},
 
-	_hide: function() {
-		return BoardActions.revokeAccessCode(this.props.board.id);
+	hide() {
+		BoardAction.revokeAccessCode({ id: this.props.board.id });
 	},
 
-	_share: function() {
-		return BoardActions.generateAccessCode(this.props.board.id);
+	share() {
+		BoardAction.generateAccessCode({ id: this.props.board.id });
 	},
 
-	render: function() {
-		var id        = this.props.board.id;
-		var code      = this.props.board.accessCode;
-		var sharedURL = (code !== null && code.length > 0) ?
-			location.host + '/boards/' + id + '/access/' + code + '' : '';
+	render() {
+		let id   = this.props.board.id;
+		let code = this.props.board.accessCode;
 
-		var shareButton = sharedURL.length > 0 ? (
-			/* jshint ignore:start */
-			<button className="input btn-neutral" onClick={this._hide}>
-				Hide
+		let sharedURL = code !== null && code.length > 0
+			? location.host + '/boards/' + id + '/access/' + code + ''
+			: '';
+
+		let shareButtonClass = sharedURL.length > 0 ? 'neutral' : 'secondary';
+		let shareButtonClick = sharedURL.length > 0 ? this.hide : this.share
+
+		let shareButton = (
+			<button className={`input btn-${shareButtonClass}`} onClick={shareButtonClick}>
+				{ sharedURL.length > 0 ? 'Hide' : 'Share' }
 			</button>
-			/* jshint ignore:end */
-		) : (
-			/* jshint ignore:start */
-			<button className="input btn-secondary" onClick={this._share}>
-				Share
-			</button>
-			/* jshint ignore:end */
 		);
+
 		return (
-			/* jshint ignore:start */
 			<Dialog className="dialog-edit-board" onDismiss={this.props.onDismiss}>
 				<section className="dialog-header">
 					Edit Board
@@ -82,14 +80,11 @@ var EditBoardDialog = React.createClass({
 
 				</section>
 				<section className="dialog-footer">
-					<button className="btn-primary" onClick={this._submit}>
+					<button className="btn-primary" onClick={this.submit}>
 						Done
 					</button>
 				</section>
 			</Dialog>
-			/* jshint ignore:end */
 		);
 	}
 });
-
-module.exports = EditBoardDialog;

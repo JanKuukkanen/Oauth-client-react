@@ -34,15 +34,6 @@ gulp.task('test', function() {
 });
 
 /**
- * Static code analysis.
- */
-gulp.task('lint', function() {
-	return gulp.src('./src/scripts/**/*')
-		.pipe(jshint('.jshintrc'))
-		.pipe(jshint.reporter('jshint-stylish'));
-});
-
-/**
  * Build the JavaScript source.
  */
 gulp.task('build-js', function() {
@@ -94,6 +85,6 @@ gulp.task('serve', ['build'], function() {
 gulp.task('default', ['serve'], function() {
 	gulp.watch('./src/assets/**/*',      ['build-assets']);
 	gulp.watch('./src/styles/**/*.sass', ['build-css']);
-	gulp.watch('./src/scripts/**/*.js',  ['lint', 'build-js']);
-	gulp.watch('./src/scripts/**/*.jsx', ['lint', 'build-js']);
+	gulp.watch('./src/scripts/**/*.js',  ['build-js']);
+	gulp.watch('./src/scripts/**/*.jsx', ['build-js']);
 });

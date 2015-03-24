@@ -1,256 +1,188 @@
-'use strict';
+import api  from '../utils/api';
+import uid  from '../utils/uid';
+import flux from '../utils/flux';
 
-var _ = require('lodash');
-
-var uid        = require('../utils/uid');
-var api        = require('../utils/api');
-var build      = require('../utils/action-builder');
-var Action     = require('../constants/actions');
-var Dispatcher = require('../dispatcher');
-
-var AuthStore  = require('../stores/auth');
-var BoardStore = require('../stores/board');
+import Board           from '../models/board';
+import Action          from '../actions';
+import UserStore       from '../stores/user';
+import BoardStore      from '../stores/board';
+import BroadcastAction from '../actions/broadcast';
 
 /**
- * The methods exported by BoardActions
+ * Action Creator for Board related actions.
  */
-module.exports = {
-	addBoard:    addBoard,
-	editBoard:   editBoard,
-	removeBoard: removeBoard,
-
-	loadBoard:   loadBoard,
-	loadBoards:  loadBoards,
-
-	revokeAccessCode:   revokeAccessCode,
-	generateAccessCode: generateAccessCode,
-}
-
-/**
- *
- */
-function loadBoard(boardID) {
-	var opts = {
-		id: {
-			board: boardID,
-		},
-		token: AuthStore.getToken(),
-	}
-	var initial = {
-		type: Action.LOAD_BOARD,
-	}
-
-	return build(initial, api.getBoard(opts).then(
-		function getSuccessPayload(board) {
-			return { board: board }
-		},
-		function getFailurePayload(err) {
-			return { error: err }
-		}
-	));
-}
-
-/**
- *
- */
-function loadBoards() {
-	var opts = {
-		token: AuthStore.getToken(),
-	}
-	var initial = {
-		type: Action.LOAD_BOARDS,
-	}
+export default flux.actionCreator({
+	/**
+	 * Add a board.
+	 *
+	 * NOTE This method does not hit servers and is meant to be used when
+	 *      informing the client of change.
+	 */
+	add(board) {
+		this.dispatch(Action.Board.Add, { board });
+	},
 
 	/**
-	 * Construct the payload for 'success'.
+	 * Edit the given board.
+	 *
+	 * NOTE This method does not hit servers and is meant to be used when
+	 *      informing the client of change.
 	 */
-	function onSuccess(boards) {
-		return { boards: boards }
-	}
+	edit(board) {
+		this.dispatch(Action.Board.Edit, { board });
+	},
 
 	/**
-	 * Construct the payload for 'failure'.
+	 * Remove the given board.
+	 *
+	 * NOTE This method does not hit servers and is meant to be used when
+	 *      informing the client of change.
 	 */
-	function onFailure(err) {
-		return { error: err }
-	}
-
-	return build(initial, api.getBoards(opts).then(onSuccess, onFailure));
-}
-
-/**
- *
- * TODO Make the ID generation into its own utility function.
- */
-function addBoard(board) {
-	var opts = {
-		token:   AuthStore.getToken(),
-		payload: board,
-	}
-	var initial = {
-		payload: {
-			// We generate a 'mock' id for the board, so we can be optimistic.
-			board: _.assign(_.clone(board), { id: uid() }),
-		},
-		type: Action.ADD_BOARD,
-	}
+	remove(board) {
+		this.dispatch(Action.Board.Remove, { board });
+	},
 
 	/**
-	 * Construct the payload for 'success'.
+	 * Fetch board data from the server. If given an 'id', will fetch data for
+	 * the Board specified by it.
 	 */
-	function onSuccess(board) {
-		return {
-			clean: board,
-			dirty: initial.payload.board.id,
-		}
-	}
+	load(boardID = undefined) {
+		let token   = UserStore.getToken();
+		let request = boardID === undefined
+			? api.getBoards.bind(null, { token })
+			: api.getBoard.bind(null, { token, id: { board: boardID }});
+
+		request()
+			.then((board) => {
+				// Quick, hacky cleanup for the board data received from the
+				// server... Might need to be replaced with something in model.
+				function cleanup(board) {
+					if(board instanceof Array) {
+						return board.map(cleanup);
+					}
+					if(!Board.Background.hasOwnProperty(board.background)) {
+						board.background = 'NONE';
+					}
+					delete board.createdBy;
+					return board;
+				}
+
+				board = cleanup(board);
+
+				this.dispatch(Action.Board.Add, { board });
+
+				// We gradually inform the store that it should emit change as
+				// it receives the tickets belonging to it.
+				(board instanceof Array ? board : [ board ]).map((board) => {
+					// Perform the request for each board to get their tickets.
+					api.getTickets({ token, id: { board: board.id } })
+						.then((ticket) => {
+							this.dispatch(Action.Ticket.Add, { board, ticket });
+						})
+						.catch((err) => {
+							BroadcastAction.add(err, Action.Ticket.Load);
+						});
+				});
+			})
+			.catch((err) => {
+				BroadcastAction.add(err, Action.Board.Load);
+			});
+	},
 
 	/**
-	 * Construct the payload for 'failure'.
+	 * Create a board, persisting it on the server.
 	 */
-	function onFailure(err) {
-		return {
-			error:   err,
-			boardID: initial.payload.board.id,
-		}
-	}
+	create(board) {
+		let token   = UserStore.getToken();
+		let payload = Object.assign(board, { id: uid() });
 
-	return build(initial, api.createBoard(opts).then(onSuccess, onFailure));
-}
+		this.dispatch(Action.Board.Add, { board: payload });
 
-/**
- *
- */
-function editBoard(boardID, board) {
-	// This way we can undo changes if something goes wrong...
-	var old = BoardStore.getBoard(boardID);
-
-	var opts = {
-		id: {
-			board: boardID,
-		},
-		token:   AuthStore.getToken(),
-		payload: board,
-	}
-	var initial = {
-		payload: {
-			board:   board,
-			boardID: boardID,
-		},
-		type: Action.EDIT_BOARD,
-	}
+		api.createBoard({ token, payload })
+			.then((board) => {
+				this.dispatch(Action.Board.Add, { board }, { silent: true });
+				this.dispatch(Action.Board.Remove, { board: payload });
+			})
+			.catch((err) => {
+				this.dispatch(Action.Board.Remove, { board: payload });
+				BroadcastAction.add(err, Action.Board.Add);
+			});
+	},
 
 	/**
-	 * Construct the payload for 'success'.
+	 * Update a board, persisting the changes to the server.
 	 */
-	function onSuccess(board) {
-		return { board: board, boardID: boardID }
-	}
+	update(board) {
+		let token    = UserStore.getToken();
+		let previous = BoardStore.getBoard(board.id).toJS();
+
+		this.dispatch(Action.Board.Edit, { board });
+
+		api.updateBoard({ token, payload: board, id: { board: board.id } })
+			.catch((err) => {
+				this.dispatch(Action.Board.Edit, { board: previous });
+				BroadcastAction.add(err, Action.Board.Edit);
+			});
+	},
 
 	/**
-	 * Construct the payload for 'failure'.
+	 * Delete a board, persisting the removal to the server.
 	 */
-	function onFailure(err) {
-		return {
-			error:   err,
-			board:   old,
-			boardID: boardID,
-		}
-	}
+	delete(board) {
+		let token    = UserStore.getToken();
+		let existing = BoardStore.getBoard(board.id).toJS();
 
-	return build(initial, api.updateBoard(opts).then(onSuccess, onFailure));
-}
+		this.dispatch(Action.Board.Remove, { board });
 
-/**
- *
- */
-function generateAccessCode(boardID) {
-	var opts = {
-		id: {
-			board: boardID,
-		},
-		token: AuthStore.getToken(),
-	}
-	var initial = {
-		type: Action.GENERATE_ACCESS_CODE,
-	}
-	return build(initial, api.generateAccessCode(opts).then(
-		function getSuccessPayload(res) {
-			return { boardID: boardID, accessCode: res.accessCode }
-		},
-		function getFailurePayload(err) {
-			return { error: err }
-		}
-	));
-}
+		api.deleteBoard({ token, id: { board: board.id } })
+			.catch((err) => {
+				this.dispatch(Action.Board.Add, { board: existing });
+				BroadcastAction.add(err, Action.Board.Remove);
+			});
+	},
 
-/**
- *
- */
-function revokeAccessCode(boardID) {
-	var opts = {
-		id: {
-			board: boardID,
-		},
-		token: AuthStore.getToken(),
-	}
-	var initial = {
-		payload: {
-			boardID: boardID,
-		},
-		type: Action.REVOKE_ACCESS_CODE,
-	}
+	/**
+	 * Generate an 'access-code' for the given board, allowing the board to be
+	 * shared to ther users.
+	 */
+	generateAccessCode(board) {
+		let token = UserStore.getToken();
 
-	var oldBoard      = BoardStore.getBoard(boardID);
-	var oldAccessCode = oldBoard ? oldBoard.accessCode : '';
+		api.generateAccessCode({ token, id: { board: board.id }})
+			.then((res) => {
+				this.dispatch(Action.Board.Edit, {
+					board: {
+						id: board.id, accessCode: res.accessCode
+					}
+				});
+			})
+			.catch((err) => {
+				BroadcastAction.add(err, Action.Board.Edit);
+			});
+	},
 
-	return build(initial, api.revokeAccessCode(opts).then(
-		function getSuccessPayload() {
-			return { }
-		},
-		function getFailurePayload(err) {
-			return {
-				error:      err,
-				boardID:    boardID,
-				accessCode: oldAccessCode,
+	/**
+	 * Revoke the 'access-code' of the given board, essentially making it
+	 * hidden to other users.
+	 */
+	revokeAccessCode(board) {
+		let token    = UserStore.getToken();
+		let existing = BoardStore.getBoard(board.id);
+
+		this.dispatch(Action.Board.Edit, {
+			board: {
+				id: board.id, accessCode: null
 			}
-		}
-	));
-}
+		});
 
-/**
- *
- */
-function removeBoard(boardID) {
-	// This way we can undo changes if something goes wrong...
-	var old = BoardStore.getBoard(boardID);
-
-	var opts = {
-		id: {
-			board: boardID,
-		},
-		token: AuthStore.getToken(),
+		api.revokeAccessCode({ token, id: { board: board.id }})
+			.catch((err) => {
+				this.dispatch(Action.Board.Edit, {
+					board: {
+						id: board.id, accessCode: existing.accessCode
+					}
+				});
+				BroadcastAction.add(err, Action.Board.Edit);
+			});
 	}
-	var initial = {
-		payload: {
-			boardID: boardID,
-		},
-		type: Action.REMOVE_BOARD,
-	}
-
-	/**
-	 * Construct the payload for 'success'.
-	 */
-	function onSuccess() {
-		return { boardID: boardID }
-	}
-
-	/**
-	 * Construct the payload for 'failure'.
-	 */
-	function onFailure(err) {
-		return { error: err, board: old }
-	}
-
-	return build(initial, api.deleteBoard(opts).then(onSuccess, onFailure));
-}
+});

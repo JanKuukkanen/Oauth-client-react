@@ -1,40 +1,38 @@
-'use strict';
-
-var React  = require('react/addons');
-var Hammer = require('hammerjs');
+import React  from 'react/addons';
+import Hammer from 'hammerjs';
 
 /**
- * Very simple Toggle component, that displays a single FontAwesome icon.
+ *
  */
-module.exports = React.createClass({
+export default React.createClass({
+	mixins: [ React.addons.PureRenderMixin ],
+
 	propTypes: {
 		icon:    React.PropTypes.string.isRequired,
 		active:  React.PropTypes.bool,
 		onClick: React.PropTypes.func.isRequired,
 	},
 
-	getDefaultProps: function() {
+	getDefaultProps() {
 		return { active: false }
 	},
 
-	componentDidMount: function() {
+	componentDidMount() {
 		new Hammer(this.getDOMNode()).on('tap', this.props.onClick);
 	},
 
-	render: function() {
-		var controlClasses = React.addons.classSet({
-			active:  this.props.active,
-			control: true,
-		});
+	render() {
+		// console.debug('components/control::render');
 
-		var iconClasses = 'fa fa-fw fa-' + this.props.icon + '';
+		let controlClasses = React.addons.classSet({
+			 control: true, active: this.props.active
+		});
+		let iconClasses = `fa fa-fw fa-${this.props.icon}`;
 
 		return (
-			/* jshint ignore:start */
 			<div className={controlClasses}>
 				<span className={iconClasses}></span>
 			</div>
-			/* jshint ignore:end */
 		);
 	}
 });

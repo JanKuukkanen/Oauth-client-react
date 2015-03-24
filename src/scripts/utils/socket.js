@@ -1,43 +1,23 @@
-'use strict';
+import io   from 'socket.io-client';
+import utf8 from 'utf8';
 
-var _       = require('lodash');
-var io      = require('socket.io-client');
-var utf8    = require('utf8');
-var Promise = require('promise');
+import Action          from '../actions';
+import BoardStore      from '../stores/board';
+import BoardAction     from '../actions/board';
+import TicketAction    from '../actions/ticket';
+import BroadcastAction from '../actions/broadcast';
 
-var config     = require('../config');
-var Action     = require('../constants/actions');
-var Dispatcher = require('../dispatcher');
-
-var AuthStore     = require('../stores/auth');
-var BoardStore    = require('../stores/board');
-var TicketStore   = require('../stores/ticket');
-var BoardActions  = require('../actions/board');
-var TicketActions = require('../actions/ticket');
-
-/**
- * Public interface.
- */
-module.exports = {
+export default {
 	connect:    connect,
-	disconnect: disconnect,
+	disconnect: disconnect
 }
 
-/**
- * Keeping track of boards we have joined.
- */
-var _rooms = [ ];
+const IO_URL     = process.env.IO_URL || 'http://localhost:9001';
+const JOIN_EVENT = 'board:join';
+const DATA_EVENT = 'board:event';
 
-/**
- * Reference to our socket instance.
- */
-var _socket = null;
-
-/**
- * We declare the possible events here as 'constants'.
- */
-var JOIN_EVENT = 'board:join';
-var DATA_EVENT = 'board:event';
+let rooms  = [ ];
+let socket = null;
 
 /**
  * Creates a new 'socket.io' connection. Doesn't do anything if a connection is
@@ -53,176 +33,149 @@ var DATA_EVENT = 'board:event';
  * @returns {Promise}  Resolved when a connection is established. Rejected if
  *                     an error occurs with the connection.
  */
-function connect(opts) {
-	var options = {
-		'query': 'access-token=' + opts.token + '',
-		// For socket.io to actually force new connections to the same host, we
-		// need to tell it to do so explicitly...
+function connect(opts = {}) {
+	let options = {
+		'query':                `access-token=${opts.token}`,
 		'multiplex':            false,
 		'force new connection': true,
 	}
-	return new Promise(function(resolve, reject) {
-		if(_socket && _socket.connected) {
-			return resolve();
-		}
-		return (_socket = io(config.io, options))
-			.on('error',   onConnectionFailure)
-			.on('connect', onConnectionSuccess);
-
-		/**
-		 *
-		 */
-		function onConnectionSuccess() {
-			// Store a reference to the connected socket and attach a listener
-			// to receive any data. Note we only have a single event, see the
-			// implementation of 'teamboard-api' for reasons.
-			_socket.on(DATA_EVENT, _onData);
-
-			// Join the boards we currently have in store. Attach a listener
-			// for listening to changes in BoardStore.
-			_joinBoards();
-			BoardStore.addChangeListener(_joinBoards);
-
+	return new Promise((resolve, reject) => {
+		if(socket && socket.connected) {
 			return resolve();
 		}
 
-		/**
-		 * When we receive a 'reconnect' event, we should reload our data from
-		 * the server, to make sure we have not missed any events.
-		 *
-		 * NOTE This has not been attached anywhere, since we can't really test
-		 *      this currently.
-		 */
-		function onReconnect() {
-			BoardStore.getBoards().map(function(board) {
-				TicketActions.loadTickets(board.id);
-			});
-			return BoardActions.loadBoards();
-		}
+		socket = io(IO_URL, options);
 
-		/**
-		 *
-		 */
-		function onConnectionFailure(err) {
-			var error     = new Error(err);
-			var errorType = error.statusCode === 401 ?
-				Action.AUTHENTICATION_FAILURE : Action.FAILURE;
+		socket.on('error', (err) => {
+			BroadcastAction.add(err, Action.Socket.Connect);
+		});
 
-			Dispatcher.dispatch({
-				payload: { error: error }, type: errorType,
-			});
-			return reject(err);
-		}
+		socket.on('connect', () => {
+			joinBoards();
+			BoardStore.addChangeListener(joinBoards);
+			socket.on(DATA_EVENT, handleIncomingEvent);
+			return resolve();
+
+		});
+
+		// This is a bit of a hack in order to make sure we get new data if we
+		// disconnect and regain connection later on.
+		socket.on('reconnect', () => {
+			BoardAction.load();
+		});
 	});
 }
 
 /**
+ * Disconnect the client from the 'socket.io' server. Also clears any stored
+ * socket state in the client.
  *
+ * @returns {Promise}  Resolved upon disconnecting.
  */
 function disconnect() {
-	return new Promise(function(resolve) {
-		if(_socket && _socket.connected) {
-			_socket.disconnect();
+	return new Promise((resolve) => {
+		if(socket && socket.connected) {
+			socket.disconnect();
 		}
 
-		_rooms  = [ ];
-		_socket = null;
+		rooms  = [ ];
+		socket = null;
 
-		BoardStore.removeChangeListener(_joinBoards);
+		BoardStore.removeChangeListener(joinBoards);
 		return resolve();
 	});
 }
 
 /**
- * Joins rooms (or boards) at socket level, based on BoardStore.
- *
- * TODO We should really define the 'dirty' here as a constant at application
- *      level, so it doesn't get lost in the jungle of code and stuff.
+ * Each board represents a 'room', as far as the socket connection cares. When
+ * the state of the 'BoardStore' changs, we make sure to sync our room status
+ * with the store.
  */
-function _joinBoards() {
-	if(!_socket || !_socket.connected) {
+function joinBoards() {
+	if(!socket || !socket.connected) {
 		return null;
 	}
 
-	var dirty    = 'dirty';
-	var boardIDs = _.pluck(BoardStore.getBoards(), 'id');
+	let boards   = BoardStore.getBoards();
+	let boardIDs = boards.map((board) => board.id)
+		.filter((boardID) => rooms.indexOf(boardID) < 0);
 
-	_.difference(boardIDs, _rooms).forEach(function(id) {
-		// If the board is 'dirty', not yet server approved, we don't join it.
-		if(id.substring(0, dirty.length) === dirty) {
+	boardIDs.forEach((boardID) => {
+		// If the board is 'dirty', not yet approved by the server, we don't
+		// join it because the 'id' property will change.
+		if(boardID.substring(0, 'dirty'.length) === 'dirty') {
 			return null;
 		}
-		// Attempt to join the room, back out if an error occurs.
-		_rooms.push(id);
-		_socket.emit(JOIN_EVENT, { board: id }, function(err) {
+
+		rooms.push(boardID);
+		socket.emit(JOIN_EVENT, { board: boardID }, (err) => {
 			if(err) {
-				return (_rooms = _.without(_rooms, id));
+				rooms = rooms.filter((id) => id !== boardID);
+				return BroadcastAction.add(err, Action.Socket.Join);
 			}
 		});
 	});
 }
 
 /**
+ * The received data is in the format of 'events'. We simply dispatch a few
+ * actions when new data is received and we should have real time stuff...
  *
- * TODO Move 'type' to constants.
+ * NOTE See the implementation of the handlers below...
  */
-function _onData(data) {
-	/**
-	 * Wrap the Dispatch in a timeout to avoid weird shenanigans with socket
-	 * based events succeeding before the HTTP events, in other words, to
-	 * prevent the following scenario:
-	 *
-	 * TICKET_ADD (http) -> TICKET_ADD (socket) -> TICKET_ADD_SUCCESS (http)
-	 *
-	 * This is a dirty hack and not cool at all...
-	 */
-	setTimeout(function() {
-		switch(data.type) {
-			case 'BOARD_EDIT':
-				Dispatcher.dispatch({
-					payload: {
-						board:   data.data.newAttributes,
-						boardID: data.board,
-					},
-					type: Action.EDIT_BOARD,
-				});
-				break;
-			case 'BOARD_REMOVE':
-				break;
-			case 'TICKET_CREATE':
-				if(!TicketStore.getTicket(data.board, data.data.id)) {
-					data.data.content = utf8.decode(data.data.content);
-					Dispatcher.dispatch({
-						payload: {
-							ticket:  data.data,
-							boardID: data.board,
-						},
-						type: Action.ADD_TICKET,
-					});
-				}
-				break;
-			case 'TICKET_EDIT':
-				data.data.newAttributes.content = utf8.decode(
-					data.data.newAttributes.content
-				);
-				Dispatcher.dispatch({
-					payload: {
-						ticket:   data.data.newAttributes,
-						boardID:  data.board,
-						ticketID: data.data.id,
-					},
-					type: Action.EDIT_TICKET,
-				});
-				break;
-			case 'TICKET_REMOVE':
-				Dispatcher.dispatch({
-					payload: {
-						boardID:  data.board,
-						ticketID: data.data.id,
-					},
-					type: Action.REMOVE_TICKET,
-				});
-				break;
+function handleIncomingEvent(event) {
+	if(PayloadHandler[event.type]) {
+		return PayloadHandler[event.type](event);
+	}
+}
+
+/**
+ * Defines the types of 'events' we receive.
+ */
+const Event = {
+	Board: {
+		Update: 'BOARD_EDIT'
+	},
+	Ticket: {
+		Create: 'TICKET_CREATE',
+		Update: 'TICKET_EDIT',
+		Delete: 'TICKET_REMOVE'
+	}
+}
+
+/**
+ * The implementation of the 'event' handlers.
+ */
+const PayloadHandler = {
+	[Event.Board.Update](payload) {
+		let board = Object.assign({ id: payload.board },
+			payload.data.newAttributes);
+		return BoardAction.edit(board);
+	},
+	[Event.Ticket.Create](payload) {
+		let board = {
+			id: payload.board
 		}
-	}, 0);
+		let ticket = payload.data;
+		if(!BoardStore.getTicket(board.id, ticket.id)) {
+			ticket.content = utf8.decode(ticket.content);
+			return TicketAction.add(board, ticket);
+		}
+	},
+	[Event.Ticket.Update](payload) {
+		let board = {
+			id: payload.board
+		}
+		let ticket = Object.assign({ id: payload.data.id },
+			payload.data.newAttributes);
+		ticket.content = utf8.decode(ticket.content);
+		return TicketAction.edit(board, ticket);
+	},
+	[Event.Ticket.Delete](payload) {
+		let board = {
+			id: payload.board
+		}
+		let ticket = payload.data;
+		return TicketAction.remove(board, ticket);
+	}
 }

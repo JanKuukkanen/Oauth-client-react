@@ -1,13 +1,11 @@
-'use strict';
-
-var Hammer = require('hammerjs');
+import Hammer from 'hammerjs';
 
 /**
- *
+ * Simple abstraction over creating a HammerJS element with a 'doubletap' event
+ * already added, so it can be listened to.
  */
-function doubletap(element) {
-	var hammer = new Hammer.Manager(element);
-
+export default function doubletap(element) {
+	let hammer = new Hammer.Manager(element);
 	hammer.add(new Hammer.Tap({
 		event:        'doubletap',
 		taps:         2,
@@ -15,8 +13,5 @@ function doubletap(element) {
 		threshold:    16,
 		posThreshold: 16
 	}));
-
 	return hammer;
 }
-
-module.exports = doubletap;

@@ -1,198 +1,107 @@
-'use strict';
+import api  from '../utils/api';
+import uid  from '../utils/uid';
+import flux from '../utils/flux';
 
-var _ = require('lodash');
-
-var uid    = require('../utils/uid');
-var api    = require('../utils/api');
-var build  = require('../utils/action-builder');
-var Action = require('../constants/actions');
-
-var AuthStore   = require('../stores/auth');
-var TicketStore = require('../stores/ticket');
-
-/**
- * The methods exported by TicketActions
- */
-module.exports = {
-	addTicket:    addTicket,
-	editTicket:   editTicket,
-	loadTickets:  loadTickets,
-	removeTicket: removeTicket,
-}
+import Action          from '../actions';
+import UserStore       from '../stores/user';
+import BoardStore      from '../stores/board';
+import BroadcastAction from '../actions/broadcast';
 
 /**
  *
  */
-function loadTickets(boardID) {
-	var opts = {
-		id:    { board: boardID },
-		token: AuthStore.getToken(),
-	}
-	var initial = {
-		type: Action.LOAD_TICKETS,
-	}
+export default flux.actionCreator({
+	/**
+	 * Add a ticket to the given board.
+	 *
+	 * NOTE This method does not hit servers and is meant to be used when
+	 *      informing the client of change.
+	 */
+	add(board, ticket) {
+		ticket.ua = Date.now();
+		this.dispatch(Action.Ticket.Add, { board, ticket });
+	},
 
 	/**
-	 * Construct the payload for 'success'.
+	 * Edit the given ticket.
+	 *
+	 * NOTE This method does not hit servers and is meant to be used when
+	 *      informing the client of change.
 	 */
-	function onSuccess(tickets) {
-		return { boardID: boardID, tickets: tickets }
-	}
+	edit(board, ticket) {
+		ticket.ua = Date.now();
+		this.dispatch(Action.Ticket.Edit, { board, ticket });
+	},
 
 	/**
-	 * Construct the payload for 'failure'.
+	 * Remove the given ticket.
+	 *
+	 * NOTE This method does not hit servers and is meant to be used when
+	 *      informing the client of change.
 	 */
-	function onFailure(err) {
-		return { error: err }
-	}
-
-	return build(initial, api.getTickets(opts).then(onSuccess, onFailure));
-}
-
-/**
- *
- */
-function addTicket(boardID, ticket) {
-	var opts = {
-		id: {
-			board: boardID,
-		},
-		token:   AuthStore.getToken(),
-		payload: ticket,
-	}
-	// We generate a 'mock' id for the ticket so we can be optimistic about
-	// adding it to our collection. It is further used to update the ticket's
-	// real id once we receive it from the server.
-	var initial = {
-		payload: {
-			ticket: _.assign(_.clone(ticket), {
-				id:        uid(),
-				updatedAt: Date.now(),
-			}),
-			boardID: boardID,
-		},
-		type: Action.ADD_TICKET,
-	}
+	remove(board, ticket) {
+		this.dispatch(Action.Ticket.Remove, { board, ticket });
+	},
 
 	/**
-	 * Construct the payload for 'success'.
+	 * Create a ticket on the given board, persisting it on the server.
 	 */
-	function onSuccess(ticket) {
-		return {
-			boardID: boardID,
-			clean:   ticket,
-			dirty:   initial.payload.ticket.id,
-		}
-	}
+	create(board, ticket) {
+		let token   = UserStore.getToken();
+		let payload = Object.assign(ticket, { id: uid(), ua: Date.now() });
+
+		this.dispatch(Action.Ticket.Add, { board, ticket: payload });
+
+		api.createTicket({ token, payload, id: { board: board.id } })
+			.then((ticket) => {
+				// Let's just ignore the stuff server gives us, expect the id,
+				// because why the hell not! This is not good... But what is?
+				let dirty = { id: payload.id }
+				let clean = Object.assign(payload, { id: ticket.id });
+
+				this.dispatch(Action.Ticket.Add, { board, ticket: clean }, {
+					silent: true
+				});
+				this.dispatch(Action.Ticket.Remove, { board, ticket: dirty });
+			})
+			.catch((err) => {
+				this.dispatch(Action.Ticket.Remove, { board, ticket: payload });
+				BroadcastAction.add(err, Action.Ticket.Add);
+			});
+	},
 
 	/**
-	 * Construct the payload for 'failure'.
+	 * Update the given ticket, persisting the changes to the server.
 	 */
-	function onFailure(err) {
-		return {
-			error:    err,
-			boardID:  boardID,
-			ticketID: initial.payload.ticket.id,
-		}
-	}
+	update(board, ticket) {
+		let token    = UserStore.getToken();
+		let payload  = Object.assign(ticket, { ua: Date.now() });
+		let previous = BoardStore.getTicket(board.id, ticket.id).toJS();
 
-	return build(initial, api.createTicket(opts).then(onSuccess, onFailure));
-}
+		this.dispatch(Action.Ticket.Edit, { board, ticket: payload });
 
-/**
- *
- */
-function editTicket(boardID, ticketID, ticket) {
-	// Very simple to roll back changes, if something goes wrong.
-	var old = TicketStore.getTicket(boardID, ticketID);
-
-	var opts = {
-		id: {
-			board:  boardID,
-			ticket: ticketID,
-		},
-		token:   AuthStore.getToken(),
-		payload: ticket,
-	}
-	var initial = {
-		payload: {
-			ticket: _.assign(ticket, {
-				updatedAt: Date.now(),
-			}),
-			boardID:  boardID,
-			ticketID: ticketID,
-		},
-		type: Action.EDIT_TICKET,
-	}
+		api.updateTicket({
+			token, payload, id: { board: board.id, ticket: payload.id }
+		})
+			.catch((err) => {
+				this.dispatch(Action.Ticket.Edit, { board, ticket: previous });
+				BroadcastAction.add(err, Action.Ticket.Edit);
+			});
+	},
 
 	/**
-	 * Construct the payload for 'success'.
+	 * Delete the given ticket, persisting the changes to the server.
 	 */
-	function onSuccess(ticket) {
-		return {
-			ticket:   ticket,
-			boardID:  boardID,
-			ticketID: ticketID,
-		}
+	delete(board, ticket) {
+		let token    = UserStore.getToken();
+		let existing = BoardStore.getTicket(board.id, ticket.id).toJS();
+
+		this.dispatch(Action.Ticket.Remove, { board, ticket });
+
+		api.deleteTicket({ token, id: { board: board.id, ticket: ticket.id } })
+			.catch((err) => {
+				this.dispatch(Action.Ticket.Add, { board, ticket: existing });
+				BroadcastAction.add(err, Action.Ticket.Remove);
+			});
 	}
-
-	/**
-	 * Construct the payload for 'failure'.
-	 */
-	function onFailure(err) {
-		return {
-			error:    err,
-			ticket:   old,
-			boardID:  boardID,
-			ticketID: ticketID,
-		}
-	}
-
-	return build(initial, api.updateTicket(opts).then(onSuccess, onFailure));
-}
-
-/**
- *
- */
-function removeTicket(boardID, ticketID) {
-	// Very simple to roll back changes, if something goes wrong.
-	var old = TicketStore.getTicket(boardID, ticketID);
-
-	var opts = {
-		id: {
-			board:  boardID,
-			ticket: ticketID,
-		},
-		token: AuthStore.getToken(),
-	}
-	var initial = {
-		payload: {
-			boardID:  boardID,
-			ticketID: ticketID,
-		},
-		type: Action.REMOVE_TICKET,
-	}
-
-	/**
-	 * Construct the payload for 'success'.
-	 */
-	function onSuccess() {
-		return {
-			boardID:  boardID,
-			ticketID: ticketID,
-		}
-	}
-
-	/**
-	 * Construct the payload for 'failure'.
-	 */
-	function onFailure(err) {
-		return {
-			error:   err,
-			ticket:  old,
-			boardID: boardID,
-		}
-	}
-
-	return build(initial, api.deleteTicket(opts).then(onSuccess, onFailure));
-}
+});

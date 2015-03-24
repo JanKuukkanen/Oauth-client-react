@@ -1,15 +1,11 @@
-'use strict';
-
-var page  = require('page');
-var React = require('react/addons');
-
-var Broadcast = require('../components/broadcast.jsx');
+import React       from 'react/addons';
+import Broadcaster from '../../components/broadcaster';
 
 /**
  *
  */
-var FormView = React.createClass({
-	mixins: [React.addons.LinkedStateMixin],
+export default React.createClass({
+	mixins: [ React.addons.LinkedStateMixin ],
 
 	propTypes: {
 		fields: React.PropTypes.arrayOf(React.PropTypes.shape({
@@ -22,60 +18,54 @@ var FormView = React.createClass({
 			pattern:  React.PropTypes.string,
 			required: React.PropTypes.bool,
 		})),
+
 		secondary: React.PropTypes.shape({
 			submit:      React.PropTypes.func.isRequired,
 			action:      React.PropTypes.string.isRequired,
 			description: React.PropTypes.string,
 		}),
+
 		help:   React.PropTypes.string,
 		submit: React.PropTypes.func.isRequired,
 		action: React.PropTypes.string.isRequired,
 	},
 
-	getDefaultProps: function() {
-		return {
-			fields:    [],
-			secondary: null,
-		}
+	getDefaultProps() {
+		return { fields: [ ], secondary: null }
 	},
 
-	getInitialState: function() {
-		return this.props.fields.reduce(function(state, field) {
-			state[field.name] = ''; return state;
+	getInitialState() {
+		return this.props.fields.reduce((state, field) => {
+			state[ field.name ] = '';
+			return state;
 		}, {});
 	},
 
-	/**
-	 *
-	 */
-	_submit: function(ev) {
+	submitPrimary(event) {
 		this.props.submit(this.state);
-		return ev.preventDefault();
+		return event.preventDefault();
 	},
 
-	_submitSecondary: function(ev) {
-		this.props.secondary.submit();
-		return ev.preventDefault();
+	submitSecondary(event) {
+		this.props.secondary.submit(this.state);
+		return event.preventDefault();
 	},
 
-	render: function() {
-		var secondaryContent = !this.props.secondary ? null : (
-			/* jshint ignore:start */
+	render() {
+		let secondaryContent = !this.props.secondary ? null : (
 			<section className="secondary">
 				<p>{this.props.secondary.description}</p>
 				<button className="btn-secondary"
-						onClick={this._submitSecondary}>
+						onClick={this.submitSecondary}>
 					{this.props.secondary.action}
 				</button>
 			</section>
-			/* jshint ignore:end */
 		);
 		return (
-			/* jshint ignore:start */
 			<div className="view view-form">
-				<Broadcast />
-				<div className="view-content">
-					<form className="form" onSubmit={this._submit}>
+				<Broadcaster />
+				<div className="content">
+					<form className="form" onSubmit={this.submitPrimary}>
 						<div className="logo">
 							<img src="/dist/assets/img/logo.svg" />
 							<h1>Contriboard</h1>
@@ -90,31 +80,24 @@ var FormView = React.createClass({
 					</form>
 				</div>
 			</div>
-			/* jshint ignore:end */
 		);
 	},
 
-	renderFields: function(fields) {
-		return fields.map(function(field, index) {
-			var controlattrs = {
+	renderFields(fields) {
+		return fields.map((field, index) => {
+			let controlattrs = {
 				title:    field.title,
 				pattern:  field.pattern,
 				required: field.required,
 			}
 			return (
-				/* jshint ignore:start */
 				<section key={field.name} className="input">
-					<label htmlFor={field.name}>
-						{field.label}
-					</label>
-					<input autoFocus={index === 0} name={field.name} type={field.type}
-						{...controlattrs}
+					<label htmlFor={field.name}>{field.label}</label>
+					<input autoFocus={index === 0} name={field.name}
+						type={field.type} {...controlattrs}
 						valueLink={this.linkState(field.name)} />
 				</section>
-				/* jshint ignore:end */
 			);
-		}.bind(this));
+		});
 	}
 });
-
-module.exports = FormView;
