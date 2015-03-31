@@ -55,8 +55,6 @@ export default React.createClass({
 	},
 
 	renderDialog() {
-		console.debug('components/dialog::renderDialog');
-
 		return (
 			<div className="dialog-overlay">
 				<div className={`dialog ${this.props.className}`}>

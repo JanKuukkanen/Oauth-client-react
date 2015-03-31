@@ -1,5 +1,6 @@
 import React      from 'react/addons';
 import Hammer     from 'hammerjs';
+import immutable  from 'immutable';
 import TweenState from 'react-tween-state';
 
 import gridify   from '../utils/gridify';
@@ -12,7 +13,7 @@ import DraggableMixin   from '../mixins/draggable';
 import EditTicketDialog from '../components/dialog/edit-ticket';
 
 /**
- * Tickets are those movable little things on the board.
+ *
  */
 export default React.createClass({
 	mixins: [DraggableMixin, TweenState.Mixin ],
@@ -35,6 +36,27 @@ export default React.createClass({
 			y: this.props.ticket.position.y,
 			showEditDialog: false
 		}
+	},
+
+	shouldComponentUpdate(nextProps, nextState) {
+		let prevProps = this.props;
+		let prevState = this.state;
+
+		let hasStateChanged = (
+			prevState.x                 !== nextState.x              ||
+			prevState.y                 !== nextState.y              ||
+			prevState.showEditDialog    !== nextState.showEditDialog
+		);
+
+		let havePropsChanged = (
+			prevProps.snap  !== nextProps.snap                ||
+			prevProps.board !== nextProps.board               ||
+			!immutable.is(prevProps.ticket, nextProps.ticket)
+		);
+
+		let isTweening = nextState.tweenQueue.length > 0;
+
+		return hasStateChanged || havePropsChanged || isTweening;
 	},
 
 	componentDidMount() {
@@ -86,9 +108,6 @@ export default React.createClass({
 		this.setState({ showEditDialog: !this.state.showEditDialog });
 	},
 
-	/**
-	 *
-	 */
 	tween(to, from, duration) {
 		['x', 'y'].map((axis) => {
 			let tweeningOpts = {
@@ -101,8 +120,6 @@ export default React.createClass({
 	},
 
 	render() {
-		// console.debug('component/ticket::render');
-
 		let style = {
 			ticket: {
 				top:    this.getTweeningValue('y'),
@@ -113,12 +130,10 @@ export default React.createClass({
 				backgroundColor: this.props.ticket.color
 			}
 		}
-
 		let editTicketDialog = !this.state.showEditDialog ? null : (
 			<EditTicketDialog board={this.props.board} ticket={this.props.ticket}
 				onDismiss={this.toggleEditDialog} />
 		);
-
 		return (
 			<div className="ticket" style={style.ticket}>
 				<div className="color" style={style.color} />
