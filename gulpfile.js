@@ -1,23 +1,33 @@
 'use strict';
 
-var args       = require('minimist')(process.argv);
+var args = require('minimist')(process.argv);
+
 var gulp       = require('gulp');
 var sass       = require('gulp-sass');
 var mocha      = require('gulp-mocha');
 var eslint     = require('gulp-eslint');
-var server     = require('gulp-webserver');
-var source     = require('vinyl-source-stream');
+var uglify     = require('gulp-uglify');
+var webserver  = require('gulp-webserver');
+var sourcemaps = require('gulp-sourcemaps');
+
+var buffer = require('vinyl-buffer');
+var source = require('vinyl-source-stream');
+
 var envify     = require('envify');
 var babelify   = require('babelify');
 var watchify   = require('watchify');
 var browserify = require('browserify');
 
 // We need to setup browserify. For regular builds we use 'browserify' by
-// itself, but for builds that keep repeating, we use 'watchify'.
+// itself, but for builds that keep repeating, we use 'watchify'. Note that we
+// set the 'debug' flag in order to preserve sourcemaps.
+watchify.args       = watchify.args || { }
+watchify.args.debug = true;
+
 var bundler = args.watchify
 	? watchify(browserify('./src/scripts/app.js', watchify.args))
 		.transform(envify).transform(babelify)
-	: browserify('./src/scripts/app.js')
+	: browserify('./src/scripts/app.js', { debug: true })
 		.transform(envify).transform(babelify);
 
 /**
@@ -44,11 +54,30 @@ gulp.task('test', function() {
 
 /**
  * Build the JavaScript source.
+ *
+ * NOTE If this task is ran with a 'production' flag, the code will be minified
+ *      without sourcemaps.
  */
 gulp.task('build-js', function() {
-	return bundler.bundle()
-		.pipe(source('app.js'))
+	var stream = bundler.bundle()
+		.pipe(source('app.js'));
+
+	if(args.production) {
+		stream = stream
+			.pipe(buffer())
+			.pipe(uglify());
+	}
+	else {
+		stream = stream
+			.pipe(buffer())
+			.pipe(sourcemaps.init({ loadMaps: true }))
+			.pipe(sourcemaps.write());
+	}
+
+	stream = stream
 		.pipe(gulp.dest('dist'));
+
+	return stream;
 });
 
 /**
@@ -81,7 +110,7 @@ gulp.task('build', ['build-assets', 'build-css', 'build-js']);
  */
 gulp.task('serve', ['build'], function() {
 	return gulp.src('.')
-		.pipe(server({
+		.pipe(webserver({
 			host:       process.env.HOSTNAME || '0.0.0.0',
 			fallback:   'index.html',
 			livereload: true,
@@ -95,5 +124,4 @@ gulp.task('default', ['serve'], function() {
 	gulp.watch('./src/assets/**/*',      ['build-assets']);
 	gulp.watch('./src/styles/**/*.sass', ['build-css']);
 	gulp.watch('./src/scripts/**/*.js',  ['build-js']);
-	gulp.watch('./src/scripts/**/*.jsx', ['build-js']);
 });
