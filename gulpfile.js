@@ -4,6 +4,7 @@ var args       = require('minimist')(process.argv);
 var gulp       = require('gulp');
 var sass       = require('gulp-sass');
 var mocha      = require('gulp-mocha');
+var eslint     = require('gulp-eslint');
 var server     = require('gulp-webserver');
 var source     = require('vinyl-source-stream');
 var envify     = require('envify');
@@ -18,6 +19,15 @@ var bundler = args.watchify
 		.transform(envify).transform(babelify)
 	: browserify('./src/scripts/app.js')
 		.transform(envify).transform(babelify);
+
+/**
+ * Lint the source code.
+ */
+gulp.task('lint', function() {
+	return gulp.src('src/scripts/**/*.js')
+		.pipe(eslint())
+		.pipe(eslint.format());
+});
 
 /**
  * Unit tests.
