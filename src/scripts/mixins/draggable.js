@@ -1,36 +1,26 @@
-'use strict';
-
-var React     = require('react');
-var Draggable = require('draggabilly');
+import React     from 'react';
+import Draggable from 'draggabilly';
 
 /**
- * Makes the element draggable inside its parent container.
+ * Simple mixin that makes the component draggable inside it's parent.
  */
-module.exports = {
-
-	getInitialState: function() {
-		return {
-			isDragging: false,
-		}
+export default {
+	getInitialState() {
+		return { isDragging: false }
 	},
-
-	componentDidMount: function() {
+	componentDidMount() {
 		this.draggable = new Draggable(this.getDOMNode(), {
-			containment: true,
+			containment: true
 		});
-
-		// Fix issue with IScroll and draggable elements, also isDragging...
-		this.draggable.on('dragStart', function(draggable, ev) {
+		this.draggable.on('dragStart', (draggable, event) => {
 			this.setState({ isDragging: true });
-			return ev.stopPropagation();
-		}.bind(this));
-
-		this.draggable.on('dragEnd', function() {
+			return event.stopPropagation();
+		});
+		this.draggable.on('dragEnd', () => {
 			this.setState({ isDragging: false });
-		}.bind(this));
+		});
 	},
-
-	componentWillUnmount: function() {
+	componentWillUnmount() {
 		this.draggable = null;
-	},
+	}
 }
