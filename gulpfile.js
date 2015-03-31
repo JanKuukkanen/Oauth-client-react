@@ -4,7 +4,6 @@ var args       = require('minimist')(process.argv);
 var gulp       = require('gulp');
 var sass       = require('gulp-sass');
 var mocha      = require('gulp-mocha');
-var jshint     = require('gulp-jshint');
 var server     = require('gulp-webserver');
 var source     = require('vinyl-source-stream');
 var envify     = require('envify');
