@@ -21,9 +21,8 @@ const ColorButton = React.createClass({
 	},
 
 	render() {
-		return (
-			<div className="option" style={{ backgroundColor: this.props.color }} />
-		);
+		return <div className="option"
+			style={{ backgroundColor: this.props.color }} />;
 	}
 });
 
@@ -49,10 +48,12 @@ export default React.createClass({
 
 		return (
 			<div className="color-select">
-				<div className="value" style={{ backgroundColor: this.props.color.value }} />
+				<div className="value"
+					style={{ backgroundColor: this.props.color.value }} />
 				<div className="options">
 					{colors.map((color) => {
-						return <ColorButton key={color} color={color} onSelect={this.selectColor} />;
+						return <ColorButton key={color} color={color}
+							onSelect={this.selectColor} />;
 					})}
 				</div>
 			</div>

@@ -24,11 +24,11 @@ export default React.createClass({
 			}],
 			submit: (state) => {
 				let credentials = Object.assign(state, {
-					boardID:    this.props.id,
-					accessCode: this.props.code
+					boardID:    this.props.boardID,
+					accessCode: this.props.accessCode
 				});
 				return UserAction.login(credentials, true).then(() => {
-					return page.show(`/boards/${ctx.params.id}`);
+					return page.show(`/boards/${this.props.boardID}`);
 				});
 			},
 			action: 'Login as Guest'

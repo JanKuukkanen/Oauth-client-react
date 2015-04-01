@@ -19,8 +19,6 @@ export default React.createClass({
 	},
 
 	render() {
-		console.debug('components/background-select::render');
-
 		let background = Board.Background[this.props.background.value];
 		let preview    = background.url !== null
 			? <img src={background.url} />
@@ -33,7 +31,8 @@ export default React.createClass({
 				</div>
 				<label>Board Background</label>
 				<div className="select">
-					<select onChange={this.onChange} defaultValue={this.props.background.value}>
+					<select onChange={this.onChange}
+							defaultValue={this.props.background.value}>
 						{this.renderOptions()}
 					</select>
 					<span className="caret fa fa-arrow-down"></span>
@@ -43,8 +42,6 @@ export default React.createClass({
 	},
 
 	renderOptions: function() {
-		console.debug('components/background-select::renderOptions');
-
 		return Object.keys(Board.Background).map(function(key) {
 			return (
 				<option key={key} value={key}>
