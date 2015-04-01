@@ -40,5 +40,5 @@ EXPOSE 80
 
 USER root
 CMD cd /home/teamboard/teamboard-client && \
-        sudo -u teamboard -E ./node_modules/.bin/gulp build && \
+        sudo -u teamboard -E ./node_modules/.bin/gulp build --production && \
         nginx -c /etc/nginx/nginx.conf
