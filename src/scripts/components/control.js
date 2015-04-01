@@ -1,12 +1,10 @@
-import React  from 'react/addons';
+import React  from 'react';
 import Hammer from 'hammerjs';
 
 /**
  *
  */
 export default React.createClass({
-	mixins: [ React.addons.PureRenderMixin ],
-
 	propTypes: {
 		icon:    React.PropTypes.string.isRequired,
 		active:  React.PropTypes.bool,
@@ -17,18 +15,20 @@ export default React.createClass({
 		return { active: false }
 	},
 
+	shouldComponentUpdate(nextProps) {
+		return this.props.active !== nextProps.active;
+	},
+
 	componentDidMount() {
 		new Hammer(this.getDOMNode()).on('tap', this.props.onClick);
 	},
 
 	render() {
-		// console.debug('components/control::render');
-
 		let controlClasses = React.addons.classSet({
-			 control: true, active: this.props.active
+			 control: true,
+			 active:  this.props.active
 		});
 		let iconClasses = `fa fa-fw fa-${this.props.icon}`;
-
 		return (
 			<div className={controlClasses}>
 				<span className={iconClasses}></span>

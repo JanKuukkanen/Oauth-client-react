@@ -10,8 +10,12 @@ const DropdownItem = React.createClass({
 	getDefaultProps() {
 		return {
 			onClick:  () => {},
-			disabled: false,
+			disabled: false
 		}
+	},
+
+	shouldComponentUpdate() {
+		return false;
 	},
 
 	render() {
@@ -39,6 +43,12 @@ export default React.createClass({
 
 	getDefaultProps() {
 		return { items: [ ] }
+	},
+
+	shouldComponentUpdate(nextProps) {
+		// We know the items won't change over time, at least with the current
+		// implementation of the Navigation component...
+		return this.props.show !== nextProps.show;
 	},
 
 	render() {

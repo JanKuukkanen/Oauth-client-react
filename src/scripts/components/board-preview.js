@@ -1,5 +1,6 @@
-import page  from 'page';
-import React from 'react';
+import page      from 'page';
+import React     from 'react';
+import immutable from 'immutable';
 
 import Board        from '../models/board';
 import BoardStore   from '../stores/board';
@@ -17,7 +18,7 @@ export default React.createClass({
 	propTypes: {
 		board: (props) => {
 			if(!props.board instanceof Board) throw Error();
-		},
+		}
 	},
 
 	getInitialState() {
@@ -27,13 +28,18 @@ export default React.createClass({
 		}
 	},
 
-	componentDidMount() {
-		// console.debug('components/board-preview::componentDidMount');
-	},
+	shouldComponentUpdate(nextProps, nextState) {
+		let prevProps = this.props;
+		let prevState = this.state;
 
-
-	componentDidUpdate() {
-		// console.debug('components/board-preview::componentDidUpdate');
+		let havePropsChanged = (
+			!immutable.is(prevProps.board, nextProps.board)
+		);
+		let hasStateChanged = (
+			prevState.showEditBoardDialog   !== nextState.showEditBoardDialog   ||
+			prevState.showRemoveBoardDialog !== nextState.showRemoveBoardDialog
+		);
+		return havePropsChanged || hasStateChanged;
 	},
 
 	showBoard() {
@@ -45,8 +51,6 @@ export default React.createClass({
 	},
 
 	render() {
-		// console.debug('components/board-preview::render');
-
 		let board = this.props.board;
 
 		let editBoardDialog = !this.state.showEditBoardDialog ? null : (
@@ -75,8 +79,6 @@ export default React.createClass({
 	},
 
 	renderControls() {
-		// console.debug('components/board-preview::renderControls');
-
 		let controls = [{
 			icon:    'trash',
 			active:  this.state.showRemoveBoardDialog,
@@ -86,7 +88,6 @@ export default React.createClass({
 			active:  this.state.showEditBoardDialog,
 			onClick: this.showDialog.bind(this, 'EditBoardDialog')
 		}];
-
 		return (
 			<div className="controls">
 				{controls.map(function(ctrl, index) {
