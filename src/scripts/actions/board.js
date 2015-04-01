@@ -64,6 +64,7 @@ export default flux.actionCreator({
 						board.background = 'NONE';
 					}
 					delete board.createdBy;
+					delete board.description;
 					return board;
 				}
 
