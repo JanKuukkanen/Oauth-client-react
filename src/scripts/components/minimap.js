@@ -73,11 +73,13 @@ export default React.createClass({
 	},
 
 	shouldComponentUpdate(nextProps) {
-		// If the map is not going to be shown, why bother updating it.
-		if(!nextProps.show) return false;
-
 		let prevProps = this.props;
+
+		// If the map is not going to be shown, why bother updating it.
+		if(!prevProps.show && !nextProps.show) return false;
+
 		let havePropsChanged = (
+			prevProps.show       !== nextProps.show             ||
 			prevProps.background !== nextProps.background       ||
 			!immutable.is(prevProps.size,    nextProps.size)    ||
 			!immutable.is(prevProps.tickets, nextProps.tickets)
