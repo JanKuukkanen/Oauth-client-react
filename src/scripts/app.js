@@ -22,8 +22,6 @@ const middleware = {
 		is: (...types) => {
 			return function(ctx, next) {
 				if((ctx.user = UserStore.getUser())) {
-					// Make sure the user has at least one of the types
-					// specified.
 					let userHasType = types.reduce((has, type) => {
 						return has || ctx.user.type === type;
 					}, false);

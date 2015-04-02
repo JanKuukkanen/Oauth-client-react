@@ -1,5 +1,6 @@
 'use strict';
 
+var path = require('path');
 var args = require('minimist')(process.argv);
 
 var gulp       = require('gulp');
@@ -21,14 +22,17 @@ var browserify = require('browserify');
 // We need to setup browserify. For regular builds we use 'browserify' by
 // itself, but for builds that keep repeating, we use 'watchify'. Note that we
 // set the 'debug' flag in order to preserve sourcemaps.
-watchify.args       = watchify.args || { }
-watchify.args.debug = true;
+watchify.args           = watchify.args || { }
+watchify.args.debug     = !args.production;
+watchify.args.fullPaths = !args.production;
 
-var bundler = args['use-watchify']
-	? watchify(browserify('./src/scripts/app.js', watchify.args))
-		.transform(envify).transform(babelify)
-	: browserify('./src/scripts/app.js', { debug: true })
-		.transform(envify).transform(babelify);
+var entry   = path.join(__dirname, 'src/scripts/app.js');
+var bundler = browserify(entry, watchify.args);
+
+if(args['use-watchify']) {
+	bundler = watchify(bundler);
+}
+bundler = bundler.transform(envify).transform(babelify);
 
 /**
  * Bundles the code using bundler.
