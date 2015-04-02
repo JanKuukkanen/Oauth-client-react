@@ -64,7 +64,12 @@ const middleware = {
 
 		loggedOut: (ctx, next) => {
 			if(ctx.user = UserStore.getUser()) {
-				return page.redirect('/boards');
+				if(ctx.user.type === 'guest') {
+					// If the logged in user a 'guest', he or she is redirected
+					// to the board the guest has access to.
+					return page.redirect(`/boards/${ctx.user.access}`);
+				}
+				else return page.redirect('/boards');
 			}
 			return next();
 		}
@@ -141,7 +146,5 @@ page('/boards/:id',
 		);
 	});
 
-// Make sure requests to root get redirected to Workspace. Here we also start
-// listening to changes to the URL.
 page('/', () => page.redirect('/boards'));
 page.start();
