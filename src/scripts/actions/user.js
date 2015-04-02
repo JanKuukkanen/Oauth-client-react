@@ -61,7 +61,16 @@ export default flux.actionCreator({
 	 *
 	 */
 	logout() {
-		return api.logout({ token: UserStore.getToken() })
+		let user  = UserStore.getUser();
+		let token = UserStore.getToken();
+
+		if(user.type === 'guest') {
+			return new Promise((resolve) => {
+				this.dispatch(Action.User.Logout);
+				return resolve();
+			});
+		}
+		return api.logout({ token })
 			.then(() => {
 				this.dispatch(Action.User.Logout);
 				return Promise.resolve();
