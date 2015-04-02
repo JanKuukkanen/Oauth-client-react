@@ -24,11 +24,41 @@ var browserify = require('browserify');
 watchify.args       = watchify.args || { }
 watchify.args.debug = true;
 
-var bundler = args.watchify
+var bundler = args['use-watchify']
 	? watchify(browserify('./src/scripts/app.js', watchify.args))
 		.transform(envify).transform(babelify)
 	: browserify('./src/scripts/app.js', { debug: true })
 		.transform(envify).transform(babelify);
+
+/**
+ * Bundles the code using bundler.
+ *
+ * NOTE If this task is ran with a 'production' flag, the code will be minified
+ *      without sourcemaps. By default the code is built with sourcemaps within
+ *      the code, and not minified.
+ */
+function bundle() {
+	var stream = bundler.bundle()
+		.pipe(source('app.js'));
+
+	if(args.production) {
+		stream = stream
+			.pipe(buffer())
+			.pipe(uglify());
+	}
+	else {
+		stream = stream
+			.pipe(buffer())
+			.pipe(sourcemaps.init({ loadMaps: true }))
+			.pipe(sourcemaps.write());
+	}
+
+	stream = stream
+		.pipe(gulp.dest('dist'));
+
+	return stream;
+}
+
 
 /**
  * Lint the source code.
@@ -53,32 +83,9 @@ gulp.task('test', function() {
 });
 
 /**
- * Build the JavaScript source.
- *
- * NOTE If this task is ran with a 'production' flag, the code will be minified
- *      without sourcemaps.
+ * Build the JavaScript source files.
  */
-gulp.task('build-js', function() {
-	var stream = bundler.bundle()
-		.pipe(source('app.js'));
-
-	if(args.production) {
-		stream = stream
-			.pipe(buffer())
-			.pipe(uglify());
-	}
-	else {
-		stream = stream
-			.pipe(buffer())
-			.pipe(sourcemaps.init({ loadMaps: true }))
-			.pipe(sourcemaps.write());
-	}
-
-	stream = stream
-		.pipe(gulp.dest('dist'));
-
-	return stream;
-});
+gulp.task('build-js', bundle);
 
 /**
  * Build the CSS source.
@@ -121,7 +128,14 @@ gulp.task('serve', ['build'], function() {
  * Keep track of the source files and rebuild as necessary.
  */
 gulp.task('default', ['serve'], function() {
-	gulp.watch('./src/assets/**/*',      ['build-assets']);
-	gulp.watch('./src/styles/**/*.sass', ['build-css']);
-	gulp.watch('./src/scripts/**/*.js',  ['build-js']);
+	gulp.watch('./src/assets/**/*',      [ 'build-assets' ]);
+	gulp.watch('./src/styles/**/*.sass', [ 'build-css' ]);
+	// There is some issue with 'gulp-watch' and rebuilding the bundle not
+	// actually taking changes in the code into account. However, if running
+	// the build tasks on a 'vagrant' machine, the bundler 'update' event never
+	// fires, so we need to use 'gulp-watch' then.
+	if(args['use-gulp-watch']) {
+		gulp.watch('./src/scripts/**/*.js', [ 'build-js' ]);
+	}
+	else bundler.on('update', bundle);
 });
