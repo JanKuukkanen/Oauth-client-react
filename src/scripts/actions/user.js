@@ -12,7 +12,6 @@ import BroadcastAction from '../actions/broadcast';
  *      what it is for now.
  */
 export default flux.actionCreator({
-
 	/**
 	 *
 	 */

@@ -5,6 +5,8 @@ import Broadcast       from '../models/broadcast';
 import BroadcastStore  from '../stores/broadcast';
 import BroadcastAction from '../actions/broadcast';
 
+const FADE_TIME = 2000;
+
 /**
  *
  */
@@ -16,9 +18,19 @@ const Item = React.createClass({
 	},
 
 	componentDidMount() {
+		this.fadeTimeout = setTimeout(() => {
+			BroadcastAction.remove(this.props.item);
+		}, FADE_TIME);
+
 		new Hammer(this.getDOMNode()).on('tap', () => {
+			clearTimeout(this.fadeTimeout);
 			BroadcastAction.remove(this.props.item);
 		});
+	},
+
+	componentWillUnmount() {
+		clearTimeout(this.fadeTimeout);
+		BroadcastAction.remove(this.props.item);
 	},
 
 	render() {
