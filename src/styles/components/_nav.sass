@@ -1,6 +1,5 @@
 /**
- * The navigation bar found in the application. It's a flex container with two
- * equally wide elements, '.title' and '.profile'...
+ *
  */
 .nav
 	height:           64px
@@ -10,71 +9,72 @@
 	@include display(flex)
 	@include flex-direction(row)
 
+	.logo
+		@include flex-grow(0)
+		@include flex-shrink(0)
+
+		cursor: pointer
+
+		width:  32px
+		height: 32px
+		margin: 16px 16px
+
 	.title
-		@include flex(1)
+		@include flex-grow(1)
+		@include flex-shrink(1)
 
-		img
-			float:  left
-			cursor: pointer
+		overflow: hidden
 
-			width:  32px
-			height: 32px
-			margin: 16px 16px
+		height: 32px
 
-		h1
-			float:  left
-			height: 32px
+		margin:     16px 0px
+		margin-top: 19px
 
-			margin:     16px 0px
-			margin-top: 19px
+		font-size:   18px
+		line-height: 28px
 
-			font-size:   18px
-			line-height: 28px
+		color:       $gallery
+		font-family: "Lato", sans-serif
 
-			color:       $gallery
-			font-family: "Lato", sans-serif
+		&:hover
+			color: $white
 
-			&:hover
-				color: $white
+	.avatar
+		@include flex-grow(0)
+		@include flex-shrink(0)
 
-	.profile
-		@include flex(0)
+		@include transition(all, 0.2s)
 
-		.avatar
-			float: right
+		width:  30px
+		height: 30px
+		margin: 16px 16px
 
-			@include transition(all, 0.2s)
+		color:  $gallery
+		cursor: pointer
 
-			width:  30px
-			height: 30px
-			margin: 16px 16px
+		border:        1px solid $voodoo
+		border-radius: 2px
 
-			color:  $gallery
-			cursor: pointer
+		span
+			width:       30px
+			line-height: 30px
 
-			border:        1px solid $voodoo
-			border-radius: 2px
+		&:hover
+			color:            $white
+			border-color:     $affair
+			background-color: $voodoo
 
-			span
-				width:       30px
-				line-height: 30px
+	.dropdown
+		&::before
+			content: ""
 
-			&:hover
-				color:            $white
-				border-color:     $affair
-				background-color: $voodoo
+			width:  0
+			height: 0
 
-		.dropdown
-			&::before
-				content: ""
+			@include position(absolute, -8px 21px null null)
 
-				width:  0
-				height: 0
+			border-left:   8px solid transparent
+			border-right:  8px solid transparent
+			border-bottom: 8px solid $bastille
 
-				@include position(absolute, -8px 21px null null)
-
-				border-left:   8px solid transparent
-				border-right:  8px solid transparent
-				border-bottom: 8px solid $bastille
-
-			@include position(absolute, 80px 4px null null)
+		@include position(absolute, 80px 4px null null)

@@ -55,16 +55,13 @@ export default React.createClass({
 		];
 		return (
 			<nav className="nav">
-				<section className="title">
-					<img src="/dist/assets/img/logo.svg" onClick={this.showWorkspace} />
-					<h1>{this.props.title}</h1>
-				</section>
-				<section className="profile">
-					<div className="avatar" onClick={this.toggleDropdown}>
-						<span className="fa fa-fw fa-user"></span>
-					</div>
-					<Dropdown show={this.state.dropdown} items={items} />
-				</section>
+				<img className="logo" src="/dist/assets/img/logo.svg"
+					onClick={this.showWorkspace} />
+				<h1 className="title">{this.props.title}</h1>
+				<div className="avatar" onClick={this.toggleDropdown}>
+					<span className="fa fa-fw fa-user"></span>
+				</div>
+				<Dropdown show={this.state.dropdown} items={items} />
 			</nav>
 		);
 	}
