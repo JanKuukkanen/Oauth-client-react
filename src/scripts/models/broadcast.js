@@ -34,8 +34,8 @@ BroadcastType.Error.Message = {
 BroadcastType.Error.Message.From = function(err, action) {
 	if(BroadcastType.Error.Message[action]) {
 		let message = BroadcastType.Error.Message[action];
-		if(err.statusCode && message[err.statusCode]) {
-			return message[err.statusCode];
+		if(err.statusCode && message.status[err.statusCode]) {
+			return message.status[err.statusCode];
 		}
 		return message.default;
 	}
