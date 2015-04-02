@@ -23,8 +23,8 @@ var browserify = require('browserify');
 // itself, but for builds that keep repeating, we use 'watchify'. Note that we
 // set the 'debug' flag in order to preserve sourcemaps.
 watchify.args           = watchify.args || { }
-watchify.args.debug     = !args.production;
-watchify.args.fullPaths = !args.production;
+watchify.args.debug     = process.env.NODE_ENV !== 'production';
+watchify.args.fullPaths = process.env.NODE_ENV !== 'production';
 
 var entry   = path.join(__dirname, 'src/scripts/app.js');
 var bundler = browserify(entry, watchify.args);
@@ -37,30 +37,21 @@ bundler = bundler.transform(envify).transform(babelify);
 /**
  * Bundles the code using bundler.
  *
- * NOTE If this task is ran with a 'production' flag, the code will be minified
- *      without sourcemaps. By default the code is built with sourcemaps within
- *      the code, and not minified.
+ * NOTE If this task is ran in 'production' environment, the sourcemaps are not
+ *      present and the code will be minified in order to ensure the smallest
+ *      possible size of the generated bundle.
  */
 function bundle() {
-	var stream = bundler.bundle()
-		.pipe(source('app.js'));
-
-	if(args.production) {
-		stream = stream
-			.pipe(buffer())
-			.pipe(uglify());
+	var stream = bundler.bundle().pipe(source('app.js'));
+	if(process.env.NODE_ENV === 'production') {
+		stream = stream.pipe(buffer()).pipe(uglify());
 	}
 	else {
-		stream = stream
-			.pipe(buffer())
+		stream = stream.pipe(buffer())
 			.pipe(sourcemaps.init({ loadMaps: true }))
 			.pipe(sourcemaps.write());
 	}
-
-	stream = stream
-		.pipe(gulp.dest('dist'));
-
-	return stream;
+	return stream.pipe(gulp.dest('dist'));
 }
 
 

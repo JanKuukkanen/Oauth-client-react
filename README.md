@@ -12,14 +12,12 @@ By default, `gulp` will use `browserify` to build the code, so each build will
 take a set amount of time. By default `sourcemaps` are also generated, so you
 can inspect your source files instead of the big generated bundle.
 
+If you are deploying the code into `production`, run the `build` task with the
+environmental variable `NODE_ENV` set to `production`. This will minify the
+source code, and strip out sourcemaps, making the generated bundle very small.
+
 There are a few arguments you can give to `gulp`, they are listed and explained
 below:
-
-	--production
-
-	Minifies the code using UglifyJS. Using this flag will disable sourcemaps,
-	since they take up quite a lot of space in the bundle. This flag is meant
-	to be used when building the code for the production environment.
 
 	--use-watchify
 
@@ -29,8 +27,8 @@ below:
 	watchify only rebuilds the code that has changed.
 
 	If this flag is active, changes to the source code do not trigger the
-	'build-js' task. This is intended since using watchify together with
+	'build-js' task. This is intended, since using watchify together with the
 	'gulp.watch' is a bit volatile, so we use the 'update' event made available
-	by watchify bundler instead.
+	by the watchify bundler instead.
 
 	Don't use this flag if you're running the build task on a vagrant guest.
