@@ -130,12 +130,8 @@ gulp.task('serve', ['build'], function() {
 gulp.task('default', ['serve'], function() {
 	gulp.watch('./src/assets/**/*',      [ 'build-assets' ]);
 	gulp.watch('./src/styles/**/*.sass', [ 'build-css' ]);
-	// There is some issue with 'gulp-watch' and rebuilding the bundle not
-	// actually taking changes in the code into account. However, if running
-	// the build tasks on a 'vagrant' machine, the bundler 'update' event never
-	// fires, so we need to use 'gulp-watch' then.
-	if(args['use-gulp-watch']) {
-		gulp.watch('./src/scripts/**/*.js', [ 'build-js' ]);
+	if(args['use-watchify']) {
+		bundler.on('update', bundle);
 	}
-	else bundler.on('update', bundle);
+	else gulp.watch('./src/scripts/**/*.js', [ 'build-js' ]);
 });
