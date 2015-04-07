@@ -18,14 +18,20 @@ export default React.createClass({
 		onDismiss: React.PropTypes.func.isRequired
 	},
 
-	remove() {
+	remove(event) {
+		event.preventDefault();
 		BoardAction.delete(this.props.board);
+		return this.props.onDismiss();
+	},
+
+	dismiss(event) {
+		event.preventDefault();
 		return this.props.onDismiss();
 	},
 
 	render() {
 		let remove  = this.remove;
-		let dismiss = this.props.onDismiss;
+		let dismiss = this.dismiss;
 
 		let content = !this.props.board.name
 			? 'this board'

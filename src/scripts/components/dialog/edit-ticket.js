@@ -21,10 +21,6 @@ export default React.createClass({
 		onDismiss: React.PropTypes.func.isRequired
 	},
 
-	// shouldComponentUpdate(props, state) {
-
-	// },
-
 	getInitialState() {
 		return {
 			color:   this.props.ticket.color,
@@ -32,14 +28,16 @@ export default React.createClass({
 		}
 	},
 
-	remove() {
+	remove(event) {
+		event.preventDefault();
 		TicketAction.delete({ id: this.props.board }, {
 			id: this.props.ticket.id
 		});
 		return this.props.onDismiss();
 	},
 
-	update() {
+	update(event) {
+		event.preventDefault();
 		TicketAction.update({ id: this.props.board }, {
 			id:      this.props.ticket.id,
 			color:   this.state.color,
@@ -55,13 +53,13 @@ export default React.createClass({
 					<ColorSelect color={this.linkState('color')} />
 				</section>
 				<section className="dialog-content">
-					<textarea valueLink={this.linkState('content')} />
+					<textarea valueLink={this.linkState('content')} tabIndex={1} autoFocus={true} />
 				</section>
 				<section className="dialog-footer">
-					<button className="btn-danger" onClick={this.remove}>
+					<button className="btn-danger" onClick={this.remove} tabIndex={3}>
 						Delete
 					</button>
-					<button className="btn-primary" onClick={this.update}>
+					<button className="btn-primary" onClick={this.update} tabIndex={2}>
 						Done
 					</button>
 				</section>

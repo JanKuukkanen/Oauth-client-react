@@ -27,7 +27,9 @@ export default React.createClass({
 		}
 	},
 
-	submit() {
+	submit(event) {
+		event.preventDefault();
+
 		BoardAction.update({
 			id:               this.props.board.id,
 			name:             this.state.name,
@@ -72,12 +74,12 @@ export default React.createClass({
 
 					<label htmlFor="board-name">Board Name</label>
 					<input name="board-name" placeholder="Board Name"
-						valueLink={this.linkState('name')} />
+						valueLink={this.linkState('name')} autoFocus={true} />
 
 					<label htmlFor="board-share">Shared URL</label>
 					<section className="input-group">
 						<input name="board-share" placeholder="Shared URL"
-							readOnly={true} value={sharedURL} />
+							readOnly={true} value={sharedURL} tabIndex={-1}/>
 						{shareButton}
 					</section>
 

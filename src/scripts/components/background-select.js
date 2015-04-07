@@ -13,7 +13,7 @@ export default React.createClass({
 			requestChange: React.PropTypes.func.isRequired,
 		}).isRequired,
 		customBackground: React.PropTypes.shape({
-			value:         React.PropTypes.string.isRequired,
+			value:         React.PropTypes.string,
 			requestChange: React.PropTypes.func.isRequired,
 		}).isRequired
 	},

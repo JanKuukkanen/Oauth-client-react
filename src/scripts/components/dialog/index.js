@@ -42,10 +42,13 @@ export default React.createClass({
 	},
 
 	componentDidUpdate() {
-		// Force updates on the child components.
 		if(this.isMounted() && this.target) {
 			React.render(this.renderDialog(), this.target);
 		}
+	},
+
+	onSubmit(event) {
+		return event.preventDefault();
 	},
 
 	render() {
@@ -57,9 +60,10 @@ export default React.createClass({
 	renderDialog() {
 		return (
 			<div className="dialog-overlay">
-				<div className={`dialog ${this.props.className}`}>
+				<form className={`dialog ${this.props.className}`}
+						onSubmit={this.onSubmit}>
 					{this.props.children}
-				</div>
+				</form>
 			</div>
 		);
 	}
