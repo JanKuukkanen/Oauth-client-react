@@ -21,16 +21,18 @@ export default React.createClass({
 
 	getInitialState() {
 		return {
-			name:       this.props.board.name,
-			background: this.props.board.background
+			name:             this.props.board.name,
+			background:       this.props.board.background,
+			customBackground: this.props.board.customBackground
 		}
 	},
 
 	submit() {
 		BoardAction.update({
-			id:         this.props.board.id,
-			name:       this.state.name,
-			background: this.state.background,
+			id:               this.props.board.id,
+			name:             this.state.name,
+			background:       this.state.background,
+			customBackground: this.state.customBackground
 		});
 		return this.props.onDismiss();
 	},
@@ -55,7 +57,8 @@ export default React.createClass({
 		let shareButtonClick = sharedURL.length > 0 ? this.hide : this.share
 
 		let shareButton = (
-			<button className={`input btn-${shareButtonClass}`} onClick={shareButtonClick}>
+			<button className={`input btn-${shareButtonClass}`}
+					onClick={shareButtonClick}>
 				{ sharedURL.length > 0 ? 'Hide' : 'Share' }
 			</button>
 		);
@@ -68,16 +71,18 @@ export default React.createClass({
 				<section className="dialog-content">
 
 					<label htmlFor="board-name">Board Name</label>
-					<input name="board-name" placeholder="Board Name" valueLink={this.linkState('name')} />
+					<input name="board-name" placeholder="Board Name"
+						valueLink={this.linkState('name')} />
 
 					<label htmlFor="board-share">Shared URL</label>
 					<section className="input-group">
-						<input name="board-share" placeholder="Shared URL" readOnly={true} value={sharedURL} />
+						<input name="board-share" placeholder="Shared URL"
+							readOnly={true} value={sharedURL} />
 						{shareButton}
 					</section>
 
-					<BackgroundSelect background={this.linkState('background')} />
-
+					<BackgroundSelect background={this.linkState('background')}
+						customBackground={this.linkState('customBackground')} />
 				</section>
 				<section className="dialog-footer">
 					<button className="btn-primary" onClick={this.submit}>

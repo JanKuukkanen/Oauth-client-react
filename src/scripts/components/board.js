@@ -27,8 +27,6 @@ export default React.createClass({
 	},
 
 	componentDidMount() {
-	//	console.debug('components/board::componentDidMount');
-
 		this.hammer = doubletap(this.getDOMNode());
 		this.hammer.on('doubletap', (event) => {
 			// We need to take into account the height of the navigation bar.
@@ -70,16 +68,20 @@ export default React.createClass({
 	},
 
 	render() {
-		// console.debug('components/board::render');
+		let board         = this.props.board;
+		let background    = Board.Background[board.background];
+		let backgroundURL = background.url
+			? `url(${background.url})` : '';
 
-		let board      = this.props.board;
-		let background = Board.Background[board.background].url
-			? `url(${Board.Background[board.background].url})` : '';
+		if(background === Board.Background.CUSTOM) {
+			backgroundURL = board.customBackground
+				? `url(${board.customBackground})` : '';
+		}
 
 		let style = {
 			width:           board.size.width  * Ticket.Width,
 			height:          board.size.height * Ticket.Height,
-			backgroundImage: background,
+			backgroundImage: backgroundURL,
 		}
 
 		return (
@@ -90,8 +92,6 @@ export default React.createClass({
 	},
 
 	renderTickets() {
-		// console.debug('components/board::renderTickets');
-
 		if(this.props.board.tickets.size === 0) {
 			return (
 				<div className="board-helper">

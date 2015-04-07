@@ -44,28 +44,10 @@ const Marker = React.createClass({
  */
 export default React.createClass({
 	propTypes: {
-		show: React.PropTypes.bool,
-
-		size: (props) => {
-			if(!props.size instanceof Board.Size)
-				throw new Error();
+		board: (props) => {
+			if(!props.board instanceof Board) throw new Error();
 		},
-
-		background: (props) => {
-			if(!Board.Background.hasOwnProperty(props.background))
-				throw new Error();
-		},
-
-		tickets: (props) => {
-			if(!props.tickets instanceof immutable.List)
-				throw new Error();
-			props.tickets.forEach((ticket) => {
-				if(!ticket instanceof Ticket)
-					throw new Error();
-				if(!ticket.position instanceof Ticket.Position)
-					throw new Error();
-			});
-		}
+		show: React.PropTypes.bool
 	},
 
 	getDefaultProps() {
@@ -79,10 +61,8 @@ export default React.createClass({
 		if(!prevProps.show && !nextProps.show) return false;
 
 		let havePropsChanged = (
-			prevProps.show       !== nextProps.show             ||
-			prevProps.background !== nextProps.background       ||
-			!immutable.is(prevProps.size,    nextProps.size)    ||
-			!immutable.is(prevProps.tickets, nextProps.tickets)
+			prevProps.show !== nextProps.show               ||
+			!immutable.is(prevProps.board, nextProps.board)
 		);
 		return havePropsChanged;
 	},
@@ -95,8 +75,8 @@ export default React.createClass({
 		let $cursor = this.refs.cursor.getDOMNode();
 
 		let scale = {
-			x: screen.width  / (this.props.size.width  * Ticket.Width),
-			y: screen.height / (this.props.size.height * Ticket.Height),
+			x: screen.width  / (this.props.board.size.width  * Ticket.Width),
+			y: screen.height / (this.props.board.size.height * Ticket.Height)
 		}
 
 		$cursor.style.width  = Math.round(scale.x * $this.clientWidth);
@@ -104,30 +84,36 @@ export default React.createClass({
 	},
 
 	render() {
+		let board   = this.props.board;
 		let classes = React.addons.classSet({
-			minimap: true, hidden: !this.props.show,
+			minimap: true, hidden: !this.props.show
 		});
 
 		// Recalculate the size of the minimap while retaining the aspect ratio
 		// of the minimap, which is 'Ticket.Width / Ticket.Height'.
 
 		let size = {
-			width:  this.props.size.width  * Ticket.Width,
-			height: this.props.size.height * Ticket.Height
+			width:  board.size.width  * Ticket.Width,
+			height: board.size.height * Ticket.Height
 		}
 
 		let width   = Ticket.Width;
 		let height  = (size.height / size.width) * width;
 		let scaling = (height > width) ? (width / height) : 1.0;
 
-		let image = Board.Background[this.props.background].url
-			? `url(${Board.Background[this.props.background].url})`
-			: '';
+		let background    = Board.Background[board.background];
+		let backgroundURL = background.url
+			? `url(${background.url})` : '';
+
+		if(background === Board.Background.CUSTOM) {
+			backgroundURL = board.customBackground
+				? `url(${board.customBackground})` : '';
+		}
 
 		let style = {
 			width:           scaling * width,
 			height:          scaling * height,
-			backgroundImage: image
+			backgroundImage: backgroundURL
 		}
 
 		return (
@@ -139,7 +125,7 @@ export default React.createClass({
 	},
 
 	renderMarkers(scale) {
-		return this.props.tickets.map(function(ticket) {
+		return this.props.board.tickets.map(function(ticket) {
 			return <Marker key={ticket.id} scale={scale} ticket={ticket} />;
 		});
 	}

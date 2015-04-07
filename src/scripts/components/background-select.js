@@ -12,6 +12,10 @@ export default React.createClass({
 			value:         React.PropTypes.string.isRequired,
 			requestChange: React.PropTypes.func.isRequired,
 		}).isRequired,
+		customBackground: React.PropTypes.shape({
+			value:         React.PropTypes.string.isRequired,
+			requestChange: React.PropTypes.func.isRequired,
+		}).isRequired
 	},
 
 	onChange(event) {
@@ -19,10 +23,23 @@ export default React.createClass({
 	},
 
 	render() {
-		let background = Board.Background[this.props.background.value];
-		let preview    = background.url !== null
-			? <img src={background.url} />
-			: <div className="blanko" />;
+		let background    = Board.Background[this.props.background.value];
+		let backgroundURL = background.url;
+
+		let customBackgroundInput = null;
+		if(background === Board.Background.CUSTOM) {
+			customBackgroundInput = (
+				<div className="custom-background-url">
+					<label htmlFor="board-custom-background">URL</label>
+					<input type="url" name="board-custom-background" placeholder="URL"
+						valueLink={this.props.customBackground} />
+				</div>
+			);
+			backgroundURL = this.props.customBackground.value;
+		}
+
+		let preview = backgroundURL !== null && backgroundURL !== undefined
+			? <img src={backgroundURL} /> : <div className="blanko" />;
 
 		return (
 			<div className="background-select">
@@ -37,6 +54,7 @@ export default React.createClass({
 					</select>
 					<span className="caret fa fa-arrow-down"></span>
 				</div>
+				{customBackgroundInput}
 			</div>
 		);
 	},

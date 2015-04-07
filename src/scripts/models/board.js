@@ -6,6 +6,10 @@ const Background = {
 		url:         null,
 		description: 'Blank'
 	},
+	CUSTOM: {
+		url:         null,
+		description: 'Custom'
+	},
 	PLAY: {
 		url:         '/dist/assets/img/bg/play.png',
 		description: 'Play!'
@@ -42,12 +46,13 @@ const Size = immutable.Record({
 });
 
 const Board = immutable.Record({
-	id:         '',
-	name:       '',
-	size:       new Size(),
-	tickets:    immutable.List(),
-	accessCode: null,
-	background: 'NONE',
+	id:               '',
+	name:             '',
+	size:             new Size(),
+	tickets:          immutable.List(),
+	background:       'NONE',
+	accessCode:       null,
+	customBackground: null
 });
 
 Board.Size       = Size;

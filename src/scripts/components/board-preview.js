@@ -65,8 +65,7 @@ export default React.createClass({
 		return (
 			<div className="board-preview">
 				<div className="minimap-container" onClick={this.showBoard}>
-					<Minimap size={board.size} background={board.background}
-						tickets={board.tickets} />
+					<Minimap board={board} />
 				</div>
 				<div className="name" onClick={this.showBoard}>
 					{board.name}

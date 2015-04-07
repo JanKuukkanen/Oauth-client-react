@@ -102,10 +102,8 @@ export default React.createClass({
 	render() {
 		let props = {
 			minimap: {
-				show:       this.props.minimap,
-				size:       this.props.board.size,
-				tickets:    this.props.board.tickets,
-				background: this.props.board.background
+				show:  this.props.minimap,
+				board: this.props.board
 			}
 		}
 		return (
