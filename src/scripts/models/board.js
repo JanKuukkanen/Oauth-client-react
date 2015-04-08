@@ -50,7 +50,6 @@ const Board = immutable.Record({
 	name:             '',
 	size:             new Size(),
 	tickets:          immutable.List(),
-	updatedAt:        Date.now(),
 	background:       'NONE',
 	accessCode:       null,
 	customBackground: null
@@ -76,9 +75,7 @@ Board.fromJS = function fromJS(board) {
 		board.background = 'NONE';
 	}
 
-	board.updatedAt = new Date(board.updatedAt);
-
-	return new Board(board);
+	return new Board(board)
 }
 
 export default Board;

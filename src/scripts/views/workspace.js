@@ -57,9 +57,8 @@ export default React.createClass({
 	},
 
 	renderBoardPreviews() {
-		return this.state.boards.sortBy((board) => board.updatedAt).reverse()
-			.map(function(board) {
-				return <BoardPreview key={board.id} board={board} />;
-			});
+		return this.state.boards.reverse().map(function(board) {
+			return <BoardPreview key={board.id} board={board} />;
+		});
 	}
 });
