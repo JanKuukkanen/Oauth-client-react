@@ -16,18 +16,18 @@ export default React.createClass({
 			label:    React.PropTypes.string.isRequired,
 			title:    React.PropTypes.string,
 			pattern:  React.PropTypes.string,
-			required: React.PropTypes.bool,
+			required: React.PropTypes.bool
 		})),
 
 		secondary: React.PropTypes.shape({
 			submit:      React.PropTypes.func.isRequired,
 			action:      React.PropTypes.string.isRequired,
-			description: React.PropTypes.string,
+			description: React.PropTypes.string
 		}),
 
 		help:   React.PropTypes.string,
 		submit: React.PropTypes.func.isRequired,
-		action: React.PropTypes.string.isRequired,
+		action: React.PropTypes.string.isRequired
 	},
 
 	getDefaultProps() {
@@ -72,7 +72,7 @@ export default React.createClass({
 						</div>
 						{this.renderFields(this.props.fields)}
 						<input type="submit" className="btn-primary"
-						       value={this.props.action} />
+							value={this.props.action} />
 						<article className="help">{this.props.help}</article>
 						<section className="secondary-content">
 							{secondaryContent}
@@ -88,7 +88,7 @@ export default React.createClass({
 			let controlattrs = {
 				title:    field.title,
 				pattern:  field.pattern,
-				required: field.required,
+				required: field.required
 			}
 			return (
 				<section key={field.name} className="input">

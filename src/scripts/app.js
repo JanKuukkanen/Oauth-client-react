@@ -67,7 +67,9 @@ const middleware = {
 					// to the board the guest has access to.
 					return page.redirect(`/boards/${ctx.user.access}`);
 				}
-				else return page.redirect('/boards');
+				else {
+					return page.redirect('/boards');
+				}
 			}
 			return next();
 		}
@@ -96,7 +98,7 @@ UserStore.addChangeListener(() => {
 page('/login',
 	middleware.user.loggedOut,
 	middleware.socket.disconnect,
-	(ctx) => {
+	() => {
 		return React.render(
 			<LoginView />,
 			document.getElementById('application')
@@ -106,7 +108,7 @@ page('/login',
 page('/register',
 	middleware.user.loggedOut,
 	middleware.socket.disconnect,
-	(ctx) => {
+	() => {
 		return React.render(
 			<RegisterView />,
 			document.getElementById('application')
