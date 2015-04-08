@@ -50,7 +50,7 @@ export default flux.actionCreator({
 		let token   = UserStore.getToken();
 		let request = boardID === undefined
 			? api.getBoards.bind(null, { token })
-			: api.getBoard.bind(null, { token, id: { board: boardID }});
+			: api.getBoard.bind(null, { token, id: { board: boardID } });
 
 		request()
 			.then((board) => {
@@ -63,8 +63,12 @@ export default flux.actionCreator({
 					if(!Board.Background.hasOwnProperty(board.background)) {
 						board.background = 'NONE';
 					}
+
+					board.updatedAt = new Date(board.updatedAt);
+
 					delete board.createdBy;
 					delete board.description;
+
 					return board;
 				}
 
@@ -149,7 +153,7 @@ export default flux.actionCreator({
 	generateAccessCode(board) {
 		let token = UserStore.getToken();
 
-		api.generateAccessCode({ token, id: { board: board.id }})
+		api.generateAccessCode({ token, id: { board: board.id } })
 			.then((res) => {
 				this.dispatch(Action.Board.Edit, {
 					board: {
@@ -176,7 +180,7 @@ export default flux.actionCreator({
 			}
 		});
 
-		api.revokeAccessCode({ token, id: { board: board.id }})
+		api.revokeAccessCode({ token, id: { board: board.id } })
 			.catch((err) => {
 				this.dispatch(Action.Board.Edit, {
 					board: {
