@@ -6,6 +6,9 @@
 		@include display(flex)
 		@include flex-direction(column)
 
+		// Fix issues with Firefox not respecting ANYTHING
+		overflow: hidden
+
 		.scrollable
 			@include flex(1)
 /**
