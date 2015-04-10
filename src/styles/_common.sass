@@ -69,10 +69,13 @@ label
 	color:     $silver-chalice
 	font-size: 10px
 
-/**
- *
- */
-button, input[type="submit"]
+// Quick hack to make links appear as if they were buttons!
+a.btn
+	height:          30px
+	text-align:      center
+	text-decoration: none
+
+a, button, input[type="submit"]
 	height:  36px
 	margin:  0px
 	padding: 2px 8px
@@ -151,4 +154,11 @@ button, input[type="submit"]
 
 		&:last-child
 			margin-right: 0px
+
+	.select
+		padding: 0px 8px
+
+		select
+			margin:   0px -8px
+			position: absolute
 

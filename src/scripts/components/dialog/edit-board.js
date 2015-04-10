@@ -4,6 +4,7 @@ import Board       from '../../models/board';
 import BoardAction from '../../actions/board';
 
 import Dialog           from '../../components/dialog';
+import BoardExporter    from '../../components/board-exporter';
 import BackgroundSelect from '../../components/background-select';
 
 /**
@@ -56,10 +57,10 @@ export default React.createClass({
 			: '';
 
 		let shareButtonClass = sharedURL.length > 0 ? 'neutral' : 'secondary';
-		let shareButtonClick = sharedURL.length > 0 ? this.hide : this.share
+		let shareButtonClick = sharedURL.length > 0 ? this.hide : this.share;
 
 		let shareButton = (
-			<button className={`input btn-${shareButtonClass}`}
+			<button className={`btn-${shareButtonClass}`}
 					onClick={shareButtonClick}>
 				{ sharedURL.length > 0 ? 'Hide' : 'Share' }
 			</button>
@@ -82,6 +83,8 @@ export default React.createClass({
 							readOnly={true} value={sharedURL} tabIndex={-1}/>
 						{shareButton}
 					</section>
+
+					<BoardExporter boardID={id} />
 
 					<BackgroundSelect background={this.linkState('background')}
 						customBackground={this.linkState('customBackground')} />
