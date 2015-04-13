@@ -228,10 +228,5 @@ function revokeAccessCode(opts = {}) {
 		url:   `${API_URL}/boards/${opts.id.board}/access`,
 		token: opts.token
 	}
-	return request.del(options).then((res) => {
-		let board = Board.fromJS(res.body).toJS();
-		// Remove the empty 'tickets' collection to prevent overwriting.
-		delete board.tickets;
-		return board;
-	});
+	return request.del(options);
 }
