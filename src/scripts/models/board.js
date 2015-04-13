@@ -75,7 +75,7 @@ Board.fromJS = function fromJS(board) {
 		board.background = 'NONE';
 	}
 
-	return new Board(board)
+	return new Board(board);
 }
 
 export default Board;

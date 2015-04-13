@@ -1,5 +1,14 @@
+import User   from '../models/user';
+import Board  from '../models/board';
+import Ticket from '../models/ticket';
+
 import request from '../utils/request';
 
+/**
+ * NOTE We use a lot of Model.fromJS.toJS conversion here, this is so that we
+ *      can be sure the data we resolve to is formatted properly. This is not
+ *      necessarily the most clean way, but it will do for now.
+ */
 export default {
 	login:      login,
 	loginGuest: loginGuest,
@@ -32,7 +41,7 @@ function login(opts = {}) {
 	}
 	return request.post(options).then((res) => {
 		return {
-			user:  res.body,
+			user:  User.fromJS(res.body).toJS(),
 			token: res.headers['x-access-token']
 		}
 	});
@@ -52,7 +61,9 @@ function register(opts = {}) {
 		payload: opts.payload
 	}
 	return request.post(options).then((res) => {
-		return { user: res.body }
+		return {
+			user: User.fromJS(res.body).toJS()
+		}
 	});
 }
 
@@ -63,12 +74,7 @@ function loginGuest(opts = {}) {
 	}
 	return request.post(options).then((res) => {
 		return {
-			user: {
-				id:     res.body.id,
-				type:   res.body.type,
-				name:   res.body.username,
-				access: res.body.access
-			},
+			user:  User.fromJS(res.body).toJS(),
 			token: res.headers['x-access-token']
 		}
 	});
@@ -80,15 +86,7 @@ function getUser(opts = {}) {
 		token: opts.token
 	}
 	return request.get(options).then((res) => {
-		let user = {
-			id:   res.body.id,
-			type: res.body.type,
-			name: res.body.username
-		}
-		if(user.type === 'guest') {
-			user.access = res.body.access;
-		}
-		return user;
+		return User.fromJS(res.body).toJS();
 	});
 }
 
@@ -98,7 +96,10 @@ function getBoard(opts = {}) {
 		token: opts.token
 	}
 	return request.get(options).then((res) => {
-		return res.body;
+		let board = Board.fromJS(res.body).toJS();
+		// Remove the empty 'tickets' collection to prevent overwriting.
+		delete board.tickets;
+		return board;
 	});
 }
 
@@ -108,7 +109,12 @@ function getBoards(opts = {}) {
 		token: opts.token
 	}
 	return request.get(options).then((res) => {
-		return res.body;
+		return res.body.map((board) => {
+			board = Board.fromJS(board).toJS();
+			// Remove the empty 'tickets' collection to prevent overwriting.
+			delete board.tickets;
+			return board;
+		});
 	});
 }
 
@@ -118,7 +124,7 @@ function getTicket(opts = {}) {
 		token: opts.token
 	}
 	return request.get(options).then((res) => {
-		return res.body;
+		return Ticket.fromJS(res.body).toJS();
 	});
 }
 
@@ -128,7 +134,9 @@ function getTickets(opts = {}) {
 		token: opts.token
 	}
 	return request.get(options).then((res) => {
-		return res.body;
+		return res.body.map((ticket) => {
+			return Ticket.fromJS(ticket).toJS();
+		});
 	});
 }
 
@@ -139,7 +147,7 @@ function createBoard(opts = {}) {
 		payload: opts.payload
 	}
 	return request.post(options).then((res) => {
-		return res.body;
+		return Board.fromJS(res.body).toJS();
 	});
 }
 
@@ -150,7 +158,7 @@ function createTicket(opts = {}) {
 		payload: opts.payload
 	}
 	return request.post(options).then((res) => {
-		return res.body;
+		return Ticket.fromJS(res.body).toJS();
 	});
 }
 
@@ -161,7 +169,10 @@ function updateBoard(opts = {}) {
 		payload: opts.payload
 	}
 	return request.put(options).then((res) => {
-		return res.body;
+		let board = Board.fromJS(res.body).toJS();
+		// Remove the empty 'tickets' collection to prevent overwriting.
+		delete board.tickets;
+		return board;
 	});
 }
 
@@ -172,7 +183,7 @@ function updateTicket(opts = {}) {
 		payload: opts.payload
 	}
 	return request.put(options).then((res) => {
-		return res.body;
+		return Ticket.fromJS(res.body).toJS();
 	});
 }
 
@@ -182,7 +193,10 @@ function deleteBoard(opts = {}) {
 		token: opts.token
 	}
 	return request.del(options).then((res) => {
-		return res.body;
+		let board = Board.fromJS(res.body).toJS();
+		// Remove the empty 'tickets' collection to prevent overwriting.
+		delete board.tickets;
+		return board;
 	});
 }
 
@@ -192,7 +206,7 @@ function deleteTicket(opts = {}) {
 		token: opts.token
 	}
 	return request.del(options).then((res) => {
-		return res.body;
+		return Ticket.fromJS(res.body).toJS();
 	});
 }
 
@@ -202,7 +216,10 @@ function generateAccessCode(opts = {}) {
 		token: opts.token
 	}
 	return request.post(options).then((res) => {
-		return res.body;
+		let board = Board.fromJS(res.body).toJS();
+		// Remove the empty 'tickets' collection to prevent overwriting.
+		delete board.tickets;
+		return board;
 	});
 }
 
@@ -212,6 +229,9 @@ function revokeAccessCode(opts = {}) {
 		token: opts.token
 	}
 	return request.del(options).then((res) => {
-		return res.body;
+		let board = Board.fromJS(res.body).toJS();
+		// Remove the empty 'tickets' collection to prevent overwriting.
+		delete board.tickets;
+		return board;
 	});
 }

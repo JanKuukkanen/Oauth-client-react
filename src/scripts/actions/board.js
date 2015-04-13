@@ -54,22 +54,6 @@ export default flux.actionCreator({
 
 		request()
 			.then((board) => {
-				// Quick, hacky cleanup for the board data received from the
-				// server... Might need to be replaced with something in model.
-				function cleanup(board) {
-					if(board instanceof Array) {
-						return board.map(cleanup);
-					}
-					if(!Board.Background.hasOwnProperty(board.background)) {
-						board.background = 'NONE';
-					}
-					delete board.createdBy;
-					delete board.description;
-					return board;
-				}
-
-				board = cleanup(board);
-
 				this.dispatch(Action.Board.Add, { board });
 
 				// We gradually inform the store that it should emit change as
@@ -153,7 +137,8 @@ export default flux.actionCreator({
 			.then((res) => {
 				this.dispatch(Action.Board.Edit, {
 					board: {
-						id: board.id, accessCode: res.accessCode
+						id:         board.id,
+						accessCode: res.accessCode
 					}
 				});
 			})
