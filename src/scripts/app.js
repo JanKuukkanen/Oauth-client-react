@@ -1,4 +1,4 @@
-import 'babelify/polyfill';
+import 'babel/polyfill';
 
 import page      from 'page';
 import React     from 'react';
