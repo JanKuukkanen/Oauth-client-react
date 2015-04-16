@@ -6,3 +6,4 @@ npm install && npm build
 # copy the stuff that should be served to the root folder
 mv dist       www/dist
 mv index.html www/index.html
+
