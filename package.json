@@ -3,7 +3,7 @@
   "author": "taneli.hartikainen@jamk.fi",
   "license": "MIT",
   "scripts": {
-    "start": "node_modules/.bin/gulp build && node_modules/.bin/babel-node lib/server.js"
+    "start": "gulp build && babel-node lib/server.js"
   },
   "dependencies": {
     "babelify": "5.0.3",
