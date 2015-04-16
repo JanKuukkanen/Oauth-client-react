@@ -1,1 +1,1 @@
-web: sleep 8 && npm install && npm start
+web: sleep 10 && npm start
