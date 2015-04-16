@@ -146,5 +146,5 @@ page('/boards/:id',
 		);
 	});
 
-page('/', () => page.redirect('/boards'));
+page('*', () => page.redirect('/boards'));
 page.start();
