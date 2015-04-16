@@ -2,6 +2,9 @@
   "name": "contriboard",
   "author": "taneli.hartikainen@jamk.fi",
   "license": "MIT",
+  "scripts": {
+    "build": "gulp build"
+  },
   "dependencies": {
     "babelify": "5.0.3",
     "draggabilly": "1.1.1",
