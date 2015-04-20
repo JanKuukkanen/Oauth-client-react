@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "build": "gulp build",
-    "start": "babel-node lib/server.js"
+    "start": "gulp build && babel-node lib/server.js"
   },
   "dependencies": {
     "babel": "5.1.10",
