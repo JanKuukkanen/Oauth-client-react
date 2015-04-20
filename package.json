@@ -3,7 +3,8 @@
   "author": "taneli.hartikainen@jamk.fi",
   "license": "MIT",
   "scripts": {
-    "start": "gulp build && babel-node lib/server.js"
+    "build": "gulp build",
+    "start": "babel-node lib/server.js"
   },
   "dependencies": {
     "babel": "5.1.10",
