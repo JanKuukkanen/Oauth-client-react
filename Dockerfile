@@ -1,7 +1,8 @@
-FROM dockerfile/python
+FROM library/ubuntu:14.04
 
 MAINTAINER n4sjamk
 
+RUN apt-get update && apt-get install -y software-properties-common
 RUN add-apt-repository ppa:nginx/stable
 RUN apt-get update && apt-get install -y nodejs npm nginx
 RUN ln -s /usr/bin/nodejs /usr/bin/node
