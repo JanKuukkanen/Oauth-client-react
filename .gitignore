@@ -2,6 +2,8 @@ out/
 dist/
 node_modules/
 
+custom_env
+
 .DS_Store
 .tmp-storage
 
