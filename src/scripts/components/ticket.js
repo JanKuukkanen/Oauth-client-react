@@ -2,6 +2,7 @@ import React      from 'react/addons';
 import Hammer     from 'hammerjs';
 import immutable  from 'immutable';
 import TweenState from 'react-tween-state';
+import marked     from 'react-marked';
 
 import gridify   from '../utils/gridify';
 import doubletap from '../utils/doubletap';
@@ -134,11 +135,15 @@ export default React.createClass({
 			<EditTicketDialog board={this.props.board} ticket={this.props.ticket}
 				onDismiss={this.toggleEditDialog} />
 		);
+
+		let markup = marked(this.props.ticket.content, {sanitize: false, smartLists: true});
+
+
 		return (
 			<div className="ticket" style={style.ticket}>
 				<div className="color" style={style.color} />
 				<div className="content">
-					{this.props.ticket.content}
+					{markup}
 				</div>
 				{editTicketDialog}
 			</div>
