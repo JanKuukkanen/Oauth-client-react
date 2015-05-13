@@ -2,7 +2,7 @@ import React      from 'react/addons';
 import Hammer     from 'hammerjs';
 import immutable  from 'immutable';
 import TweenState from 'react-tween-state';
-import marked     from 'react-marked';
+import markdown   from 'markdown';
 
 import gridify   from '../utils/gridify';
 import doubletap from '../utils/doubletap';
@@ -12,6 +12,9 @@ import TicketAction from '../actions/ticket';
 
 import DraggableMixin   from '../mixins/draggable';
 import EditTicketDialog from '../components/dialog/edit-ticket';
+
+
+
 
 /**
  *
@@ -136,14 +139,13 @@ export default React.createClass({
 				onDismiss={this.toggleEditDialog} />
 		);
 
-		let markup = marked(this.props.ticket.content, {sanitize: false, smartLists: true});
-
+		let markupContent =markdown.markdown.toHTML(this.props.ticket.content);
 
 		return (
 			<div className="ticket" style={style.ticket}>
 				<div className="color" style={style.color} />
 				<div className="content">
-					{markup}
+					<span dangerouslySetInnerHTML={{__html: markupContent}} />
 				</div>
 				{editTicketDialog}
 			</div>
