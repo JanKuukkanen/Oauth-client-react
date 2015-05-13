@@ -25,8 +25,9 @@ export default React.createClass({
 	},
 
 	dismiss(event) {
-		if (event)
+		if (event) {
 			event.preventDefault();
+		}
 		return this.props.onDismiss();
 	},
 
