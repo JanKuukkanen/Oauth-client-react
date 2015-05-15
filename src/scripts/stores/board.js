@@ -165,8 +165,7 @@ function initialize(factory, collection, fromCollection = immutable.List()) {
  *      messy and it's not necessary clear to others what a heck is happening.
  */
 function calcz(tickets) {
-	let z = tickets.sortBy((t) => { return t.ua; }).map((t) => { return t.id })
-		.toMap().flip();
+	let z = tickets.sortBy((t) => t.ua).map((t) => t.id).toMap().flip();
 	return tickets.map((t) => {
 		return t.setIn([ 'position', 'z' ], z.get(t.id));
 	});

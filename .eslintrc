@@ -15,21 +15,21 @@
     },
 
     "rules": {
-        "max-len": [ 1, 80, 4 ],
+        "semi":        [ 0 ],
+        "curly":       [ 1, "multi-line" ],
+        "quotes":      [ 1, "single" ],
+        "indent":      [ 1, "tab" ],
+        "max-len":     [ 1, 80, 4 ],
+        "brace-style": [ 1, "1tbs" ],
 
-        "semi":   [ 0           ],
-        "strict": [ 1, "never"  ],
-        "quotes": [ 1, "single" ],
+        "strict":               [ 1, "never"  ],
+        "no-use-before-define": [ 1, "nofunc" ],
 
         "new-cap":         [ 1, { "newIsCap": true, "capIsNew": false } ],
         "no-new-wrappers": [ 0 ],
 
         "no-func-assign":   [ 0 ],
         "no-return-assign": [ 0 ],
-
-        "no-use-before-define": [ 1, "nofunc" ],
-
-        "curly": [ 1, "multi-line" ],
 
         "no-var":         [ 1 ],
         "no-undef":       [ 1 ],
