@@ -4,7 +4,7 @@
 export default function(...stores) {
 	return {
 		componentDidMount() {
-			if(!this.onChange || typeof(this.onChange) !== 'function') {
+			if(!this.onChange || typeof this.onChange !== 'function') {
 				throw new Error('\'onChange\' must exist and be a function.');
 			}
 			return stores.forEach((store) => {

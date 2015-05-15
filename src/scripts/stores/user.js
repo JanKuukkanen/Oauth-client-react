@@ -75,7 +75,7 @@ export default flux.store({
 			localStorage.setItem('token', payload.token);
 		},
 
-		[Action.User.Logout](payload) {
+		[Action.User.Logout]() {
 			localStorage.removeItem('user');
 			localStorage.removeItem('token');
 		}

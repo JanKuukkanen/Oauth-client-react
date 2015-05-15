@@ -12,19 +12,19 @@ export default React.createClass({
 
 	componentWillMount() {
 		if(!window.UserVoice) {
-			let uv       = document.createElement('script');
-			    uv.src   = '//widget.uservoice.com/eXKxE4WzstJy0DTpmrepAA.js';
-			    uv.async = true;
+			let uv   = document.createElement('script');
+			uv.src   = '//widget.uservoice.com/eXKxE4WzstJy0DTpmrepAA.js';
+			uv.async = true;
 			return document.head.appendChild(uv);
 		}
 	},
 
 	componentDidMount() {
 		new Hammer(this.getDOMNode()).on('tap', () => {
-			window.UserVoice.push(['show', {
+			window.UserVoice.push([ 'show', {
 				mode:   this.props.mode,
 				target: this.getDOMNode()
-			}]);
+			} ]);
 		});
 	},
 

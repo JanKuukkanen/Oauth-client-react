@@ -16,7 +16,7 @@ import EditTicketDialog from '../components/dialog/edit-ticket';
  *
  */
 export default React.createClass({
-	mixins: [DraggableMixin, TweenState.Mixin ],
+	mixins: [ DraggableMixin, TweenState.Mixin ],
 
 	propTypes: {
 		ticket: (props) => {
@@ -94,14 +94,13 @@ export default React.createClass({
 
 	componentWillReceiveProps(next) {
 		// Prevent tweening, if there is a 'drag' currently going on.
-		if(this.state.isDragging) return;
+		if(this.state.isDragging) return null;
 
 		// Prevent unnecessary tweening.
-		if(this.state.x === next.ticket.position.x &&
-		   this.state.y === next.ticket.position.y) {
-			return;
+		if(this.state.x !== next.ticket.position.x ||
+				this.state.y !== next.ticket.position.y) {
+			return this.tween(next.ticket.position);
 		}
-		return this.tween(next.ticket.position);
 	},
 
 	toggleEditDialog() {
@@ -109,11 +108,11 @@ export default React.createClass({
 	},
 
 	tween(to, from, duration) {
-		['x', 'y'].map((axis) => {
+		[ 'x', 'y' ].map((axis) => {
 			let tweeningOpts = {
 				duration:   duration || 500,
 				endValue:   to[axis],
-				beginValue: from ? from[axis] : null,
+				beginValue: from ? from[axis] : null
 			}
 			return this.tweenState(axis, tweeningOpts);
 		});
@@ -131,7 +130,8 @@ export default React.createClass({
 			}
 		}
 		let editTicketDialog = !this.state.showEditDialog ? null : (
-			<EditTicketDialog board={this.props.board} ticket={this.props.ticket}
+			<EditTicketDialog board={this.props.board}
+				ticket={this.props.ticket}
 				onDismiss={this.toggleEditDialog} />
 		);
 		return (
@@ -143,5 +143,5 @@ export default React.createClass({
 				{editTicketDialog}
 			</div>
 		);
-	},
+	}
 });

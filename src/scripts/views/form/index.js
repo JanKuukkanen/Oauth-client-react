@@ -36,7 +36,7 @@ export default React.createClass({
 
 	getInitialState() {
 		return this.props.fields.reduce((state, field) => {
-			state[ field.name ] = '';
+			state[field.name] = '';
 			return state;
 		}, {});
 	},

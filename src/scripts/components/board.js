@@ -39,7 +39,7 @@ export default React.createClass({
 			// snap the position to a grid.
 			let position = {
 				x: (event.center.x - this.props.offset.x) - (Ticket.Width  / 2),
-				y: (event.center.y - this.props.offset.y) - (Ticket.Height / 2),
+				y: (event.center.y - this.props.offset.y) - (Ticket.Height / 2)
 			}
 			position = this.props.snap ? gridify(position) : position;
 
@@ -81,7 +81,7 @@ export default React.createClass({
 		let style = {
 			width:           board.size.width  * Ticket.Width,
 			height:          board.size.height * Ticket.Height,
-			backgroundImage: backgroundURL,
+			backgroundImage: backgroundURL
 		}
 
 		return (

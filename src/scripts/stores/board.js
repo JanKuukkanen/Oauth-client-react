@@ -168,6 +168,6 @@ function calcz(tickets) {
 	let z = tickets.sortBy((t) => { return t.ua; }).map((t) => { return t.id })
 		.toMap().flip();
 	return tickets.map((t) => {
-		return t.setIn(['position', 'z'], z.get(t.id));
+		return t.setIn([ 'position', 'z' ], z.get(t.id));
 	});
 }

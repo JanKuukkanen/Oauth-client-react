@@ -4,7 +4,7 @@ const Color = {
 	RED:    '#eb584a',
 	BLUE:   '#4f819a',
 	VIOLET: '#724a7f',
-	YELLOW: '#dcc75b',
+	YELLOW: '#dcc75b'
 }
 
 const Position = immutable.Record({
@@ -16,7 +16,7 @@ const Ticket = immutable.Record({
 	ua:       Date.now(),
 	color:    Color.VIOLET,
 	content:  '',
-	position: new Position(),
+	position: new Position()
 });
 
 Ticket.Width    = 192;

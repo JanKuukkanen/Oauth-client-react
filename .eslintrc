@@ -6,21 +6,37 @@
         "browser": true
     },
 
+    "globals": {
+        "process": 1
+    },
+
     "rules": {
+        "max-len": [ 1, 80, 4 ],
+
         "semi":   [ 0           ],
         "strict": [ 1, "never"  ],
         "quotes": [ 1, "single" ],
 
+        "new-cap":         [ 1, { "newIsCap": true, "capIsNew": false } ],
+        "no-new-wrappers": [ 0 ],
+
+        "no-func-assign":   [ 0 ],
+        "no-return-assign": [ 0 ],
+
+        "no-use-before-define": [ 1, "nofunc" ],
+
+        "curly": [ 1, "multi-line" ],
+
         "no-var":         [ 1 ],
         "no-undef":       [ 1 ],
+        "no-shadow":      [ 0 ],
         "no-console":     [ 1 ],
         "no-unused-vars": [ 1 ],
-        "no-func-assign": [ 0 ],
 
         "key-spacing":       [ 0                       ],
         "no-cond-assign":    [ 0                       ],
         "no-multi-spaces":   [ 0                       ],
-        "space-in-brackets": [ 1, "always"             ],
+        "space-in-brackets": [ 1, "always", { "propertyName": false } ],
 
         "eol-last":                [ 1 ],
         "no-multiple-empty-lines": [ 1, { "max": 1 } ]

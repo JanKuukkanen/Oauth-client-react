@@ -8,19 +8,22 @@ import BroadcastAction from '../../actions/broadcast';
 import FormView from '../../views/form';
 
 const formOptions = {
-	fields: [{
-		name:     'email',
-		type:     'email',
-		label:    'Email',
-		required: true,
-	}, {
-		name:     'password',
-		type:     'password',
-		label:    'Password',
-		title:    'Minimum of 8 characters required.',
-		pattern:  '.{8,}',
-		required: true,
-	}],
+	fields: [
+		{
+			name:     'email',
+			type:     'email',
+			label:    'Email',
+			required: true
+		},
+		{
+			name:     'password',
+			type:     'password',
+			label:    'Password',
+			title:    'Minimum of 8 characters required.',
+			pattern:  '.{8,}',
+			required: true
+		}
+	],
 	secondary: {
 		submit: () => {
 			return page.show('/login');

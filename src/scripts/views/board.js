@@ -84,8 +84,10 @@ export default React.createClass({
 				<Broadcaster />
 				<Navigation title={this.state.board.name} />
 				<div className="content">
-					<Scrollable board={this.state.board} minimap={this.state.showMinimap}>
-						<BoardComponent board={this.state.board} snap={this.state.snapToGrid} />
+					<Scrollable board={this.state.board}
+							minimap={this.state.showMinimap}>
+						<BoardComponent board={this.state.board}
+							snap={this.state.snapToGrid} />
 					</Scrollable>
 				</div>
 				{editBoardDialog}
@@ -99,31 +101,37 @@ export default React.createClass({
 	 * TODO Use immutable data to prevent constantly re-rendering the controls.
 	 */
 	renderControls() {
-		let controls = [{
-			onClick: () => {
-				SettingsAction.setSetting('snap-to-grid', !this.state.snapToGrid);
+		let controls = [
+			{
+				onClick: () => {
+					SettingsAction.setSetting('snap-to-grid',
+						!this.state.snapToGrid);
+				},
+				icon:   'magnet',
+				active: this.state.snapToGrid
 			},
-			icon:   'magnet',
-			active: this.state.snapToGrid
-		}, {
-			onClick: () => {
-				SettingsAction.setSetting('show-minimap', !this.state.showMinimap);
+			{
+				onClick: () => {
+					SettingsAction.setSetting('show-minimap',
+						!this.state.showMinimap);
+				},
+				icon:   'globe',
+				active: this.state.showMinimap
+			}
+		];
+		let userOnlyControls = [
+			{
+				onClick: () => {
+					return page.show('/boards')
+				},
+				icon: 'arrow-left'
 			},
-			icon:   'globe',
-			active: this.state.showMinimap
-		}];
-
-		let userOnlyControls = [{
-			onClick: () => {
-				return page.show('/boards')
-			},
-			icon: 'arrow-left'
-		}, {
-			icon:    'pencil',
-			active:  this.state.showEditBoardDialog,
-			onClick: this.toggleEditBoardDialog,
-		}];
-
+			{
+				icon:    'pencil',
+				active:  this.state.showEditBoardDialog,
+				onClick: this.toggleEditBoardDialog
+			}
+		];
 		if(this.props.user.type === User.Type.User) {
 			controls = userOnlyControls.concat(controls);
 		}

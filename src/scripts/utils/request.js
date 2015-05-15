@@ -30,35 +30,5 @@ function request(to, options = {}) {
 			}
 			return resolve({ body: res.body, headers: res.headers });
 		});
-
-
-
-
-
-
-		// let requestOptions = {
-		// 	withCredentials: false,
-		// 	headers: {
-		// 		'Accept':        'application/json',
-		// 		'Content-Type':  'application/json',
-		// 		'Authorization': `Bearer ${options.token}`
-		// 	},
-		// 	url:  options.url,
-		// 	body: options.payload ? JSON.stringify(options.payload) : null
-		// }
-		// requestMethod(requestOptions, (err, res, body) => {
-		// 	if(err) {
-		// 		return reject(err);
-		// 	}
-		// 	if(res.statusCode === 0 || res.statusCode >= 400) {
-		// 		var error            = new Error(res.message);
-		// 		    error.statusCode = res.statusCode;
-		// 		return reject(error);
-		// 	}
-		// 	if(res.headers['content-type'].includes('application/json')) {
-		// 		body = JSON.parse(body);
-		// 	}
-		// 	return resolve({ body, headers: res.headers });
-		// });
 	});
 }

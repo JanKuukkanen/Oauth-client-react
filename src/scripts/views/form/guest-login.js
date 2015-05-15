@@ -14,14 +14,16 @@ export default React.createClass({
 
 	render() {
 		let options = {
-			fields: [{
-				name:     'username',
-				type:     'text',
-				label:    'Username',
-				title:    'Username must be at least 3 characters.',
-				pattern:  '.{3,}',
-				required: true,
-			}],
+			fields: [
+				{
+					name:     'username',
+					type:     'text',
+					label:    'Username',
+					title:    'Username must be at least 3 characters.',
+					pattern:  '.{3,}',
+					required: true
+				}
+			],
 			submit: (state) => {
 				let credentials = Object.assign(state, {
 					boardID:    this.props.boardID,

@@ -47,7 +47,8 @@ export default React.createClass({
 				<Broadcaster />
 				<Navigation title="Contriboard" />
 				<div className="content">
-					<div className="new-board board-preview" onClick={this.createBoard}>
+					<div className="new-board board-preview"
+							onClick={this.createBoard}>
 						<span className="fa fa-fw fa-plus" />
 					</div>
 					{this.renderBoardPreviews()}

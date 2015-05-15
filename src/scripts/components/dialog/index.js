@@ -15,7 +15,7 @@ export default React.createClass({
 	getDefaultProps() {
 		return {
 			className: '',
-			onDismiss: () => {},
+			onDismiss: () => {}
 		}
 	},
 

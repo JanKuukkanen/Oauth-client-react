@@ -15,7 +15,9 @@ export default flux.actionCreator({
 	add(broadcast, action = null) {
 		if(broadcast instanceof Error) {
 			broadcast.type    = Broadcast.Type.Error;
-			broadcast.content = Broadcast.Type.Error.Message.From(broadcast, action);
+			broadcast.content = Broadcast.Type.Error.Message.From(
+				broadcast, action
+			);
 
 			// Having this here is a bit hackish, but whatever tbh...
 			if(broadcast.statusCode === 401) {
