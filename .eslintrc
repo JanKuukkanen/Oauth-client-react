@@ -6,6 +6,10 @@
         "browser": true
     },
 
+    "plugins": [
+        "react"
+    ],
+
     "globals": {
         "process": 1
     },
@@ -33,12 +37,15 @@
         "no-console":     [ 1 ],
         "no-unused-vars": [ 1 ],
 
-        "key-spacing":       [ 0                       ],
-        "no-cond-assign":    [ 0                       ],
-        "no-multi-spaces":   [ 0                       ],
+        "key-spacing":       [ 0 ],
+        "no-cond-assign":    [ 0 ],
+        "no-multi-spaces":   [ 0 ],
+
         "space-in-brackets": [ 1, "always", { "propertyName": false } ],
 
         "eol-last":                [ 1 ],
-        "no-multiple-empty-lines": [ 1, { "max": 1 } ]
+        "no-multiple-empty-lines": [ 1, { "max": 1 } ],
+
+        "react/jsx-quotes": [ 1, "double" ]
     }
 }

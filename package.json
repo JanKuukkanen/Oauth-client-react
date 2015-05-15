@@ -26,6 +26,8 @@
     "babelify": "5.0.3",
     "browserify": "9.0.3",
     "envify": "3.2.0",
+    "eslint": "0.21.0",
+    "eslint-plugin-react": "2.3.0",
     "gulp": "3.8.10",
     "gulp-eslint": "0.8.0",
     "gulp-mocha": "2.0.0",
