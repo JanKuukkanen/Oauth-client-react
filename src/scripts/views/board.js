@@ -130,7 +130,17 @@ export default React.createClass({
 				icon:    'pencil',
 				active:  this.state.showEditBoardDialog,
 				onClick: this.toggleEditBoardDialog
-			}
+			},
+			{
+				icon:    'download',
+				active:  this.state.showEditBoardDialog,
+				onClick: this.toggleEditBoardDialog
+			},
+			{
+				icon:    'share-alt',
+				active:  this.state.showEditBoardDialog,
+				onClick: this.toggleEditBoardDialog
+			},
 		];
 		if(this.props.user.type === User.Type.User) {
 			controls = userOnlyControls.concat(controls);
