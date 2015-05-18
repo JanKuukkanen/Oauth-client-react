@@ -23,9 +23,12 @@ export default React.createClass({
 	},
 
 	render() {
-		let query     = `access_token=${UserStore.getToken()}&format=${this.state.format}`;
+		let id    = this.props.boardID;
+		let query = `access_token=${UserStore.getToken()}
+			&format=${this.state.format}`;
+
 		let apiURL    = process.env.API_URL || 'http://localhost:9002/api';
-		let exportURL = `${apiURL}/boards/${this.props.boardID}/export?${query}`;
+		let exportURL = `${apiURL}/boards/${id}/export?${query}`;
 
 		return (
 			<section className="board-exporter">
@@ -38,7 +41,10 @@ export default React.createClass({
 						</select>
 						<span className="caret fa fa-arrow-down" />
 					</div>
-					<a className="btn btn-secondary" href={exportURL} target="_blank">Export</a>
+					<a className="btn btn-secondary" href={exportURL}
+							target="_blank">
+						Export
+					</a>
 				</div>
 			</section>
 		);

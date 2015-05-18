@@ -8,7 +8,7 @@ export default React.createClass({
 	propTypes: {
 		icon:    React.PropTypes.string.isRequired,
 		active:  React.PropTypes.bool,
-		onClick: React.PropTypes.func.isRequired,
+		onClick: React.PropTypes.func.isRequired
 	},
 
 	getDefaultProps() {
@@ -25,8 +25,8 @@ export default React.createClass({
 
 	render() {
 		let controlClasses = React.addons.classSet({
-			 control: true,
-			 active:  this.props.active
+			control: true,
+			active:  this.props.active
 		});
 		let iconClasses = `fa fa-fw fa-${this.props.icon}`;
 		return (

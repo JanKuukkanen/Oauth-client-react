@@ -6,23 +6,46 @@
         "browser": true
     },
 
+    "plugins": [
+        "react"
+    ],
+
+    "globals": {
+        "process": 1
+    },
+
     "rules": {
-        "semi":   [ 0           ],
-        "strict": [ 1, "never"  ],
-        "quotes": [ 1, "single" ],
+        "semi":        [ 0 ],
+        "curly":       [ 1, "multi-line" ],
+        "quotes":      [ 1, "single" ],
+        "indent":      [ 1, "tab" ],
+        "max-len":     [ 1, 80, 4 ],
+        "brace-style": [ 1, "1tbs" ],
+
+        "strict":               [ 1, "never"  ],
+        "no-use-before-define": [ 1, "nofunc" ],
+
+        "new-cap":         [ 1, { "newIsCap": true, "capIsNew": false } ],
+        "no-new-wrappers": [ 0 ],
+
+        "no-func-assign":   [ 0 ],
+        "no-return-assign": [ 0 ],
 
         "no-var":         [ 1 ],
         "no-undef":       [ 1 ],
+        "no-shadow":      [ 0 ],
         "no-console":     [ 1 ],
         "no-unused-vars": [ 1 ],
-        "no-func-assign": [ 0 ],
 
-        "key-spacing":       [ 0                       ],
-        "no-cond-assign":    [ 0                       ],
-        "no-multi-spaces":   [ 0                       ],
-        "space-in-brackets": [ 1, "always"             ],
+        "key-spacing":       [ 0 ],
+        "no-cond-assign":    [ 0 ],
+        "no-multi-spaces":   [ 0 ],
+
+        "space-in-brackets": [ 1, "always", { "propertyName": false } ],
 
         "eol-last":                [ 1 ],
-        "no-multiple-empty-lines": [ 1, { "max": 1 } ]
+        "no-multiple-empty-lines": [ 1, { "max": 1 } ],
+
+        "react/jsx-quotes": [ 1, "double" ]
     }
 }

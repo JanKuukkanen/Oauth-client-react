@@ -37,7 +37,7 @@ const Background = {
 	BUSINESS_MODEL_CANVAS: {
 		url:         '/dist/assets/img/bg/business_model_canvas.png',
 		description: 'Business Model Canvas'
-	},
+	}
 }
 
 const Size = immutable.Record({

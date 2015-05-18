@@ -1,4 +1,4 @@
-import 'babelify/polyfill';
+import 'babel/polyfill';
 
 import page      from 'page';
 import React     from 'react';
@@ -66,8 +66,7 @@ const middleware = {
 					// If the logged in user a 'guest', he or she is redirected
 					// to the board the guest has access to.
 					return page.redirect(`/boards/${ctx.user.access}`);
-				}
-				else {
+				} else {
 					return page.redirect('/boards');
 				}
 			}
@@ -146,5 +145,5 @@ page('/boards/:id',
 		);
 	});
 
-page('/', () => page.redirect('/boards'));
+page('*', () => page.redirect('/boards'));
 page.start();

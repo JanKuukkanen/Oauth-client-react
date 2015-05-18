@@ -10,11 +10,11 @@ export default React.createClass({
 	propTypes: {
 		background: React.PropTypes.shape({
 			value:         React.PropTypes.string.isRequired,
-			requestChange: React.PropTypes.func.isRequired,
+			requestChange: React.PropTypes.func.isRequired
 		}).isRequired,
 		customBackground: React.PropTypes.shape({
 			value:         React.PropTypes.string,
-			requestChange: React.PropTypes.func.isRequired,
+			requestChange: React.PropTypes.func.isRequired
 		}).isRequired
 	},
 
@@ -31,7 +31,8 @@ export default React.createClass({
 			customBackgroundInput = (
 				<div className="custom-background-url">
 					<label htmlFor="board-custom-background">URL</label>
-					<input type="url" name="board-custom-background" placeholder="URL"
+					<input type="url" name="board-custom-background"
+						placeholder="URL"
 						valueLink={this.props.customBackground} />
 				</div>
 			);

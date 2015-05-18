@@ -17,7 +17,7 @@ export default React.createClass({
 		board: (props) => {
 			if(!props.board instanceof Board) throw new Error();
 		},
-		onDismiss: React.PropTypes.func.isRequired,
+		onDismiss: React.PropTypes.func.isRequired
 	},
 
 	getInitialState() {
@@ -67,7 +67,8 @@ export default React.createClass({
 		);
 
 		return (
-			<Dialog className="dialog-edit-board" onDismiss={this.props.onDismiss}>
+			<Dialog className="dialog-edit-board"
+					onDismiss={this.props.onDismiss}>
 				<section className="dialog-header">
 					Edit Board
 				</section>

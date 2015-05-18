@@ -37,9 +37,9 @@ function connect(opts = {}) {
 	let options = {
 		'query':                `access-token=${opts.token}`,
 		'multiplex':            false,
-		'force new connection': true,
+		'force new connection': true
 	}
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		if(socket && socket.connected) {
 			return resolve();
 		}
@@ -78,7 +78,7 @@ function disconnect() {
 			socket.disconnect();
 		}
 
-		rooms  = [ ];
+		rooms  = [];
 		socket = null;
 
 		BoardStore.removeChangeListener(joinBoards);
@@ -115,18 +115,6 @@ function joinBoards() {
 			}
 		});
 	});
-}
-
-/**
- * The received data is in the format of 'events'. We simply dispatch a few
- * actions when new data is received and we should have real time stuff...
- *
- * NOTE See the implementation of the handlers below...
- */
-function handleIncomingEvent(event) {
-	if(PayloadHandler[event.type]) {
-		return PayloadHandler[event.type](event);
-	}
 }
 
 /**
@@ -177,5 +165,17 @@ const PayloadHandler = {
 		}
 		let ticket = payload.data;
 		return TicketAction.remove(board, ticket);
+	}
+}
+
+/**
+ * The received data is in the format of 'events'. We simply dispatch a few
+ * actions when new data is received and we should have real time stuff...
+ *
+ * NOTE See the implementation of the handlers below...
+ */
+function handleIncomingEvent(event) {
+	if(PayloadHandler[event.type]) {
+		return PayloadHandler[event.type](event);
 	}
 }

@@ -37,8 +37,8 @@ export default React.createClass({
 				el:          this.refs.minimap.getDOMNode(),
 				shrink:      false,
 				resize:      false,
-				interactive: true,
-			},
+				interactive: true
+			}
 		});
 
 		// Force the initial calculation of size for the 'cursor'.
@@ -93,7 +93,7 @@ export default React.createClass({
 		if(this.props.minimap) {
 			this.refs.minimap.resizeCursor({
 				width:  this.getDOMNode().clientWidth,
-				height: this.getDOMNode().clientHeight,
+				height: this.getDOMNode().clientHeight
 			});
 		}
 		return this.scroller.refresh();
@@ -124,5 +124,5 @@ export default React.createClass({
 				offset: this.state.offset
 			});
 		});
-	},
+	}
 });

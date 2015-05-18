@@ -32,8 +32,8 @@ function store(blueprint) {
 	}
 
 	Dispatcher.addListener(ACTION_EVENT, (action) => {
-		if(blueprint.handlers[ action.type ]) {
-			blueprint.handlers[ action.type ](action.payload);
+		if(blueprint.handlers[action.type]) {
+			blueprint.handlers[action.type](action.payload);
 			if(!action.options.silent) {
 				return emitter.emit(CHANGE_EVENT);
 			}
@@ -42,7 +42,7 @@ function store(blueprint) {
 
 	return Object.keys(blueprint).filter(k => k !== 'handlers')
 		.reduce((proto, property) => {
-			proto[ property ] = blueprint[ property ];
+			proto[property] = blueprint[property];
 			return proto;
 		}, proto);
 }
@@ -56,13 +56,13 @@ function actions(action, prefix = '') {
 
 		return Object.keys(action).reduce((object, prop) => {
 			let pre   = `${prefix}${prop.toUpperCase()}`;
-			let async = action[ prop ] === true;
+			let async = action[prop] === true;
 
-			object[ prop ] = actions(action[ prop ], pre);
+			object[prop] = actions(action[prop], pre);
 
 			if(async) {
-				object[ prop ].Success = new String(`${pre}_SUCCESS`);
-				object[ prop ].Failure = new String(`${pre}_FAILURE`);
+				object[prop].Success = new String(`${pre}_SUCCESS`);
+				object[prop].Failure = new String(`${pre}_FAILURE`);
 			}
 
 			return object;
@@ -81,7 +81,7 @@ function actionCreator(blueprint) {
 		});
 	}
 	return Object.keys(blueprint).reduce((proto, action) => {
-		proto[ action ] = blueprint[ action ].bind({ dispatch });
+		proto[action] = blueprint[action].bind({ dispatch });
 		return proto;
 	}, {});
 }

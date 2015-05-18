@@ -24,7 +24,7 @@ export default React.createClass({
 	getInitialState() {
 		return {
 			showEditBoardDialog:   false,
-			showRemoveBoardDialog: false,
+			showRemoveBoardDialog: false
 		}
 	},
 
@@ -36,7 +36,7 @@ export default React.createClass({
 			!immutable.is(prevProps.board, nextProps.board)
 		);
 		let hasStateChanged = (
-			prevState.showEditBoardDialog   !== nextState.showEditBoardDialog   ||
+			prevState.showEditBoardDialog   !== nextState.showEditBoardDialog ||
 			prevState.showRemoveBoardDialog !== nextState.showRemoveBoardDialog
 		);
 		return havePropsChanged || hasStateChanged;
@@ -78,15 +78,18 @@ export default React.createClass({
 	},
 
 	renderControls() {
-		let controls = [{
-			icon:    'trash',
-			active:  this.state.showRemoveBoardDialog,
-			onClick: this.showDialog.bind(this, 'RemoveBoardDialog')
-		}, {
-			icon:    'pencil',
-			active:  this.state.showEditBoardDialog,
-			onClick: this.showDialog.bind(this, 'EditBoardDialog')
-		}];
+		let controls = [
+			{
+				icon:    'trash',
+				active:  this.state.showRemoveBoardDialog,
+				onClick: this.showDialog.bind(this, 'RemoveBoardDialog')
+			},
+			{
+				icon:    'pencil',
+				active:  this.state.showEditBoardDialog,
+				onClick: this.showDialog.bind(this, 'EditBoardDialog')
+			}
+		];
 		return (
 			<div className="controls">
 				{controls.map(function(ctrl, index) {

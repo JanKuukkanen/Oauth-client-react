@@ -24,7 +24,7 @@ export default React.createClass({
 	getInitialState() {
 		return {
 			color:   this.props.ticket.color,
-			content: this.props.ticket.content,
+			content: this.props.ticket.content
 		}
 	},
 
@@ -48,18 +48,22 @@ export default React.createClass({
 
 	render() {
 		return (
-			<Dialog className="edit-ticket-dialog" onDismiss={this.props.onDismiss}>
+			<Dialog className="edit-ticket-dialog"
+					onDismiss={this.props.onDismiss}>
 				<section className="dialog-header">
 					<ColorSelect color={this.linkState('color')} />
 				</section>
 				<section className="dialog-content">
-					<textarea valueLink={this.linkState('content')} tabIndex={1} autoFocus={true} />
+					<textarea valueLink={this.linkState('content')}
+						tabIndex={1} autoFocus={true} />
 				</section>
 				<section className="dialog-footer">
-					<button className="btn-danger" onClick={this.remove} tabIndex={3}>
+					<button className="btn-danger" onClick={this.remove}
+							tabIndex={3}>
 						Delete
 					</button>
-					<button className="btn-primary" onClick={this.update} tabIndex={2}>
+					<button className="btn-primary" onClick={this.update}
+							tabIndex={2}>
 						Done
 					</button>
 				</section>
