@@ -113,7 +113,8 @@ gulp.task('build', ['build-assets', 'build-css', 'build-js']);
 gulp.task('serve', ['build'], function() {
 	return gulp.src('.')
 		.pipe(webserver({
-			host:       process.env.HOSTNAME || '0.0.0.0',
+			port:       process.env.PORT      || 8000,
+			host:       process.env.HOSTNAME  || '0.0.0.0',
 			fallback:   'index.html',
 			livereload: true,
 		}));
