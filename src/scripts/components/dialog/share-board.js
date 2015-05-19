@@ -58,9 +58,9 @@ export default React.createClass({
                 </section>
                 <section className="dialog-content">
 
-                    <label htmlFor="board-share">Shared URL</label>
+                    <label htmlFor="board-share">Shared link</label>
                     <section className="input-group">
-                        <input name="board-share" placeholder="Shared URL"
+                        <input name="board-share" placeholder="Shared link"
                                readOnly={true} value={sharedURL} tabIndex={-1}/>
                         {shareButton}
                     </section>
