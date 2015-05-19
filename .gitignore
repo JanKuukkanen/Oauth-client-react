@@ -3,6 +3,8 @@ dist/
 node_modules/
 
 custom_env
+nohup.out
+npm-debug.log
 
 .DS_Store
 .tmp-storage
