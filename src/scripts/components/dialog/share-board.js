@@ -4,7 +4,6 @@ import Board       from '../../models/board';
 import BoardAction from '../../actions/board';
 
 import Dialog           from '../../components/dialog';
-import BackgroundSelect from '../../components/background-select';
 
 /**
  *

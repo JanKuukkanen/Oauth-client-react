@@ -21,8 +21,8 @@ import Broadcaster     from '../components/broadcaster';
 import BoardComponent  from '../components/board';
 
 import EditBoardDialog   from '../components/dialog/edit-board';
-import ShareBoardDialog  from '../components/dialog/share-board';
 import ExportBoardDialog from '../components/dialog/export-board.js';
+import ShareBoardDialog  from '../components/dialog/share-board';
 
 /**
  * Fix issues with iOS and IScroll not working together too well...
@@ -105,14 +105,8 @@ export default React.createClass({
 		} else if(this.state.showShareBoardDialog) {
 			boardDialog = <ShareBoardDialog board={this.state.board}
 										   onDismiss={this.toggleShareBoardDialog} />
-
 		}
-		/*
-		let editBoardDialog = !this.state.showEditBoardDialog ? null : (
-			<EditBoardDialog board={this.state.board}
-				onDismiss={this.toggleEditBoardDialog} />
-		);
-		*/
+
 		return (
 			<div className="view view-board">
 				<Broadcaster />
