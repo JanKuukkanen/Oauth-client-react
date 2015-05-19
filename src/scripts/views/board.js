@@ -133,6 +133,11 @@ export default React.createClass({
 	renderControls() {
 		let controls = [
 			{
+				icon:    'download',
+				active:  this.state.showExportBoardDialog,
+				onClick: this.toggleExportBoardDialog
+			},
+			{
 				onClick: () => {
 					SettingsAction.setSetting('snap-to-grid',
 						!this.state.snapToGrid);
@@ -165,11 +170,6 @@ export default React.createClass({
 				icon:    'share-alt',
 				active:  this.state.showShareBoardDialog,
 				onClick: this.toggleShareBoardDialog
-			},
-			{
-				icon:    'download',
-				active:  this.state.showExportBoardDialog,
-				onClick: this.toggleExportBoardDialog
 			}
 
 		];
