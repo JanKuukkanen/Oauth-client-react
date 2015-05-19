@@ -2,9 +2,7 @@ import React from 'react/addons';
 
 import Board       from '../../models/board';
 import BoardAction from '../../actions/board';
-
-import Dialog           from '../../components/dialog';
-
+import Dialog      from '../../components/dialog';
 /**
  *
  */

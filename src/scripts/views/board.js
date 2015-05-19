@@ -59,9 +59,11 @@ export default React.createClass({
 	},
 
 	getInitialState() {
-		return Object.assign(this.getState(), { showEditBoardDialog:   false,
-												showExportBoardDialog: false,
-												showShareBoardDialog:  false });
+		return Object.assign(this.getState(), {
+			showEditBoardDialog:   false,
+			showExportBoardDialog: false,
+			showShareBoardDialog:  false
+		});
 	},
 
 	componentDidMount() {
@@ -97,14 +99,14 @@ export default React.createClass({
 
 		if(this.state.showEditBoardDialog) {
 			boardDialog = <EditBoardDialog board={this.state.board}
-										   onDismiss={this.toggleEditBoardDialog} />
+                                    onDismiss={this.toggleEditBoardDialog} />
 		} else if(this.state.showExportBoardDialog) {
 			boardDialog = <ExportBoardDialog board={this.state.board}
-										   onDismiss={this.toggleExportBoardDialog} />
+                                    onDismiss={this.toggleExportBoardDialog} />
 
 		} else if(this.state.showShareBoardDialog) {
 			boardDialog = <ShareBoardDialog board={this.state.board}
-										   onDismiss={this.toggleShareBoardDialog} />
+                                    onDismiss={this.toggleShareBoardDialog} />
 		}
 
 		return (
@@ -168,7 +170,7 @@ export default React.createClass({
 				icon:    'download',
 				active:  this.state.showExportBoardDialog,
 				onClick: this.toggleExportBoardDialog
-			},
+			}
 
 		];
 		if(this.props.user.type === User.Type.User) {

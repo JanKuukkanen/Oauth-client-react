@@ -9,7 +9,6 @@ import BackgroundSelect from '../../components/background-select';
 /**
  *
  */
-	
 export default React.createClass({
 	mixins: [ React.addons.PureRenderMixin, React.addons.LinkedStateMixin ],
 

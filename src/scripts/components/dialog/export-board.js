@@ -24,7 +24,7 @@ export default React.createClass({
         return this.props.onDismiss();
     },
     render() {
-        let id   = this.props.board.id;
+        let id = this.props.board.id;
 
         return (
             <Dialog className="dialog-edit-board"
