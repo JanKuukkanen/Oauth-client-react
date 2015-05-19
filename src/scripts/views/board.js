@@ -61,7 +61,7 @@ export default React.createClass({
 	getInitialState() {
 		return Object.assign(this.getState(), { showEditBoardDialog:   false,
 												showExportBoardDialog: false,
-												showShareBoardDialog:  false});
+												showShareBoardDialog:  false });
 	},
 
 	componentDidMount() {
