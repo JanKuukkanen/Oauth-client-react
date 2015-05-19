@@ -19,7 +19,10 @@ import Scrollable      from '../components/scrollable';
 import Navigation      from '../components/navigation';
 import Broadcaster     from '../components/broadcaster';
 import BoardComponent  from '../components/board';
-import EditBoardDialog from '../components/dialog/edit-board';
+
+import EditBoardDialog   from '../components/dialog/edit-board';
+import ShareBoardDialog  from '../components/dialog/share-board';
+import ExportBoardDialog from '../components/dialog/export-board.js';
 
 /**
  * Fix issues with iOS and IScroll not working together too well...
@@ -56,7 +59,9 @@ export default React.createClass({
 	},
 
 	getInitialState() {
-		return Object.assign(this.getState(), { showEditBoardDialog: false });
+		return Object.assign(this.getState(), { showEditBoardDialog:   false,
+												showExportBoardDialog: false,
+												showShareBoardDialog:  false});
 	},
 
 	componentDidMount() {
@@ -74,11 +79,40 @@ export default React.createClass({
 		});
 	},
 
+	toggleExportBoardDialog() {
+		this.setState({
+			showExportBoardDialog: !this.state.showExportBoardDialog
+		});
+	},
+
+	toggleShareBoardDialog() {
+		this.setState({
+			showShareBoardDialog: !this.state.showShareBoardDialog
+		});
+	},
+
 	render() {
+
+		let boardDialog = null;
+
+		if(this.state.showEditBoardDialog) {
+			boardDialog = <EditBoardDialog board={this.state.board}
+										   onDismiss={this.toggleEditBoardDialog} />
+		} else if(this.state.showExportBoardDialog) {
+			boardDialog = <ExportBoardDialog board={this.state.board}
+										   onDismiss={this.toggleExportBoardDialog} />
+
+		} else if(this.state.showShareBoardDialog) {
+			boardDialog = <ShareBoardDialog board={this.state.board}
+										   onDismiss={this.toggleShareBoardDialog} />
+
+		}
+		/*
 		let editBoardDialog = !this.state.showEditBoardDialog ? null : (
 			<EditBoardDialog board={this.state.board}
 				onDismiss={this.toggleEditBoardDialog} />
 		);
+		*/
 		return (
 			<div className="view view-board">
 				<Broadcaster />
@@ -90,7 +124,7 @@ export default React.createClass({
 							snap={this.state.snapToGrid} />
 					</Scrollable>
 				</div>
-				{editBoardDialog}
+				{boardDialog}
 				{this.renderControls()}
 			</div>
 		);
@@ -133,13 +167,13 @@ export default React.createClass({
 			},
 			{
 				icon:    'download',
-				active:  this.state.showEditBoardDialog,
-				onClick: this.toggleEditBoardDialog
+				active:  this.state.showExportBoardDialog,
+				onClick: this.toggleExportBoardDialog
 			},
 			{
 				icon:    'share-alt',
-				active:  this.state.showEditBoardDialog,
-				onClick: this.toggleEditBoardDialog
+				active:  this.state.showShareBoardDialog,
+				onClick: this.toggleShareBoardDialog
 			},
 		];
 		if(this.props.user.type === User.Type.User) {

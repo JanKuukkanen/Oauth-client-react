@@ -4,7 +4,6 @@ import Board       from '../../models/board';
 import BoardAction from '../../actions/board';
 
 import Dialog           from '../../components/dialog';
-import BoardExporter    from '../../components/board-exporter';
 import BackgroundSelect from '../../components/background-select';
 
 /**
@@ -20,24 +19,9 @@ export default React.createClass({
         onDismiss: React.PropTypes.func.isRequired
     },
 
-    getInitialState() {
-      /*  return {
-            name:             this.props.board.name,
-            background:       this.props.board.background,
-            customBackground: this.props.board.customBackground
-        }*/
-    },
-
     submit(event) {
-      /*  event.preventDefault();
-
-        BoardAction.update({
-            id:               this.props.board.id,
-            name:             this.state.name,
-            background:       this.state.background,
-            customBackground: this.state.customBackground
-        });
-        return this.props.onDismiss();*/
+        event.preventDefault();
+        return this.props.onDismiss();
     },
 
     hide() {
