@@ -166,15 +166,16 @@ export default React.createClass({
 				onClick: this.toggleEditBoardDialog
 			},
 			{
-				icon:    'download',
-				active:  this.state.showExportBoardDialog,
-				onClick: this.toggleExportBoardDialog
-			},
-			{
 				icon:    'share-alt',
 				active:  this.state.showShareBoardDialog,
 				onClick: this.toggleShareBoardDialog
 			},
+			{
+				icon:    'download',
+				active:  this.state.showExportBoardDialog,
+				onClick: this.toggleExportBoardDialog
+			},
+
 		];
 		if(this.props.user.type === User.Type.User) {
 			controls = userOnlyControls.concat(controls);
