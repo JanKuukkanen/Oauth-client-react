@@ -4,7 +4,8 @@ import UserStore from '../stores/user';
 const Format = {
 	CSV:  'csv',
 	JSON: 'json',
-	PLAINTEXT: "plaintext"
+	PLAINTEXT: "plaintext",
+	IMAGE: 'image'
 }
 
 /**
