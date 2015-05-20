@@ -16,11 +16,6 @@ export default React.createClass({
         onDismiss: React.PropTypes.func.isRequired
     },
 
-    componentDidUpdate() {
-        console.log("componentDidUpdate");
-        this.highlight();
-    },
-
     submit(event) {
         event.preventDefault();
         return this.props.onDismiss();
@@ -32,7 +27,8 @@ export default React.createClass({
 
     share() {
         BoardAction.generateAccessCode({ id: this.props.board.id });
-        this.highlight();
+
+        window.setTimeout(this.highlight, 50);
     },
 
     highlight() {
