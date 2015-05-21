@@ -32,3 +32,19 @@ below:
 	by the watchify bundler instead.
 
 	Don't use this flag if you're running the build task on a vagrant guest.
+
+	--use-browser-sync
+
+	Using this flag will switch from using the pretty basic `gulp-webserver`
+	module to `browser-sync` for serving the static content. This will also use
+	the BrowserSync's own flavor of livereloading the changes.
+
+## On Testing...
+If you want to test this app on other devices, such as tablets and phones, you
+need to set the `IO_URL` and `API_URL` environmental variables to point at your
+own IP address.
+```
+	IO_URL=http://<MyIPHere>:9001 \
+	API_URL=http://<MyIPHere>:9002/api \
+	gulp --use-watchify --use-browser-sync
+```
