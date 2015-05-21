@@ -24,6 +24,7 @@
   "devDependencies": {
     "babel-eslint": "2.0.2",
     "babelify": "5.0.3",
+    "browser-sync": "^2.7.2",
     "browserify": "9.0.3",
     "envify": "3.2.0",
     "eslint": "0.21.0",

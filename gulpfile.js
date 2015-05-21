@@ -1,5 +1,7 @@
 'use strict';
 
+var fs   = require('fs');
+var url  = require('url');
 var path = require('path');
 var args = require('minimist')(process.argv);
 
@@ -8,8 +10,10 @@ var sass       = require('gulp-sass');
 var mocha      = require('gulp-mocha');
 var eslint     = require('gulp-eslint');
 var uglify     = require('gulp-uglify');
-var webserver  = require('gulp-webserver');
 var sourcemaps = require('gulp-sourcemaps');
+
+var sync   = require('browser-sync');
+var server = require('gulp-webserver');
 
 var buffer = require('vinyl-buffer');
 var source = require('vinyl-source-stream');
@@ -43,6 +47,7 @@ bundler = bundler.transform(envify).transform(babelify);
  */
 function bundle() {
 	var stream = bundler.bundle().pipe(source('app.js'));
+
 	if(process.env.NODE_ENV === 'production') {
 		stream = stream.pipe(buffer()).pipe(uglify());
 	}
@@ -51,9 +56,36 @@ function bundle() {
 			.pipe(sourcemaps.init({ loadMaps: true }))
 			.pipe(sourcemaps.write());
 	}
-	return stream.pipe(gulp.dest('dist'));
+
+	stream = stream.pipe(gulp.dest('dist'));
+
+	if(args['use-browser-sync']) {
+		stream = stream.pipe(sync.reload({ stream: true, once: true }));
+	}
+	return stream;
 }
 
+/**
+ * Creates the BrowserSync server used to serve static content.
+ */
+function createSyncServer() {
+	/**
+	 * Middleware for serving the 'index.html' file.
+	 * Based on https://github.com/BrowserSync/browser-sync/issues/204#issuecomment-51469022
+	 */
+	function serveDefault(req, res, next) {
+		var file = url.parse(req.url);
+		    file = file.href.split(file.search).join('');
+
+		var exists = fs.existsSync(path.join(__dirname, file));
+
+		if(!exists && file.indexOf('browser-sync-client') < 0) {
+			req.url = '/index.html';
+		}
+		return next();
+	}
+	return sync({ server: { baseDir: '.', middleware: serveDefault } });
+}
 
 /**
  * Lint the source code.
@@ -108,16 +140,19 @@ gulp.task('build-assets', function() {
 gulp.task('build', ['build-assets', 'build-css', 'build-js']);
 
 /**
- * Serve the static content and run a livereload server.
+ * Serve the static content and run a livereload server. If the script is given
+ * a '--use-browser-sync' argument, the content is served through BrowserSync,
+ * and so no livereload is not needed.
  */
 gulp.task('serve', ['build'], function() {
-	return gulp.src('.')
-		.pipe(webserver({
-			port:       process.env.PORT      || 8000,
-			host:       process.env.HOSTNAME  || '0.0.0.0',
-			fallback:   'index.html',
-			livereload: true,
-		}));
+	if(args['use-browser-sync']) return createSyncServer();
+
+	return gulp.src('.').pipe(server({
+		port:       process.env.PORT      || 8000,
+		host:       process.env.HOSTNAME  || '0.0.0.0',
+		fallback:   'index.html',
+		livereload: true
+	}));
 });
 
 /**
@@ -126,6 +161,7 @@ gulp.task('serve', ['build'], function() {
 gulp.task('default', ['serve'], function() {
 	gulp.watch('./src/assets/**/*',      [ 'build-assets' ]);
 	gulp.watch('./src/styles/**/*.sass', [ 'build-css' ]);
+
 	if(args['use-watchify']) {
 		bundler.on('update', bundle);
 	}
