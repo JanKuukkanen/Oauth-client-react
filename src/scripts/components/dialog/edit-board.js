@@ -23,18 +23,24 @@ export default React.createClass({
 		return {
 			name:             this.props.board.name,
 			background:       this.props.board.background,
-			customBackground: this.props.board.customBackground
+			customBackground: this.props.board.customBackground,
+			width:            this.props.board.size.width,
+			height:           this.props.board.size.height
 		}
 	},
 
 	submit(event) {
 		event.preventDefault();
 
+		let size = {"width":  this.state.width,
+			        "height": this.state.height};
+
 		BoardAction.update({
 			id:               this.props.board.id,
 			name:             this.state.name,
 			background:       this.state.background,
-			customBackground: this.state.customBackground
+			customBackground: this.state.customBackground,
+			size:             size
 		});
 		return this.props.onDismiss();
 	},
@@ -54,6 +60,17 @@ export default React.createClass({
 
 					<BackgroundSelect background={this.linkState('background')}
 						customBackground={this.linkState('customBackground')} />
+
+					<label htmlFor="board-width">Board Width</label>
+					<input name="board-width" placeholder="Board Width"
+						   valueLink={this.linkState('width')}
+						   type="number" min="1" />
+
+					<label htmlFor="board-height">Board Length</label>
+					<input name="board-height" placeholder="Board Length"
+						   valueLink={this.linkState('height')}
+						   type="number" min="1" />
+
 				</section>
 				<section className="dialog-footer">
 					<button className="btn-primary" onClick={this.submit}>
