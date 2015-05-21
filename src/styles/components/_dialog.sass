@@ -39,6 +39,27 @@
 			@include display(flex)
 			@include flex-direction(column)
 
+		.dialog-size-wrapper
+			@include display(flex)
+			@include flex-direction(row)
+
+			margin-top: 10px
+			width:      100%
+
+			.dialog-size
+				display: inline-block
+				width:   45%
+
+				input
+					width: 100%
+
+			.times-wrapper
+				color:      $silver-chalice
+				margin-top: 5%
+				text-align: center
+				font-size:  130%
+				width:      10%
+
 		.dialog-footer
 			padding: 8px 16px 16px 16px
 
