@@ -100,13 +100,31 @@ gulp.task('lint', function() {
  * Unit tests.
  */
 gulp.task('test', function() {
+	// When running the tests, we need to include 'babel/register' so that ES6
+	// modules work in our environment.
+	require('babel/register');
+
+	// Also require the 'polyfill', since in the application it's normally
+	// required in the 'app.js' module.
+	require('babel/polyfill');
+
+	/**
+	 * Require the module with the given name. This will 'require' it relative
+	 * to the current working directory, so tests should be ran from the root
+	 * folder.
+	 */
+	function reqmod(name) {
+		return require(path.join(process.cwd(), '/src/scripts/', name));
+	}
+
+	// For testing purposes, we expose the 'reqmod' function in global scope.
+	global.reqmod = reqmod;
+
 	return gulp.src('./test/**/*.js')
 		.pipe(mocha({
-			globals: {
-				should: require('should'),
-			},
-			reporter: 'spec',
-		}))
+			globals: { should: require('should') },
+			reporter: 'spec'
+		}));
 });
 
 /**
