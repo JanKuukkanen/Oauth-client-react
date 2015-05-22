@@ -75,7 +75,7 @@ export default React.createClass({
 					<label htmlFor="dialog-size-wrapper">Board size (measured in tickets)</label>
 					<section className="dialog-size-wrapper">
 						<section className="dialog-size">
-								<label htmlFor="board-width">Board Width</label>
+								<label htmlFor="board-width">Width</label>
 								<input name="board-width"
                                        placeholder="Board Width"
                                        valueLink={this.linkState('width')}
@@ -87,7 +87,7 @@ export default React.createClass({
 						</section>
 
 						<section className="dialog-size">
-							<label htmlFor="board-height">Board Height</label>
+							<label htmlFor="board-height">Height</label>
 								<input name="board-height"
                                        placeholder="Board Height"
                                        valueLink={this.linkState('height')}
