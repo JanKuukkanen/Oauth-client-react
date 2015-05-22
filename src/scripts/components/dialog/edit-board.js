@@ -29,10 +29,6 @@ export default React.createClass({
 		}
 	},
 
-	validateNumberOnly() {
-		console.log("Hello");
-	},
-
 	submit(event) {
 		event.preventDefault();
 
@@ -41,18 +37,22 @@ export default React.createClass({
 			"height": this.state.height
 		};
 
-		if(size.width < 1 || size.height < 1 ) {
-			size.width = this.props.board.size.width;
-			size.height = this.props.board.size.height;
-		}
 
-		BoardAction.update({
-			id:               this.props.board.id,
-			name:             this.state.name,
-			background:       this.state.background,
-			customBackground: this.state.customBackground,
-			size:             size
-		});
+		if (!isNaN(size.width) && !isNaN(size.height)) {
+
+			if (size.width < 1 || size.height < 1) {
+				size.width = this.props.board.size.width;
+				size.height = this.props.board.size.height;
+			}
+
+			BoardAction.update({
+				id: this.props.board.id,
+				name: this.state.name,
+				background: this.state.background,
+				customBackground: this.state.customBackground,
+				size: size
+			});
+		}
 		return this.props.onDismiss();
 	},
 
@@ -76,9 +76,10 @@ export default React.createClass({
 					<section className="dialog-size-wrapper">
 						<section className="dialog-size">
 								<label htmlFor="board-width">Board Width</label>
-								<input name="board-width" placeholder="Board Width"
-									   valueLink={this.linkState('width')}
-									   type="number" min="1" />
+								<input name="board-width"
+                                       placeholder="Board Width"
+                                       valueLink={this.linkState('width')}
+                                       type="number" min="1" />
 						</section>
 
 						<section className="times-wrapper">
@@ -87,11 +88,12 @@ export default React.createClass({
 
 						<section className="dialog-size">
 							<label htmlFor="board-height">Board Length</label>
-								<input name="board-height" placeholder="Board Length"
-									   valueLink={this.linkState('height')}
-									   type="number" min="1"/>
+								<input name="board-height"
+                                       placeholder="Board Length"
+                                       valueLink={this.linkState('height')}
+                                       type="number" min="1"/>
 						</section>
-				    </section>
+                </section>
 
 				</section>
 				<section className="dialog-footer">
