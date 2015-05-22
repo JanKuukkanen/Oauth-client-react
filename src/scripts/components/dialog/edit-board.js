@@ -72,7 +72,7 @@ export default React.createClass({
 					<BackgroundSelect background={this.linkState('background')}
 						customBackground={this.linkState('customBackground')} />
 
-
+					<label htmlFor="dialog-size-wrapper">Board size (measured in tickets)</label>
 					<section className="dialog-size-wrapper">
 						<section className="dialog-size">
 								<label htmlFor="board-width">Board Width</label>
@@ -87,9 +87,9 @@ export default React.createClass({
 						</section>
 
 						<section className="dialog-size">
-							<label htmlFor="board-height">Board Length</label>
+							<label htmlFor="board-height">Board Height</label>
 								<input name="board-height"
-                                       placeholder="Board Length"
+                                       placeholder="Board Height"
                                        valueLink={this.linkState('height')}
                                        type="number" min="1"/>
 						</section>
