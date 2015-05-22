@@ -120,7 +120,14 @@ gulp.task('test', function() {
 	// For testing purposes, we expose the 'reqmod' function in global scope.
 	global.reqmod = reqmod;
 
-	return gulp.src('./test/**/*.js')
+	// Also for testing React components we need to have JSDOM setup.
+	var jsdom = require('jsdom').jsdom;
+
+	global.document  = jsdom('<html><body><div></div></body></html>');
+	global.window    = global.document.parentWindow;
+	global.navigator = global.window.navigator;
+
+	return gulp.src('test/**/*.js')
 		.pipe(mocha({
 			globals: { should: require('should') },
 			reporter: 'spec'
