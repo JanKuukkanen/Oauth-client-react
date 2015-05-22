@@ -78,7 +78,7 @@ export default React.createClass({
 								<label htmlFor="board-width">Board Width</label>
 								<input name="board-width" placeholder="Board Width"
 									   valueLink={this.linkState('width')}
-									   type="number" min="1"e />
+									   type="number" min="1" />
 						</section>
 
 						<section className="times-wrapper">
