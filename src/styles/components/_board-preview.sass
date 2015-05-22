@@ -36,6 +36,7 @@
 		overflow: hidden
 
 		.minimap
+			transform: translateX(-50%)
 			cursor:          pointer
 			background-size: cover
 
@@ -46,11 +47,12 @@
 
 			box-shadow: 0px 0px 2px $silver-chalice
 
+
 			&:hover
 				border-color: $silver-chalice
 
 
-			@include position(relative, 0px null null 0px)
+			@include position(relative, 0px null null 50%)
 
 	.name
 		width:  186px
