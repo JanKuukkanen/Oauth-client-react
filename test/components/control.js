@@ -5,6 +5,10 @@ let render = React.addons.TestUtils.renderIntoDocument;
 
 let Control = reqmod('components/control');
 
+// Since we don't want React warnings about some deprecated stuff being spammed
+// in our test run, we disable the warnings with this...
+console.warn = () => { }
+
 /**
  * Control components are those little icon based buttons, which can be toggled
  * active.
