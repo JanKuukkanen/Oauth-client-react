@@ -71,7 +71,7 @@ export default React.createClass({
 
 				let reg = new RegExp('^[1-9]+[0-9]*$');
 
-				if(reg.test(val) && val.length <= 2) {
+				if((reg.test(val) || val === "") && val.length <= 2) {
 					this.setState({width: val});
 				}
 			}
@@ -83,7 +83,7 @@ export default React.createClass({
 
 				let reg = new RegExp('^[1-9]+[0-9]*$');
 
-				if (reg.test(val) && val.length <= 2) {
+				if ((reg.test(val) || val === "") && val.length <= 2) {
 					this.setState({height: val});
 				}
 			}
