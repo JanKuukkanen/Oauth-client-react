@@ -37,21 +37,23 @@ export default React.createClass({
 			height: this.state.height
 		};
 
+		let updatePayload = {
+			id: this.props.board.id,
+			name: this.state.name,
+			background: this.state.background,
+			customBackground: this.state.customBackground,
+		}
+
 
 		if (!isNaN(size.width) && !isNaN(size.height)) {
 			if (size.width < 1 || size.height < 1) {
 				size.width = this.props.board.size.width;
 				size.height = this.props.board.size.height;
 			}
-
-			BoardAction.update({
-				id: this.props.board.id,
-				name: this.state.name,
-				background: this.state.background,
-				customBackground: this.state.customBackground,
-				size: size
-			});
+			updatePayload.size = size;
 		}
+
+		BoardAction.update(updatePayload);
 		return this.props.onDismiss();
 	},
 
@@ -61,6 +63,30 @@ export default React.createClass({
 
 		if(this.linkState('background')) {
 			board = board.set('background', this.linkState('background').value);
+		}
+
+		let widthValueLink = {
+			value: this.state.width,
+			requestChange: (val) => {
+
+				let reg = new RegExp('^[0-9]+$');
+
+				if(reg.test(val)) {
+					this.setState({width: val});
+				}
+			}
+		}
+
+		let heightValueLink = {
+			value: this.state.height,
+			requestChange: (val) => {
+
+				let reg = new RegExp('^[0-9]+$');
+
+				if (reg.test(val)) {
+					this.setState({height: val});
+				}
+			}
 		}
 
 		return (
@@ -88,7 +114,7 @@ export default React.createClass({
 								<label htmlFor="board-width">Width</label>
 								<input name="board-width"
                                        placeholder="Board Width"
-                                       valueLink={this.linkState('width')}
+                                       valueLink={widthValueLink}
                                        type="number" min="1" />
 						</section>
 
@@ -100,7 +126,7 @@ export default React.createClass({
 							<label htmlFor="board-height">Height</label>
 								<input name="board-height"
                                        placeholder="Board Height"
-                                       valueLink={this.linkState('height')}
+                                       valueLink={heightValueLink}
                                        type="number" min="1"/>
 						</section>
                 </section>
