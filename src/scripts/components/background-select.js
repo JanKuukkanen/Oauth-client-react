@@ -9,9 +9,6 @@ export default React.createClass({
 	mixins: [ React.addons.PureRenderMixin ],
 
 	propTypes: {
-		board: (props) => {
-			if(!props.board instanceof Board) throw new Error();
-		},
 		background: React.PropTypes.shape({
 			value:         React.PropTypes.string.isRequired,
 			requestChange: React.PropTypes.func.isRequired
@@ -49,9 +46,6 @@ export default React.createClass({
 		return (
 			<div className="background-select">
 				<div className="value">
-					<Minimap
-						board={this.props.board}
-						show={true} />
 				</div>
 				<label>Board Background</label>
 				<div className="select">

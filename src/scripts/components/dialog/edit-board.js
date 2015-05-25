@@ -5,7 +5,7 @@ import BoardAction from '../../actions/board';
 
 import Dialog           from '../../components/dialog';
 import BackgroundSelect from '../../components/background-select';
-
+import Minimap          from '../../components/minimap'
 /**
  *
  */
@@ -57,6 +57,14 @@ export default React.createClass({
 	},
 
 	render() {
+
+		//this.props.board.background = this.linkState('background');
+		let board = this.props.board;
+		
+		if(this.linkState('background')) {
+			board = this.props.board.set('background', this.linkState('background').value);
+		}
+
 		return (
 			<Dialog className="dialog-edit-board"
 					onDismiss={this.props.onDismiss}>
@@ -69,9 +77,11 @@ export default React.createClass({
 					<input name="board-name" placeholder="Board Name"
 						valueLink={this.linkState('name')} autoFocus={true} />
 
+					<Minimap
+						board={board} />
+
 					<BackgroundSelect background={this.linkState('background')}
-						customBackground={this.linkState('customBackground')}
-						board={this.props.board}/>
+						customBackground={this.linkState('customBackground')} />
 
 					<label htmlFor="dialog-size-wrapper">Board size (measured in tickets)</label>
 					<section className="dialog-size-wrapper">
