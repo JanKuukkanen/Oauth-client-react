@@ -1,4 +1,4 @@
-let flux = reqmod('utils/flux');
+import flux from 'utils/flux';
 
 /**
  * The 'flux' utility abstracts away some of the more tedious parts of the flux
