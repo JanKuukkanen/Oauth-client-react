@@ -77,11 +77,11 @@ export default React.createClass({
 					<label htmlFor="board-name">Board Name</label>
 					<input name="board-name" placeholder="Board Name"
 						valueLink={this.linkState('name')} autoFocus={true} />
-
-					<Minimap
-						board={board}
-						isTicketSized={true} />
-
+					<div className="preview-container">
+						<Minimap
+							board={board}
+							isTicketSized={true} />
+					</div>
 					<BackgroundSelect background={this.linkState('background')}
 						customBackground={this.linkState('customBackground')} />
 

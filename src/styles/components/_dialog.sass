@@ -22,7 +22,7 @@
 		background-color: $white
 
 		.dialog-header
-			padding: 16px
+			padding:        16px
 
 			font-size:      18px
 			letter-spacing: 1px
@@ -39,11 +39,16 @@
 			@include display(flex)
 			@include flex-direction(column)
 
-		.minimap
-			transform: translateX(-50%)
-			left: 50% !important
-			@include position(relative, 0px null null 20%)
-			max-height: 108
+		.preview-container
+			height:   116px
+			padding:  12px
+			overflow: hidden
+
+			.minimap
+				transform:  translateX(-50%)
+				left:       50% !important
+				max-height: 108
+				@include    position(relative, 0px null null 20%)
 
 		.dialog-size-wrapper
 			@include display(flex)
@@ -55,19 +60,19 @@
 			width:      100%
 
 			.dialog-size
-				padding-top: 4px
-				padding-left: 4px
+				padding-top:   4px
+				padding-left:  4px
 				padding-right: 4px
-				display: inline-block
-				width:   45%
+				display:       inline-block
+				width:         45%
 
 				input
 					background-color: $white
-					width: 100%
+					width:            100%
 
 				input[type="number"]::-webkit-inner-spin-button
 					-webkit-appearance: none
-					margin: 0
+					margin:             0
 
 			.times-wrapper
 				color:      $silver-chalice
