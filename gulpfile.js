@@ -7,7 +7,7 @@ var args = require('minimist')(process.argv);
 
 var gulp       = require('gulp');
 var sass       = require('gulp-sass');
-var mocha      = require('gulp-mocha');
+var karma      = require('gulp-karma');
 var eslint     = require('gulp-eslint');
 var uglify     = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
@@ -22,6 +22,10 @@ var envify     = require('envify');
 var babelify   = require('babelify');
 var watchify   = require('watchify');
 var browserify = require('browserify');
+
+// The test runner mode can be configured to be either single run (default), or
+// to watch the files for changes and rerun tests.
+var mode = args['test-runner-mode'] === 'watch' ? 'watch' : 'run';
 
 // We need to setup browserify. For regular builds we use 'browserify' by
 // itself, but for builds that keep repeating, we use 'watchify'. Note that we
@@ -88,50 +92,32 @@ function createSyncServer() {
 }
 
 /**
+ * Creates a Karma test runner with the given 'mode'.
+ */
+function createTestRunner(mode) {
+	return function() {
+		return gulp.src('test/**/*.js')
+
+			// Possible modes are 'run' and 'watch'.
+			.pipe(karma({ action: mode, configFile: 'karma.conf.js' }))
+
+			// Any errors should be thrown as to not silence them...
+			.on('error', function(err) { throw err; });
+	}
+}
+
+/**
+ * Unit tests.
+ */
+gulp.task('test', createTestRunner(mode));
+
+/**
  * Lint the source code.
  */
 gulp.task('lint', function() {
 	return gulp.src('src/scripts/**/*.js')
 		.pipe(eslint())
 		.pipe(eslint.format());
-});
-
-/**
- * Unit tests.
- */
-gulp.task('test', function() {
-	// When running the tests, we need to include 'babel/register' so that ES6
-	// modules work in our environment.
-	require('babel/register');
-
-	// Also require the 'polyfill', since in the application it's normally
-	// required in the 'app.js' module.
-	require('babel/polyfill');
-
-	/**
-	 * Require the module with the given name. This will 'require' it relative
-	 * to the current working directory, so tests should be ran from the root
-	 * folder.
-	 */
-	function reqmod(name) {
-		return require(path.join(process.cwd(), '/src/scripts/', name));
-	}
-
-	// For testing purposes, we expose the 'reqmod' function in global scope.
-	global.reqmod = reqmod;
-
-	// Also for testing React components we need to have JSDOM setup.
-	var jsdom = require('jsdom').jsdom;
-
-	global.document  = jsdom('<html><body><div></div></body></html>');
-	global.window    = global.document.parentWindow;
-	global.navigator = global.window.navigator;
-
-	return gulp.src('test/**/*.js')
-		.pipe(mocha({
-			globals: { should: require('should') },
-			reporter: 'spec'
-		}));
 });
 
 /**
