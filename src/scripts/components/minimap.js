@@ -47,11 +47,12 @@ export default React.createClass({
 		board: (props) => {
 			if(!props.board instanceof Board) throw new Error();
 		},
-		show: React.PropTypes.bool
+		show: React.PropTypes.bool,
+		isTicketSized: React.PropTypes.bool
 	},
 
 	getDefaultProps() {
-		return { show: true }
+		return { show: true, isTicketSized: true }
 	},
 
 	shouldComponentUpdate(nextProps) {
@@ -99,7 +100,17 @@ export default React.createClass({
 
 		let width   = Ticket.Width;
 		let height  = (size.height / size.width) * width;
-		let scaling = (height > width) ? (width / height) : 1.0;
+		let scaling = 1.0;
+
+		if(height > width) {
+
+			if(!this.props.isTicketSized) {
+				scaling = width / height;
+			} else {
+				scaling = board.size.width / board.size.height;
+			}
+
+		}
 
 		let background    = Board.Background[board.background];
 		let backgroundURL = background.url
