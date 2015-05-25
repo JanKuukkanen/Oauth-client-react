@@ -102,7 +102,7 @@ export default React.createClass({
 		let height  = (size.height / size.width) * width;
 		let scaling = 1.0;
 
-		if(height > width) {
+		if(board.size.height > board.size.width) {
 
 			if(!this.props.isTicketSized) {
 				scaling = width / height;
@@ -111,7 +111,6 @@ export default React.createClass({
 			}
 
 		}
-
 		let background    = Board.Background[board.background];
 		let backgroundURL = background.url
 			? `url(${background.url})` : '';

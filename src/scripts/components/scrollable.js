@@ -104,7 +104,7 @@ export default React.createClass({
 			minimap: {
 				show:  this.props.minimap,
 				board: this.props.board,
-				isTicketSized: false
+				isTicketSized: true
 			}
 		}
 		return (

@@ -79,7 +79,8 @@ export default React.createClass({
 						valueLink={this.linkState('name')} autoFocus={true} />
 
 					<Minimap
-						board={board} />
+						board={board}
+						isTicketSized={true} />
 
 					<BackgroundSelect background={this.linkState('background')}
 						customBackground={this.linkState('customBackground')} />
