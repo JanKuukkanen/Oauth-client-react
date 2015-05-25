@@ -70,7 +70,8 @@ export default React.createClass({
 						valueLink={this.linkState('name')} autoFocus={true} />
 
 					<BackgroundSelect background={this.linkState('background')}
-						customBackground={this.linkState('customBackground')} />
+						customBackground={this.linkState('customBackground')}
+						board={this.props.board}/>
 
 					<label htmlFor="dialog-size-wrapper">Board size (measured in tickets)</label>
 					<section className="dialog-size-wrapper">
