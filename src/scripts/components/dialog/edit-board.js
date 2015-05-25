@@ -33,13 +33,12 @@ export default React.createClass({
 		event.preventDefault();
 
 		let size = {
-			"width": this.state.width,
-			"height": this.state.height
+			width: this.state.width,
+			height: this.state.height
 		};
 
 
 		if (!isNaN(size.width) && !isNaN(size.height)) {
-
 			if (size.width < 1 || size.height < 1) {
 				size.width = this.props.board.size.width;
 				size.height = this.props.board.size.height;
@@ -57,8 +56,6 @@ export default React.createClass({
 	},
 
 	render() {
-
-		//this.props.board.background = this.linkState('background');
 		let board = this.props.board.set('size',
 			new Board.Size({ width: this.state.width, height: this.state.height }));
 
