@@ -1,5 +1,5 @@
-let Ticket  = reqmod('models/ticket');
-let gridify = reqmod('utils/gridify');
+import Ticket  from 'models/ticket';
+import gridify from 'utils/gridify';
 
 /**
  * The 'gridify' utility snaps positions to an imaginary grid based on the

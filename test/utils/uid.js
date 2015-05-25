@@ -1,4 +1,4 @@
-let uid = reqmod('utils/uid');
+import uid from 'utils/uid';
 
 /**
  * The 'uid' utility generates a random ID, which can be used as a preliminary
