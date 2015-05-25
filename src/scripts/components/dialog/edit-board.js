@@ -58,8 +58,12 @@ export default React.createClass({
 	},
 
 	render() {
-		let board = this.props.board.set('size',
-			new Board.Size({ width: this.state.width, height: this.state.height }));
+		let board = this.props.board;
+
+		if (this.state.width != "" && this.state.height != "") {
+			board = this.props.board.set('size',
+				new Board.Size({width: this.state.width, height: this.state.height}));
+		}
 
 		if(this.linkState('background')) {
 			board = board.set('background', this.linkState('background').value);
