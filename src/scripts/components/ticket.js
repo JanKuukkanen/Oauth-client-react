@@ -113,14 +113,14 @@ export default React.createClass({
 	},
 
 	tween(to, from, duration) {
-			['x', 'y'].map((axis) => {
-				let tweeningOpts = {
-					duration: duration || 500,
-					endValue: to[axis],
-					beginValue: from ? from[axis] : null
-				}
-				return this.tweenState(axis, tweeningOpts);
-			});
+		['x', 'y'].map((axis) => {
+			let tweeningOpts = {
+				duration: duration || 500,
+				endValue: to[axis],
+				beginValue: from ? from[axis] : null
+			}
+			return this.tweenState(axis, tweeningOpts);
+		});
 	},
 
 	render() {
