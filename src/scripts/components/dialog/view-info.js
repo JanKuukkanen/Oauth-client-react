@@ -10,7 +10,7 @@ export default React.createClass({
 
 	render() {
 		return (
-			<Dialog className="info" info="true"
+			<Dialog className="info" info
 					onDismiss={this.props.onDismiss}>
 				<Carousel className="infocarousel">
 					<div className="slide1">

@@ -14,11 +14,12 @@ import InfoView  from  './dialog/view-info';
  */
 export default React.createClass({
 	propTypes: {
-		title: React.PropTypes.string.isRequired
+		title: React.PropTypes.string.isRequired,
+	
 	},
 
 	getInitialState() {
-		return { dropdown: false, feedback: false }
+		return { dropdown: false, feedback: false}
 	},
 
 	showWorkspace() {
@@ -29,13 +30,18 @@ export default React.createClass({
 		this.setState({ dropdown: !this.state.dropdown });
 	},
 	toggleInfoView() {
-		this.setState({ infoView: !this.state.infoView });
+		this.setState({ infoactive: !this.state.infoactive });
 	},
 
 	render: function() {
 		let infoDialog = null;
 
-		if(this.state.infoView) {
+		let ibuttonClass = React.addons.classSet({
+			infobutton: true,
+			active:  this.state.infoactive
+		});
+
+		if(this.state.infoactive) {
 			infoDialog = <InfoView onDismiss={this.toggleInfoView} />
         }
 
@@ -47,6 +53,7 @@ export default React.createClass({
 					<UserVoice>
 						<span className="fa fa-fw fa-bullhorn" />
 						Feedback
+
 					</UserVoice>
 				)
 			},
@@ -65,10 +72,11 @@ export default React.createClass({
 		];
 		return (
 			<nav className="nav">
+				
 				<img className="logo" src="/dist/assets/img/logo.svg"
 					onClick={this.showWorkspace} />
 				<h1 className="title">{this.props.title}</h1>
-				<div className="infobutton" onClick={this.toggleInfoView}>
+				<div onClick={this.toggleInfoView} className={ibuttonClass}>
 					<span className="fa fa-fw fa-info"></span>
 				</div>
 				<div className="avatar" onClick={this.toggleDropdown}>
@@ -76,8 +84,8 @@ export default React.createClass({
 				</div>
 				<Dropdown show={this.state.dropdown} items={items} />
 				{infoDialog}
-
 			</nav>
+
 		);
 	}
 });
