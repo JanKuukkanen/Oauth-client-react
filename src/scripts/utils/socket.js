@@ -61,6 +61,7 @@ function connect(opts = {}) {
 		// This is a bit of a hack in order to make sure we get new data if we
 		// disconnect and regain connection later on.
 		socket.on('reconnect', () => {
+			rooms = [ ];
 			BoardAction.load();
 		});
 	});

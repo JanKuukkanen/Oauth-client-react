@@ -27,6 +27,13 @@ export default React.createClass({
 
     share() {
         BoardAction.generateAccessCode({ id: this.props.board.id });
+
+        window.setTimeout(this.highlight, 50);
+    },
+
+    highlight() {
+        let input = this.refs.shareInput.getDOMNode();
+        input.setSelectionRange(0, input.value.length);
     },
 
     render() {
@@ -57,7 +64,9 @@ export default React.createClass({
 
                     <label htmlFor="board-share">Shared link</label>
                     <section className="input-group">
-                        <input name="board-share" placeholder="Shared link"
+                        <input ref="shareInput"
+                               onClick={this.highlight}
+                               name="board-share" placeholder="Shared link"
                                readOnly={true} value={sharedURL} tabIndex={-1}/>
                         {shareButton}
                     </section>

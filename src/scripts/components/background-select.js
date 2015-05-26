@@ -1,5 +1,6 @@
-import React from 'react/addons';
-import Board from '../models/board';
+import React   from 'react/addons';
+import Board   from '../models/board';
+import Minimap from './minimap';
 
 /**
  *
@@ -39,14 +40,8 @@ export default React.createClass({
 			backgroundURL = this.props.customBackground.value;
 		}
 
-		let preview = backgroundURL !== null && backgroundURL !== undefined
-			? <img src={backgroundURL} /> : <div className="blanko" />;
-
 		return (
 			<div className="background-select">
-				<div className="value">
-					{preview}
-				</div>
 				<label>Board Background</label>
 				<div className="select">
 					<select onChange={this.onChange}
