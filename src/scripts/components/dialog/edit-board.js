@@ -58,8 +58,12 @@ export default React.createClass({
 	},
 
 	render() {
-		let board = this.props.board.set('size',
-			new Board.Size({ width: this.state.width, height: this.state.height }));
+		let board = this.props.board;
+
+		if (this.state.width != "" && this.state.height != "") {
+			board = this.props.board.set('size',
+				new Board.Size({width: this.state.width, height: this.state.height}));
+		}
 
 		if(this.linkState('background')) {
 			board = board.set('background', this.linkState('background').value);
@@ -69,9 +73,9 @@ export default React.createClass({
 			value: this.state.width,
 			requestChange: (val) => {
 
-				let reg = new RegExp('^[0-9]+$');
+				let reg = new RegExp('^[1-9]+[0-9]*$');
 
-				if(reg.test(val)) {
+				if((reg.test(val) || val === "") && val.length <= 2) {
 					this.setState({width: val});
 				}
 			}
@@ -81,9 +85,9 @@ export default React.createClass({
 			value: this.state.height,
 			requestChange: (val) => {
 
-				let reg = new RegExp('^[0-9]+$');
+				let reg = new RegExp('^[1-9]+[0-9]*$');
 
-				if (reg.test(val)) {
+				if ((reg.test(val) || val === "") && val.length <= 2) {
 					this.setState({height: val});
 				}
 			}
@@ -115,7 +119,9 @@ export default React.createClass({
 								<input name="board-width"
                                        placeholder="Board Width"
                                        valueLink={widthValueLink}
-                                       type="number" min="1" />
+                                       type="number"
+									   max="99"
+									   min="1" />
 						</section>
 
 						<section className="times-wrapper">
@@ -127,7 +133,9 @@ export default React.createClass({
 								<input name="board-height"
                                        placeholder="Board Height"
                                        valueLink={heightValueLink}
-                                       type="number" min="1"/>
+                                       type="number"
+									   max="99"
+									   min="1" />
 						</section>
                 </section>
 
