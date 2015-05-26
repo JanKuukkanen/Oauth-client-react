@@ -40,6 +40,10 @@ export default React.createClass({
 			infobutton: true,
 			active:  this.state.infoactive
 		});
+		let ubuttonClass = React.addons.classSet({
+			avatar: true,
+			active:  this.state.dropdown
+		});
 
 		if(this.state.infoactive) {
 			infoDialog = <InfoView onDismiss={this.toggleInfoView} />
@@ -79,7 +83,7 @@ export default React.createClass({
 				<div onClick={this.toggleInfoView} className={ibuttonClass}>
 					<span className="fa fa-fw fa-info"></span>
 				</div>
-				<div className="avatar" onClick={this.toggleDropdown}>
+				<div onClick={this.toggleDropdown} className={ubuttonClass}>
 					<span className="fa fa-fw fa-user"></span>
 				</div>
 				<Dropdown show={this.state.dropdown} items={items} />
