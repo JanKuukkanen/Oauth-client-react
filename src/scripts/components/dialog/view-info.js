@@ -8,6 +8,21 @@ import Dialog	from '../../components/dialog';
  */
 export default React.createClass({
 
+	componentDidMount() {
+		let el = document.getElementById('application');
+
+		el.className = 'info-view-active';
+
+		// el.addClass('info-view-active')
+	},
+
+	componentWillUnmount() {
+		let el = document.getElementById('application');
+
+		// el.removeClass('info-view-active')
+		el.className = '';
+	},
+
 	render() {
 		return (
 			<Dialog className="info" info
