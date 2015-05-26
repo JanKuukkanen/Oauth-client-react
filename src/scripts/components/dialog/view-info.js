@@ -7,28 +7,39 @@ import Dialog	from '../../components/dialog';
  *
  */
 export default React.createClass({
+	mixins: [ Carousel.ControllerMixin ],
 
 	componentDidMount() {
-		let el = document.getElementById('application');
+		this.el = document.getElementById('application');
+		this.el.className = 'info-view-active';
 
-		el.className = 'info-view-active';
 
-		// el.addClass('info-view-active')
+
+	//	console.table(this.state);//.carousel
+
 	},
 
-	componentWillUnmount() {
-		let el = document.getElementById('application');
 
-		// el.removeClass('info-view-active')
-		el.className = '';
+	componentWillUnmount() {
+		this.el.className = '';
+	},
+
+	componentDidUpdate(){
+
+		this.el.className =
+		this.state.carousels.carousel.state.currentSlide === 0
+		? 'info-view-active info-view-slide-1' : '';
+		
 	},
 
 	render() {
+
 		return (
 			<Dialog className="info" info
 					onDismiss={this.props.onDismiss}>
-				<Carousel className="infocarousel">
-					<div className="slide1">
+				<Carousel ref="carousel" className="infocarousel"
+					data={this.setCarouselData.bind(this, 'carousel')}>
+					<div ref="firstSlide" className="slides slide1">
 						<p>Go Back</p>
 						<p>Edit board</p>
 						<p>Share</p>
@@ -43,5 +54,6 @@ export default React.createClass({
 				</Carousel>
 			</Dialog>
 		);
+	
 	}
 });
