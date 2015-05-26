@@ -7,6 +7,7 @@ import BroadcastAction from '../actions/broadcast';
 
 import Dropdown  from '../components/dropdown';
 import UserVoice from '../components/user-voice';
+import InfoView  from  './dialog/view-info';
 
 /**
  *
@@ -27,8 +28,17 @@ export default React.createClass({
 	toggleDropdown() {
 		this.setState({ dropdown: !this.state.dropdown });
 	},
+	toggleInfoView() {
+		this.setState({ infoView: !this.state.infoView });
+	},
 
 	render: function() {
+		let infoDialog = null;
+
+		if(this.state.infoView) {
+			infoDialog = <InfoView onDismiss={this.toggleInfoView} />
+        }
+
 		let items = [
 			{ icon: 'user',     content: 'Profile',      disabled: true  },
 			{ icon: 'language', content: 'Localization', disabled: true  },
@@ -58,10 +68,15 @@ export default React.createClass({
 				<img className="logo" src="/dist/assets/img/logo.svg"
 					onClick={this.showWorkspace} />
 				<h1 className="title">{this.props.title}</h1>
+				<div className="infobutton" onClick={this.toggleInfoView}>
+					<span className="fa fa-fw fa-info"></span>
+				</div>
 				<div className="avatar" onClick={this.toggleDropdown}>
 					<span className="fa fa-fw fa-user"></span>
 				</div>
 				<Dropdown show={this.state.dropdown} items={items} />
+				{infoDialog}
+
 			</nav>
 		);
 	}

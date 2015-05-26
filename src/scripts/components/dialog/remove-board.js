@@ -40,7 +40,7 @@ export default React.createClass({
 			: <strong>{this.props.board.name}</strong>;
 
 		return (
-			<Dialog className="dialog-remove-board" onDismiss={dismiss}>
+			<Dialog source="removeboard" className="dialog-remove-board" onDismiss={dismiss}>
 				<section className="dialog-header">
 					Remove Board
 				</section>

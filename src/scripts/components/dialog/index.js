@@ -8,6 +8,7 @@ export default React.createClass({
 	mixins: [ React.addons.PureRenderMixin ],
 
 	propTypes: {
+		info: React.PropTypes.bool,
 		className: React.PropTypes.string,
 		onDismiss: React.PropTypes.func
 	},
@@ -15,6 +16,7 @@ export default React.createClass({
 	getDefaultProps() {
 		return {
 			className: '',
+			info: false,
 			onDismiss: () => {}
 		}
 	},
@@ -58,12 +60,22 @@ export default React.createClass({
 	},
 
 	renderDialog() {
+
+		let form = null;
+		form = !this.props.info ?
+			<form className={`dialog ${this.props.className}`}
+					onSubmit={this.onSubmit}>
+				{this.props.children}
+			</form> :
+			<div className={`${this.props.className}`}
+					onSubmit={this.onSubmit}>
+				{this.props.children}
+			</div>
+		;
+
 		return (
 			<div className="dialog-overlay">
-				<form className={`dialog ${this.props.className}`}
-						onSubmit={this.onSubmit}>
-					{this.props.children}
-				</form>
+				{form}
 			</div>
 		);
 	}
