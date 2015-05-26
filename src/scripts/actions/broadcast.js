@@ -20,7 +20,7 @@ export default flux.actionCreator({
 			);
 
 			// Having this here is a bit hackish, but whatever tbh...
-			if(broadcast.statusCode === 401 || broadcast.statusCode === 400) {
+			if(broadcast.statusCode === 401) {
 				this.dispatch(Action.User.Logout);
 			}
 		}
