@@ -33,8 +33,10 @@ export default React.createClass({
 		this.setState({ infoactive: !this.state.infoactive });
 	},
 
+
 	render: function() {
-		let infoDialog = null;
+		let infoDialog =  !this.state.infoactive ? 
+		null : <InfoView onDismiss={this.toggleInfoView} />;
 
 		let ibuttonClass = React.addons.classSet({
 			infobutton: true,
@@ -44,10 +46,6 @@ export default React.createClass({
 			avatar: true,
 			active:  this.state.dropdown
 		});
-
-		if(this.state.infoactive) {
-			infoDialog = <InfoView onDismiss={this.toggleInfoView} />
-        }
 
 		let items = [
 			{ icon: 'user',     content: 'Profile',      disabled: true  },
@@ -75,7 +73,7 @@ export default React.createClass({
 			}
 		];
 		return (
-			<nav className="nav">
+			<nav id="nav" className="nav">
 				
 				<img className="logo" src="/dist/assets/img/logo.svg"
 					onClick={this.showWorkspace} />

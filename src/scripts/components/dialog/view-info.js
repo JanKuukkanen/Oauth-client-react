@@ -13,22 +13,24 @@ export default React.createClass({
 		this.el = document.getElementById('application');
 		this.el.className = 'info-view-active';
 
-
-
-	//	console.table(this.state);//.carousel
-
+		this.nav = document.getElementById('nav');
+		this.nav.className = 'nav';
 	},
 
 
 	componentWillUnmount() {
 		this.el.className = '';
+		this.nav.className = 'nav';
 	},
 
 	componentDidUpdate(){
 
 		this.el.className =
-		this.state.carousels.carousel.state.currentSlide === 0
-		? 'info-view-active info-view-slide-1' : '';
+		`info-view-active slide-${this.state.carousels.carousel.state.currentSlide}`;
+
+		this.nav.className =
+		this.state.carousels.carousel.state.currentSlide === 1
+		? 'nav user' : 'nav';
 		
 	},
 

@@ -2,9 +2,16 @@
  *
  */
 .info-view-active
-	.view-board
-		.controls
-			z-index: 10000
+	&.slide-0
+		.view-board
+			.controls
+				z-index: 10000
+
+	&.slide-1
+		.nav
+			.avatar	
+				z-index: 10000
+				background-color: $neptune
 
 .info
 	width:      100% 
