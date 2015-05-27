@@ -14,8 +14,7 @@ import InfoView  from  './dialog/view-info';
  */
 export default React.createClass({
 	propTypes: {
-		title: React.PropTypes.string.isRequired,
-	
+		title: React.PropTypes.string.isRequired,	
 	},
 
 	getInitialState() {
@@ -35,8 +34,15 @@ export default React.createClass({
 
 
 	render: function() {
-		let infoDialog =  !this.state.infoactive ? 
-		null : <InfoView onDismiss={this.toggleInfoView} />;
+
+		let infoDialog=null;
+		let activeclick=null;
+
+		!this.state.infoactive ? 
+		(infoDialog = null, activeclick = this.toggleDropdown)
+		 : (infoDialog = <InfoView onDismiss={this.toggleInfoView} />
+		 	, activeclick = () =>{});
+		 console.dir(activeclick);
 
 		let ibuttonClass = React.addons.classSet({
 			infobutton: true,
@@ -81,7 +87,7 @@ export default React.createClass({
 				<div onClick={this.toggleInfoView} className={ibuttonClass}>
 					<span className="fa fa-fw fa-info"></span>
 				</div>
-				<div onClick={this.toggleDropdown} className={ubuttonClass}>
+				<div id="avatar" onClick={activeclick} className={ubuttonClass}>
 					<span className="fa fa-fw fa-user"></span>
 				</div>
 				<Dropdown show={this.state.dropdown} items={items} />
