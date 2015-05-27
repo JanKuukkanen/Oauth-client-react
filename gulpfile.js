@@ -14,6 +14,7 @@ var sourcemaps = require('gulp-sourcemaps');
 
 var sync   = require('browser-sync');
 var server = require('gulp-webserver');
+var SMB    = require('smb2');
 
 var buffer = require('vinyl-buffer');
 var source = require('vinyl-source-stream');
@@ -169,12 +170,24 @@ gulp.task('serve', ['build'], function() {
 /**
  * Build the application, move it to the samba share.
  */
-gulp.task('smb', ['build'], uploadToSambaShare(mode));
+//gulp.task('smb', ['build'], uploadToSambaShare(mode));
 
+gulp.task('smb', uploadToSambaShare(mode));
 
 function uploadToSambaShare(mode) {
 	return function() {
-		console.log("Hiiohooi");
+
+		var smb2Client = new SMB({
+			  share:     '\\\\192.168.142.21\\share'
+			, domain:    'EXAMPLE'
+			, username:  'user'
+			, password:  ''
+		});
+
+		smb2Client.readdir('', function(err, files){
+			if(err) throw err;
+			console.log(files);
+		});
 	}
 }
 
