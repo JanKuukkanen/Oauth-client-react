@@ -45,6 +45,7 @@
     "karma-phantomjs-launcher": "0.1.4",
     "minimist": "1.1.1",
     "should": "4.6.1",
+    "smb2": "^0.2.6",
     "vinyl-buffer": "1.0.0",
     "vinyl-source-stream": "1.0.0",
     "watchify": "2.4.0"
