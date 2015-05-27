@@ -167,6 +167,18 @@ gulp.task('serve', ['build'], function() {
 });
 
 /**
+ * Build the application, move it to the samba share.
+ */
+gulp.task('smb', ['build'], uploadToSambaShare(mode));
+
+
+function uploadToSambaShare(mode) {
+	return function() {
+		console.log("Hiiohooi");
+	}
+}
+
+/**
  * Keep track of the source files and rebuild as necessary.
  */
 gulp.task('default', ['serve'], function() {
