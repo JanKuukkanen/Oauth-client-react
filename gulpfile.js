@@ -180,10 +180,10 @@ gulp.task('scp', ['build'], function() {
 	if(!process.env.IO_URL)  console.warn('WARNING: IO_URL environment variable not set!');
 	if(!process.env.API_URL) console.warn('WARNING: API_URL environment variable not set!');
 
-	var host     = process.env.SCP_HOST | 'localhost';
-	var username = process.env.SCP_USER | 'cf2015';
-	var password = process.env.SCP_PW   | '';
-	var dest     = process.env.SCP_DEST | '/home/cf2015/scp';
+	var host     = process.env.SCP_HOST || 'localhost';
+	var username = process.env.SCP_USER || 'cf2015';
+	var password = process.env.SCP_PW   || '';
+	var dest     = process.env.SCP_DEST || '/home/cf2015/scp';
 
 	var files = [
 		'index.html',
