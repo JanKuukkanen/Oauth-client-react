@@ -195,14 +195,19 @@ function uploadToSambaShare(mode) {
  * Build the application, move it with scp.
  */
 gulp.task('scp', ['build'], function() {
+	var host     = args['host'] ? args['host'] : "192.168.142.12";
+	var username = args['user'] ? args['user'] : "cf2015";
+	var password = args['pw']   ? args['pw']   : "salakalasana";
+	var dest     = args['dest'] ? args['dest'] : "/home/cf2015/scp";
+
 	return gulp.src(['*.html','./dist/app.js', './dist/app.css',
 		'./dist/assets/img/logo.svg', './dist/assets/img/bg/*.png'],
 		{ "base" : "." })
 		.pipe(scp({
-			host: '192.168.142.12',
-			username: 'cf2015',
-			password: 'salakalasana',
-			dest: '/home/cf2015/scp'
+			host: host,
+			username: username,
+			password: password,
+			dest: dest
 		}))
 		.on('error', function(err) {
 			console.log(err);
