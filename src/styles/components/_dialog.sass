@@ -22,8 +22,7 @@
 		background-color: $white
 
 		.dialog-header
-			padding: 16px
-
+			padding:        16px
 			font-size:      18px
 			letter-spacing: 1px
 
@@ -38,6 +37,46 @@
 
 			@include display(flex)
 			@include flex-direction(column)
+
+		.preview-container
+			height:   116px
+			padding:  12px
+			overflow: hidden
+
+			.minimap
+				margin: 0 auto
+				@include position(relative, 0px null null 0px)
+
+		.dialog-size-wrapper
+			@include display(flex)
+			@include flex-direction(row)
+
+			border-radius:    5px
+			background-color: $gallery
+			margin-top: 4px
+			width:      100%
+
+			.dialog-size
+				padding-top:   4px
+				padding-left:  4px
+				padding-right: 4px
+				display:       inline-block
+				width:         45%
+
+				input
+					background-color: $white
+					width:            100%
+					-moz-appearance: textfield
+				input[type="number"]::-webkit-inner-spin-button
+					-webkit-appearance: none
+					margin:             0
+
+			.times-wrapper
+				color:      $silver-chalice
+				margin-top: 22px
+				text-align: center
+				font-size:  130%
+				width:      10%
 
 		.dialog-footer
 			padding: 8px 16px 16px 16px

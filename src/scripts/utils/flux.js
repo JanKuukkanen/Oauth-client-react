@@ -1,4 +1,4 @@
-import EventEmitter from 'events';
+import events from 'event-emitter';
 
 /**
  * A minimal wrapper around the basic flux concepts.
@@ -11,7 +11,7 @@ export default {
 	actionCreator: actionCreator
 }
 
-const Dispatcher = new EventEmitter().setMaxListeners(0);
+const dispatcher = events();
 
 const CHANGE_EVENT = 'change';
 const ACTION_EVENT = 'action';
@@ -20,18 +20,18 @@ const ACTION_EVENT = 'action';
  * Create a 'flux' store.
  */
 function store(blueprint) {
-	let emitter = new EventEmitter().setMaxListeners(0);
+	let emitter = events();
 
 	let proto = {
 		addChangeListener(listener) {
-			return emitter.addListener(CHANGE_EVENT, listener);
+			return emitter.on(CHANGE_EVENT, listener);
 		},
 		removeChangeListener(listener) {
-			return emitter.removeListener(CHANGE_EVENT, listener);
+			return emitter.off(CHANGE_EVENT, listener);
 		}
 	}
 
-	Dispatcher.addListener(ACTION_EVENT, (action) => {
+	dispatcher.on(ACTION_EVENT, (action) => {
 		if(blueprint.handlers[action.type]) {
 			blueprint.handlers[action.type](action.payload);
 			if(!action.options.silent) {
@@ -76,7 +76,7 @@ function actions(action, prefix = '') {
  */
 function actionCreator(blueprint) {
 	function dispatch(action, payload = {}, options = {}) {
-		Dispatcher.emit(ACTION_EVENT, {
+		dispatcher.emit(ACTION_EVENT, {
 			type: action, payload: payload, options: options
 		});
 	}
