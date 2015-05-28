@@ -12,6 +12,7 @@ var eslint     = require('gulp-eslint');
 var uglify     = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 
+var scp    = require('gulp-scp2');
 var sync   = require('browser-sync');
 var server = require('gulp-webserver');
 var SMB    = require('smb2');
@@ -170,7 +171,6 @@ gulp.task('serve', ['build'], function() {
 /**
  * Build the application, move it to the samba share.
  */
-//gulp.task('smb', ['build'], uploadToSambaShare(mode));
 
 gulp.task('smb', uploadToSambaShare(mode));
 
@@ -192,6 +192,24 @@ function uploadToSambaShare(mode) {
 }
 
 /**
+ * Build the application, move it with scp.
+ */
+gulp.task('scp', ['build'], function() {
+	return gulp.src(['*.html','./dist/app.js', './dist/app.css',
+		'./dist/assets/img/logo.svg', './dist/assets/img/bg/*.png'],
+		{ "base" : "." })
+		.pipe(scp({
+			host: '192.168.142.12',
+			username: 'cf2015',
+			password: 'salakalasana',
+			dest: '/home/cf2015/scp'
+		}))
+		.on('error', function(err) {
+			console.log(err);
+		});
+});
+
+/**
  * Keep track of the source files and rebuild as necessary.
  */
 gulp.task('default', ['serve'], function() {
@@ -203,3 +221,5 @@ gulp.task('default', ['serve'], function() {
 	}
 	else gulp.watch('./src/scripts/**/*.js', [ 'build-js' ]);
 });
+
+
