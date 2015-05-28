@@ -173,12 +173,11 @@ gulp.task('serve', ['build'], function() {
  * Takes SSH host, username, password and folder to move the app as parameters
  *
  * For example: gulp scp --host=localhost --user=moi --pw=kaikki --dest=/home/
- * Remember to set API, IO  and HOSTNAME env variables to point to right machine!!
+ * Remember to set API and IO env variables to point to right machine!
  *
- * IO_URL=http://192.168.142.21:9001 API_URL=http://192.168.142.21:9002/api HOSTNAME=192.168.142.21 gulp scp
+ * IO_URL=http://192.168.142.21:9001 API_URL=http://192.168.142.21:9002/api  gulp scp
  */
 gulp.task('scp', ['build'], function() {
-	if (!process.env.HOSTNAME) console.warn("WARNING: HOSTNAME environment variable not set!");
 	if (!process.env.IO_URL)   console.warn("WARNING: IO_URL environment variable not set!");
 	if (!process.env.API_URL)  console.warn("WARNING: API_URL environment variable not set!");
 
