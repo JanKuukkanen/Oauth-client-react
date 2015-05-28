@@ -12,6 +12,7 @@ var eslint     = require('gulp-eslint');
 var uglify     = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 
+var scp    = require('gulp-scp2');
 var sync   = require('browser-sync');
 var server = require('gulp-webserver');
 
@@ -164,6 +165,44 @@ gulp.task('serve', ['build'], function() {
 		fallback:   'index.html',
 		livereload: true
 	}));
+});
+
+/**
+ * Build the application, move it with scp.
+ * Takes SSH host, username, password and folder to move the app as parameters
+ *
+ * For example:  SCP_HOST=localhost SCP_USER=moi SCP_PW=kaikki SCP_DEST=/home/ gulp scp
+ * Remember to set API and IO env variables to point to right machine!
+ *
+ * IO_URL=http://192.168.142.21:9001 API_URL=http://192.168.142.21:9002/api [.. other stuff ..] gulp scp
+ */
+gulp.task('scp', ['build'], function() {
+	if(!process.env.IO_URL)  console.warn('WARNING: IO_URL environment variable not set!');
+	if(!process.env.API_URL) console.warn('WARNING: API_URL environment variable not set!');
+
+	var host     = process.env.SCP_HOST || 'localhost';
+	var username = process.env.SCP_USER || 'cf2015';
+	var password = process.env.SCP_PW   || '';
+	var dest     = process.env.SCP_DEST || '/home/cf2015/scp';
+
+	var files = [
+		'index.html',
+		'./dist/app.js',
+		'./dist/app.css',
+		'./dist/assets/img/logo.svg',
+		'./dist/assets/img/bg/*.png'
+	];
+
+	return gulp.src(files, { base: '.' })
+		.pipe(scp({
+			host: host,
+			username: username,
+			password: password,
+			dest: dest
+		}))
+		.on('error', function(err) {
+			console.log(err);
+		});
 });
 
 /**
