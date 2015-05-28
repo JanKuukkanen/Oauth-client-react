@@ -177,13 +177,13 @@ gulp.task('serve', ['build'], function() {
  * IO_URL=http://192.168.142.21:9001 API_URL=http://192.168.142.21:9002/api [.. other stuff ..] gulp scp
  */
 gulp.task('scp', ['build'], function() {
-	if(!process.env.IO_URL)  console.warn("WARNING: IO_URL environment variable not set!");
-	if(!process.env.API_URL) console.warn("WARNING: API_URL environment variable not set!");
+	if(!process.env.IO_URL)  console.warn('WARNING: IO_URL environment variable not set!');
+	if(!process.env.API_URL) console.warn('WARNING: API_URL environment variable not set!');
 
-	var host     = process.env.SCP_HOST ? process.env.SCP_HOST : "localhost";
-	var username = process.env.SCP_USER ? process.env.SCP_USER : "cf2015";
-	var password = process.env.SCP_PW   ? process.env.SCP_PW   : "";
-	var dest     = process.env.SCP_DEST ? process.env.SCP_DEST : "/home/cf2015/scp";
+	var host     = process.env.SCP_HOST | 'localhost';
+	var username = process.env.SCP_USER | 'cf2015';
+	var password = process.env.SCP_PW   | '';
+	var dest     = process.env.SCP_DEST | '/home/cf2015/scp';
 
 	var files = [
 		'index.html',
