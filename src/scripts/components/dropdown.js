@@ -53,7 +53,7 @@ export default React.createClass({
 
 	render() {
 		return !this.props.show ? null : (
-			<ul className="dropdown">
+			<ul className={`dropdown ${this.props.class}`}>
 				{this.props.items.map((item, index) => {
 					return <DropdownItem key={index} {...item} />;
 				})}
