@@ -214,11 +214,10 @@ gulp.task('scp', ['build'], function() {
 gulp.task('scp-matti', ['scp'], function() {
 	var msg = 'BrowserSync in use by user ';
 
-	if (process.env.USER) {
+	if(process.env.USER) {
 		msg += process.env.USER;
-	}
-	else {
-		msg += 'Some guy???';
+	} else {
+		msg += 'unknown user';
 	}
 	sendMessageToMatti(msg, 'en');
 });
