@@ -239,11 +239,12 @@ gulp.task('default', ['serve'], function() {
 
 /**
  * Send message to Matti TTS server.
+ * process.exit(0) hack because gulp doesn't like
+ * asynchronous stuff.
  */
 function sendMessageToMatti(content, language) {
-
 	var port    = process.env.MATTI_PORT || 1234;
-	var address = process.env.MATTI_ADDR || '192.168.142.12';
+	var address = process.env.MATTI_ADDR || '0.0.0.0';
 
 	var content = JSON.stringify({ 
 			 message:  content,
