@@ -211,7 +211,7 @@ gulp.task('scp', ['build'], function() {
  * Remember to set the MATTI_PORT and MATTI_ADDR environment variables,
  * along with the same variables you use with the regular SCP task.
  */
-gulp.task('scp-matti', ['scp'], function() {
+gulp.task('matti', ['scp'], function() {
 	var msg = 'BrowserSync in use by user ';
 
 	if(process.env.USER) {
