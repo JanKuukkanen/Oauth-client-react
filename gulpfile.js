@@ -247,7 +247,7 @@ function sendMessageToMatti(content, language) {
 
 	var content = JSON.stringify({ 
 			 message:  content,
-		     language: language
+			 language: language
 	});
 
 	var headers = {
