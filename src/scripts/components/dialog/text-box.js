@@ -1,5 +1,4 @@
 import React from 'react/addons';
-import Dropdown 	from '../dropdown';
 /**
  *
  */
@@ -34,35 +33,21 @@ const SingleBox = React.createClass({
 export default React.createClass({
 	propTypes: {
 		items: React.PropTypes.array,
-		currentSlide: React.PropTypes.number.isRequired
+		objects: React.PropTypes.array
+
 	},
 
 	getDefaultProps() {
-		return { items: [ ], currentSlide: 0}
+		return { items: [ ], objects: [ ]}
 	},
 
 	render() {
-		let dropitems = [
-			{ icon: 'user',     content: 'Profile'  },
-			{ icon: 'language', content: 'Localization'  },
-			{ icon: 'bullhorn', content: 'Feedback'  },
-			{ icon: 'sign-out', content: 'Logout'  }
-		];
-
-		let objects = [
-			[<Dropdown class='infodrop' show={true} items={dropitems} />, 'hejsan'], 
-		 	['asd', ' dsadsa'], 
-			['asd', ' dsadsa'], 
-			['asd', ' dsadsa'], 
-			['asd', ' dsadsa']
-		 ];
+		
 
 		return (
 
 			<div className="infospace">
-				{objects[this.props.currentSlide].map((item, index) => {
-					return item;
-				})}
+				{this.props.objects}
 				{this.props.items.map((item, index) => {
 					return <SingleBox key={index} {...item} />;
 				})}

@@ -2,6 +2,7 @@ import React		from 'react/addons';
 import Carousel		from 'nuka-carousel';
 import Dialog		from '../../components/dialog';
 import TextBoxes	from './text-box';
+import Dropdown 	from '../dropdown';
 
 /**
  *
@@ -49,25 +50,41 @@ export default React.createClass({
 				[{ title: 'Back', content: 'Here is the back button', class: 'pos-back' },
 			 	{ title: 'Edit Board', 	content: 'Edit board', class:'pos-edit' }]
 		};
+
+		let dropitems = [
+			{ icon: 'user',     content: 'Profile'  },
+			{ icon: 'language', content: 'Localization'  },
+			{ icon: 'bullhorn', content: 'Feedback'  },
+			{ icon: 'sign-out', content: 'Logout'  }
+		];
+
+		let objects = [
+			[<Dropdown class='infodrop' show={true} items={dropitems} />, 'hejsan'], 
+		 	['asd', ' dsadsa'], 
+			['asd', ' dsadsa'], 
+			['asd', ' dsadsa'], 
+			['asd', ' dsadsa']
+		 ];
+
 		return (
 			<Dialog className="info" info
 					onDismiss={this.props.onDismiss}>
 				<Carousel ref="carousel" className="infocarousel"
 					data={this.setCarouselData.bind(this, 'carousel')}>
 					<div>
-						<TextBoxes items={boxes.eka}/>
+						<TextBoxes items={boxes.eka} objects={objects[0]}/>
 					</div>
 					<div>
-						<TextBoxes items={boxes.toka} currentSlide={currentSlide}/>
+						<TextBoxes items={boxes.toka} objects={objects[1]}/>
 					</div>
 					<div>
-						<TextBoxes items={boxes.toka} currentSlide={currentSlide}/>
+						<TextBoxes items={boxes.toka} objects={objects[2]}/>
 					</div>
 					<div>
-						<TextBoxes items={boxes.toka} currentSlide={currentSlide}/>
+						<TextBoxes items={boxes.toka} objects={objects[3]}/>
 					</div>
 					<div>
-						<TextBoxes items={boxes.toka} currentSlide={currentSlide}/>
+						<TextBoxes items={boxes.toka} objects={objects[4]}/>
 					</div>
 					
 				</Carousel>
