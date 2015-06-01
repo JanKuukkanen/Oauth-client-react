@@ -81,5 +81,5 @@ If you want to push a notification to a Matti TTS server to alert users you're u
 	SCP_DEST='\home\helloworld\' \
 	MATTI_ADDR=192.168.0.1 \
 	MATTI_PORT=1234 \
-	gulp scp
+	gulp matti
 ```
