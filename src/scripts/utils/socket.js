@@ -12,9 +12,10 @@ export default {
 	disconnect: disconnect
 }
 
-const IO_URL     = process.env.IO_URL || 'http://localhost:9001';
-const JOIN_EVENT = 'board:join';
-const DATA_EVENT = 'board:event';
+const IO_URL        = process.env.IO_URL || 'http://localhost:9001';
+const IO_URL_PATH   = process.env.IO_URL_PATH || '/socket.io';
+const JOIN_EVENT    = 'board:join';
+const DATA_EVENT    = 'board:event';
 
 let rooms  = [ ];
 let socket = null;
@@ -37,7 +38,8 @@ function connect(opts = {}) {
 	let options = {
 		'query':                `access-token=${opts.token}`,
 		'multiplex':            false,
-		'force new connection': true
+		'force new connection': true,
+		'path':                 IO_URL_PATH
 	}
 	return new Promise((resolve) => {
 		if(socket && socket.connected) {

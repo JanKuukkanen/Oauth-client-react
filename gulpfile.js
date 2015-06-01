@@ -4,6 +4,7 @@ var fs   = require('fs');
 var url  = require('url');
 var path = require('path');
 var args = require('minimist')(process.argv);
+var http = require('http');
 
 var gulp       = require('gulp');
 var sass       = require('gulp-sass');
@@ -12,6 +13,7 @@ var eslint     = require('gulp-eslint');
 var uglify     = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 
+var scp    = require('gulp-scp2');
 var sync   = require('browser-sync');
 var server = require('gulp-webserver');
 
@@ -167,6 +169,60 @@ gulp.task('serve', ['build'], function() {
 });
 
 /**
+ * Build the application, move it with scp.
+ * Takes SSH host, username, password and folder to move the app as parameters
+ *
+ * For example:  SCP_HOST=localhost SCP_USER=moi SCP_PW=kaikki SCP_DEST=/home/ gulp scp
+ * Remember to set API and IO env variables to point to right machine!
+ *
+ * IO_URL=http://192.168.142.21:9001 API_URL=http://192.168.142.21:9002/api [.. other stuff ..] gulp scp
+ */
+gulp.task('scp', ['build'], function() {
+	if(!process.env.IO_URL)  console.warn('WARNING: IO_URL environment variable not set!');
+	if(!process.env.API_URL) console.warn('WARNING: API_URL environment variable not set!');
+
+	var host     = process.env.SCP_HOST || 'localhost';
+	var username = process.env.SCP_USER || 'cf2015';
+	var password = process.env.SCP_PW   || '';
+	var dest     = process.env.SCP_DEST || '/home/cf2015/scp';
+
+	var files = [
+		'index.html',
+		'./dist/app.js',
+		'./dist/app.css',
+		'./dist/assets/img/logo.svg',
+		'./dist/assets/img/bg/*.png'
+	];
+
+	return gulp.src(files, { base: '.' })
+		.pipe(scp({
+			host: host,
+			username: username,
+			password: password,
+			dest: dest
+		}))
+		.on('error', function(err) {
+			console.log(err);
+		});
+});
+
+/**
+ * Build the client, move it with scp, broadcast message to Matti.
+ * Remember to set the MATTI_PORT and MATTI_ADDR environment variables,
+ * along with the same variables you use with the regular SCP task.
+ */
+gulp.task('matti', ['scp'], function() {
+	var msg = 'BrowserSync in use by user ';
+
+	if(process.env.USER) {
+		msg += process.env.USER;
+	} else {
+		msg += 'unknown user';
+	}
+	sendMessageToMatti(msg, 'en');
+});
+
+/**
  * Keep track of the source files and rebuild as necessary.
  */
 gulp.task('default', ['serve'], function() {
@@ -178,3 +234,37 @@ gulp.task('default', ['serve'], function() {
 	}
 	else gulp.watch('./src/scripts/**/*.js', [ 'build-js' ]);
 });
+
+
+/**
+ * Send message to Matti TTS server.
+ * process.exit(0) hack because gulp doesn't like
+ * asynchronous stuff.
+ */
+function sendMessageToMatti(content, language) {
+	var port    = process.env.MATTI_PORT || 1234;
+	var address = process.env.MATTI_ADDR || '0.0.0.0';
+
+	var content = JSON.stringify({ 
+			 message:  content,
+			 language: language
+	});
+
+	var headers = {
+			'Content-Type'  : 'application/json',
+			'Content-length': content.length
+	}
+
+	var options = {
+			host:    address,
+			port:    port,
+			method: 'POST',
+			headers: headers
+	}
+
+	var req = http.request(options, function(res) {
+		process.exit(0);
+	});
+	req.write(content);
+	req.end();
+}
