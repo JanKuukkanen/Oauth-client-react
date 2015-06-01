@@ -13,17 +13,132 @@
 .infospace
 	height:100%
 	width:100%
-
+	z-index: 10100
+	position: relative
 .pos
-	border: 1px solid $white
+	border: 1px $white solid
+	display: block 
+	position: absolute
+	&:before
+		border-top: 2px solid $neptune
+		content: ' '
+		display: block
+		position: relative
+
+	p
+		margin: 5px
 
 	&.pos-back
-		background-color:$neptune
-
+		
+		top: 40px
+		left: 150px
+		&:before
+			width: 91px
+			right: 86px
+			top: 40px
+			transform: rotate(-25deg)
 
 	&.pos-edit
-		background-color:$voodoo
-
+		top: 100px
+		left: 150px	
+		&:before
+			width: 91px
+			right: 86px
+			top: 36px
+			transform: rotate(-17deg)
+	&.pos-share
+		top: 160px
+		left: 150px
+		&:before
+			width: 91px		
+			right: 86px
+			top: 36px
+			transform: rotate(-12deg)
+	&.pos-export
+		top: 220px
+		left: 150px
+		&:before
+			width: 91px		
+			right: 86px
+			top: 30px
+			transform: rotate(-6deg)
+	&.pos-magnet
+		top: 280px
+		left: 150px
+		&:before
+			width: 91px		
+			right: 86px
+			top: 24px
+			transform: rotate(1deg)
+	&.pos-minimap
+		top: 340px
+		left: 150px		
+		&:before
+			width: 91px		
+			right: 86px
+			top: 16px
+			transform: rotate(11deg)
+	&.pos-profile
+		right: 267px
+		top: 40px
+		position: absolute	
+	
+		&:after
+			border-top: 2px solid $neptune
+			content: ' '
+			display: block
+			position: relative
+			float: right
+			right: -87px
+			width: 91px
+			top: -10px
+			transform: rotate(23deg)
+	&.pos-localization
+		
+		top: 105px
+		position: absolute
+		right: 267px
+		margin-right: 0px
+		&:after
+			border-top: 2px solid $neptune
+			content: ' '
+			display: block
+			position: relative
+			float: right
+			right: -85px;
+			width: 86px;
+			top: -16px;
+			transform: rotate(13deg);
+	&.pos-feedback
+		
+		top: 165px
+		position: absolute
+		right: 267px
+		&:after
+			border-top: 2px solid $neptune
+			content: ' '
+			display: block
+			position: relative
+			float: right
+			right: -84px
+			width: 84px
+			top: -25px
+			transform: rotate(0deg)
+	&.pos-logout
+		
+		top: 225px
+		position: absolute
+		right: 267px
+		&:after
+			border-top: 2px solid $neptune
+			content: ' '
+			display: block
+			position: relative
+			float: right
+			right: -85px
+			width: 86px
+			top: -33px
+			transform: rotate(-13deg)
 .info
 	width:      100% 
 	height:     100% 
