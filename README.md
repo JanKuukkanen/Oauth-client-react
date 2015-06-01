@@ -54,3 +54,32 @@ own IP address.
 	API_URL=http://<MyIPHere>:9002/api \
 	gulp --use-watchify --use-browser-sync
 ```
+
+## Using the SCP and Matti integration
+
+If you want to move the distribution after building to a remote server, use the gulp SCP task, like so:
+
+```
+	IO_URL=http://<MyIPHere>:9001 \
+	API_URL=http://<MyIPHere>:9002/api \
+	SCP_HOST=192.168.0.0 \
+	SCP_USER=helloworld \
+	SCP_PW=secret_password \
+	SCP_DEST='\home\helloworld\' \
+	gulp scp
+```
+
+If you want to push a notification to a Matti TTS server to alert users you're using the device lab, use the gulp matti task, like so:
+
+
+```
+	IO_URL=http://<MyIPHere>:9001 \
+	API_URL=http://<MyIPHere>:9002/api \
+	SCP_HOST=192.168.0.0 \
+	SCP_USER=helloworld \
+	SCP_PW=secret_password \
+	SCP_DEST='\home\helloworld\' \
+	MATTI_ADDR=192.168.0.1 \
+	MATTI_PORT=1234 \
+	gulp matti
+```
