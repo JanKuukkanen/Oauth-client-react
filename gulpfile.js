@@ -4,6 +4,7 @@ var fs   = require('fs');
 var url  = require('url');
 var path = require('path');
 var args = require('minimist')(process.argv);
+var http = require('http');
 
 var gulp       = require('gulp');
 var sass       = require('gulp-sass');
@@ -206,6 +207,22 @@ gulp.task('scp', ['build'], function() {
 });
 
 /**
+ * Build the client, move it with scp, broadcast message to Matti.
+ * Remember to set the MATTI_PORT and MATTI_ADDR environment variables,
+ * along with the same variables you use with the regular SCP task.
+ */
+gulp.task('matti', ['scp'], function() {
+	var msg = 'BrowserSync in use by user ';
+
+	if(process.env.USER) {
+		msg += process.env.USER;
+	} else {
+		msg += 'unknown user';
+	}
+	sendMessageToMatti(msg, 'en');
+});
+
+/**
  * Keep track of the source files and rebuild as necessary.
  */
 gulp.task('default', ['serve'], function() {
@@ -217,3 +234,37 @@ gulp.task('default', ['serve'], function() {
 	}
 	else gulp.watch('./src/scripts/**/*.js', [ 'build-js' ]);
 });
+
+
+/**
+ * Send message to Matti TTS server.
+ * process.exit(0) hack because gulp doesn't like
+ * asynchronous stuff.
+ */
+function sendMessageToMatti(content, language) {
+	var port    = process.env.MATTI_PORT || 1234;
+	var address = process.env.MATTI_ADDR || '0.0.0.0';
+
+	var content = JSON.stringify({ 
+			 message:  content,
+			 language: language
+	});
+
+	var headers = {
+			'Content-Type'  : 'application/json',
+			'Content-length': content.length
+	}
+
+	var options = {
+			host:    address,
+			port:    port,
+			method: 'POST',
+			headers: headers
+	}
+
+	var req = http.request(options, function(res) {
+		process.exit(0);
+	});
+	req.write(content);
+	req.end();
+}
