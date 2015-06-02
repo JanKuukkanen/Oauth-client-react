@@ -2,9 +2,10 @@ import React     from 'react';
 import UserStore from '../stores/user';
 
 const Format = {
-	CSV:  	   'csv',
+	CSV:       'csv',
 	JSON: 	   'json',
-	PLAINTEXT: 'plaintext'
+	PLAINTEXT: 'plaintext',
+	IMAGE: 	   'image'
 }
 
 /**
