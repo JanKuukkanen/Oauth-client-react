@@ -4,14 +4,12 @@ import React from 'react/addons';
  */
 const SingleBox = React.createClass({
 	propTypes: {
-		title: React.PropTypes.string,
 		content: React.PropTypes.string,
 		class:  React.PropTypes.string
 	},
 
 	getDefaultProps() {
 		return {
-			title: 'Title',
 			content: 'Content',
 			class: ''
 		}
@@ -20,9 +18,6 @@ const SingleBox = React.createClass({
 	render() {
 		return (
 			<div className={`pos ${this.props.class}`}>
-				<section className="dialog-header">
-					{this.props.title}
-				</section>
 				<p>{this.props.content}</p>
 			</div>
 		);

@@ -29,27 +29,6 @@ export default React.createClass({
 	},
 
 	render() {
-		let currentSlide;
-		currentSlide = !this.state.carousels.carousel ? 0 
-		: this.state.carousels.carousel.state.currentSlide;
-
-		let boxes = {
-			eka :[ 
-				{ title: 'Back', content: 'Return to workspace', class: 'pos-back' },
-			 	{ title: 'Edit Board', 	content: 'Edit board', class:'pos-edit' },
-			 	{ title: 'Share Board', 	content: 'Share board', class:'pos-share' },
-			 	{ title: 'Export Board', 	content: 'Export board yo', class:'pos-export' },
-			 	{ title: 'Magnet', 	content: 'Mag', class:'pos-magnet' },
-			 	{ title: 'Gridify', 	content: 'Toggle board overview and navigate', class:'pos-minimap' },
-			 	{ title: 'Profile', 	content: 'Edit your profile man', class:'pos-profile' },
-			 	{ title: 'Localization', 	content: 'legalize0 man', class:'pos-localization' },
-			 	{ title: 'Feedback', 	content: 'Send feedback', class:'pos-feedback' },
-			 	{ title: 'Logout', 	content: 'Mag bigmäg yo män', class:'pos-logout' }
-			 	],
-		 	toka :
-				[{ title: 'Back', content: 'Here is the back button', class: 'pos-back' },
-			 	{ title: 'Edit Board', 	content: 'Edit board', class:'pos-edit' }]
-		};
 
 		let dropitems = [
 			{ icon: 'user',     content: 'Profile'  },
@@ -58,37 +37,70 @@ export default React.createClass({
 			{ icon: 'sign-out', content: 'Logout'  }
 		];
 
-		let objects = [
-			[<Dropdown class='infodrop' show={true} items={dropitems} />, 'hejsan'], 
-		 	['asd', ' dsadsa'], 
-			['asd', ' dsadsa'], 
-			['asd', ' dsadsa'], 
-			['asd', ' dsadsa']
-		 ];
+let objects = [
+            [
+            	[<Dropdown class='infodrop' show={true} items={dropitems} />], 
+                [
+					{ content: 'Return to workspace', class: 'pos-back' },
+				 	{ content: 'Edit board', class:'pos-edit' },
+				 	{ content: 'Share board', class:'pos-share' },
+				 	{ content: 'Export board', class:'pos-export' },
+				 	{ content: 'Make tickets snap to grid', class:'pos-magnet' },
+				 	{ content: 'Toggle board overview and navigate', class:'pos-minimap' },
+				 	{ content: 'Edit your profile', class:'pos-profile' },
+				 	{ content: 'Change operating language', class:'pos-localization' },
+				 	{ content: 'Send feedback to developers', class:'pos-feedback' },
+				 	{ content: 'Logout', class:'pos-logout' }
+                ]
+             ],
+             [
+                [<img draggable="false" className="ticket-img" src="/dist/assets/img/ticket.png"/>,
+                <img draggable="false" className="edit-ticket-img" src="/dist/assets/img/edit-ticket.png"/>], 
+                [
+	                { content: 'Double tap board to create a ticket.', class: 'pos-click' },
+	                { content: 'Double tap a ticket to edit it.', class:'pos-ticket' },
+	                { content: 'Select a color for your ticket.', class:'pos-color' },
+	                { content: 'Edit the contents of a ticket.', class:'pos-content' }
+                ]
+             ],
+             [
+                [<img draggable="false" className="info-img" src="/dist/assets/img/edit-board.png"/>], 
+                [
+	                { content: 'Create or edit the name of this board.', class: 'pos-boardname' },
+	                { content: 'Board preview.', class:'pos-boardpreview' },
+	                { content: 'Edit the background appearance of this board.', class:'pos-boardbg' },
+	                { content: 'Change the size of this board.', class:'pos-boardmeasures' }
+                ]
+             ],
+                          [
+                [<img draggable="false" className="info-img" src="/dist/assets/img/share-board.png"/>], 
+                [
+	                { content: 'Hit Share to get the URL of this board for sharing.', class: 'pos-format' }
+                ]
+             ],
+             [
+                [<img draggable="false" className="info-img" src="/dist/assets/img/export-board.png"/>], 
+                [
+	                { content: 'Select an export format and hit Export to download the file.', class: 'pos-format' }
+                ]
+             ]
+         ];
 
 		return (
-			<Dialog className="info" info
-					onDismiss={this.props.onDismiss}>
-				<Carousel ref="carousel" className="infocarousel"
-					data={this.setCarouselData.bind(this, 'carousel')}>
-					<div>
-						<TextBoxes items={boxes.eka} objects={objects[0]}/>
-					</div>
-					<div>
-						<TextBoxes items={boxes.toka} objects={objects[1]}/>
-					</div>
-					<div>
-						<TextBoxes items={boxes.toka} objects={objects[2]}/>
-					</div>
-					<div>
-						<TextBoxes items={boxes.toka} objects={objects[3]}/>
-					</div>
-					<div>
-						<TextBoxes items={boxes.toka} objects={objects[4]}/>
-					</div>
-					
-				</Carousel>
-			</Dialog>
+<Dialog className="info" info
+                    onDismiss={this.props.onDismiss}>
+                <Carousel ref="carousel" className="infocarousel"
+                    data={this.setCarouselData.bind(this, 'carousel')}>
+                    
+                    {objects.map((item, index) => {
+                    return (
+                    <div>
+                        <TextBoxes items={item[1]} objects={item[0]}/>
+                    </div>
+                        );
+                })}                  
+                </Carousel>
+            </Dialog>
 		);
 	
 	}

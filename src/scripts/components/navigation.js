@@ -15,6 +15,7 @@ import InfoView  from  './dialog/view-info';
 export default React.createClass({
 	propTypes: {
 		title: React.PropTypes.string.isRequired,	
+		showhelp: React.PropTypes.bool
 	},
 
 	getInitialState() {
@@ -37,10 +38,11 @@ export default React.createClass({
 
 		let infoDialog=null;
 		let activeclick=null;
+		let infoicon=null;
 
 		!this.state.infoactive ? 
-		(infoDialog = null, activeclick = this.toggleDropdown)
-		 : (infoDialog = <InfoView onDismiss={this.toggleInfoView} />
+		(infoicon='info', infoDialog = null, activeclick = this.toggleDropdown)
+		 : (infoicon='times', infoDialog = <InfoView onDismiss={this.toggleInfoView} />
 		 	, activeclick = () =>{});
 		 console.dir(activeclick);
 
@@ -52,6 +54,11 @@ export default React.createClass({
 			avatar: true,
 			active:  this.state.dropdown
 		});
+
+		let showinfo = this.props.showhelp ? 
+			<div onClick={this.toggleInfoView} className={ibuttonClass}>
+				<span className={`fa fa-fw fa-${infoicon}`}></span>
+			</div> : null;
 
 		let items = [
 			{ icon: 'user',     content: 'Profile',      disabled: true  },
@@ -84,9 +91,7 @@ export default React.createClass({
 				<img className="logo" src="/dist/assets/img/logo.svg"
 					onClick={this.showWorkspace} />
 				<h1 className="title">{this.props.title}</h1>
-				<div onClick={this.toggleInfoView} className={ibuttonClass}>
-					<span className="fa fa-fw fa-info"></span>
-				</div>
+				{showinfo}
 				<div id="avatar" onClick={activeclick} className={ubuttonClass}>
 					<span className="fa fa-fw fa-user"></span>
 				</div>

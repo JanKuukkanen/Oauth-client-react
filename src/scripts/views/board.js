@@ -112,7 +112,7 @@ export default React.createClass({
 		return (
 			<div className="view view-board">
 				<Broadcaster />
-				<Navigation title={this.state.board.name} />
+				<Navigation showhelp={true} title={this.state.board.name} />
 				<div className="content">
 					<Scrollable board={this.state.board}
 							minimap={this.state.showMinimap}>
