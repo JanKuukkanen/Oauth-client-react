@@ -68,27 +68,30 @@ export default React.createClass({
 		this.hammer.on('doubletap', this.toggleEditDialog);
 
 		this.draggable.on('dragEnd', () => {
-			let position = this.draggable.position;
+			if(this.draggable && !this.props.ticket.id.startsWith('dirty_')) {
+				let position = this.draggable.position;
 
-			if(this.state.x === position.x && this.state.y === position.y) {
-				return;
+				if (this.state.x === position.x && this.state.y === position.y) {
+					return;
+				}
+
+				// Snap the position if necessary...
+				position = this.props.snap ? gridify(position) : position;
+
+				// If we are snapping the ticket, we 'tween' the position to the
+				// end value, else we just set the state directly.
+				if (this.props.snap) {
+					this.tween(position, this.draggable.position, 100);
+				}
+				else this.setState({x: position.x, y: position.y});
+
+				TicketAction.update({id: this.props.board}, {
+					id: this.props.ticket.id,
+					position: {x: this.state.x, y: this.state.y}
+				});
 			}
-
-			// Snap the position if necessary...
-			position = this.props.snap ? gridify(position) : position;
-
-			// If we are snapping the ticket, we 'tween' the position to the
-			// end value, else we just set the state directly.
-			if(this.props.snap) {
-				this.tween(position, this.draggable.position, 100);
-			}
-			else this.setState({ x: position.x, y: position.y });
-
-			TicketAction.update({ id: this.props.board }, {
-				id:       this.props.ticket.id,
-				position: { x: this.state.x, y: this.state.y }
-			});
 		});
+
 	},
 
 	componentWillUnmount() {
@@ -108,7 +111,9 @@ export default React.createClass({
 	},
 
 	toggleEditDialog() {
-		this.setState({ showEditDialog: !this.state.showEditDialog });
+		if(!this.props.ticket.id.startsWith('dirty_')) {
+			this.setState({showEditDialog: !this.state.showEditDialog});
+		}
 	},
 
 	tween(to, from, duration) {
@@ -116,6 +121,8 @@ export default React.createClass({
 			let tweeningOpts = {
 				duration:   duration || 500,
 				endValue:   to[axis],
+				duration: duration || 500,
+				endValue: to[axis],
 				beginValue: from ? from[axis] : null
 			}
 			return this.tweenState(axis, tweeningOpts);

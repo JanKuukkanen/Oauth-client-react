@@ -43,11 +43,15 @@ export default React.createClass({
 	},
 
 	showBoard() {
-		return page.show(`/boards/${this.props.board.id}`);
+		if(!this.props.board.id.startsWith('dirty_')) {
+			return page.show(`/boards/${this.props.board.id}`);
+		}
 	},
 
 	showDialog(dialog) {
-		this.setState({ [`show${dialog}`]: !this.state[`show${dialog}`] });
+		if(!this.props.board.id.startsWith('dirty_')) {
+			this.setState({[`show${dialog}`]: !this.state[`show${dialog}`]});
+		}
 	},
 
 	render() {

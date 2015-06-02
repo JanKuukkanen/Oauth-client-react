@@ -32,3 +32,54 @@ below:
 	by the watchify bundler instead.
 
 	Don't use this flag if you're running the build task on a vagrant guest.
+
+	--use-browser-sync
+
+	Using this flag will switch from using the pretty basic `gulp-webserver`
+	module to `browser-sync` for serving the static content. This will also use
+	the BrowserSync's own flavor of livereloading the changes.
+
+	--test-runner-mode <mode>
+
+	Specify the mode, in which the test runner should run. Available modes are
+	run and watch, of which the first will do a single run and exit the process
+	and the second will keep watching the test files and run when changed.
+
+## On Testing...
+If you want to test this app on other devices, such as tablets and phones, you
+need to set the `IO_URL` and `API_URL` environmental variables to point at your
+own IP address.
+```
+	IO_URL=http://<MyIPHere>:9001 \
+	API_URL=http://<MyIPHere>:9002/api \
+	gulp --use-watchify --use-browser-sync
+```
+
+## Using the SCP and Matti integration
+
+If you want to move the distribution after building to a remote server, use the gulp SCP task, like so:
+
+```
+	IO_URL=http://<MyIPHere>:9001 \
+	API_URL=http://<MyIPHere>:9002/api \
+	SCP_HOST=192.168.0.0 \
+	SCP_USER=helloworld \
+	SCP_PW=secret_password \
+	SCP_DEST='\home\helloworld\' \
+	gulp scp
+```
+
+If you want to push a notification to a Matti TTS server to alert users you're using the device lab, use the gulp matti task, like so:
+
+
+```
+	IO_URL=http://<MyIPHere>:9001 \
+	API_URL=http://<MyIPHere>:9002/api \
+	SCP_HOST=192.168.0.0 \
+	SCP_USER=helloworld \
+	SCP_PW=secret_password \
+	SCP_DEST='\home\helloworld\' \
+	MATTI_ADDR=192.168.0.1 \
+	MATTI_PORT=1234 \
+	gulp matti
+```
