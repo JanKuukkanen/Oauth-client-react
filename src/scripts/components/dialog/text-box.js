@@ -1,23 +1,25 @@
-import React from 'react/addons';
+import React from 'react';
+
 /**
  *
  */
+ 
 const SingleBox = React.createClass({
 	propTypes: {
 		content: React.PropTypes.string,
-		class:  React.PropTypes.string
+		className:  React.PropTypes.string
 	},
 
 	getDefaultProps() {
 		return {
 			content: 'Content',
-			class: ''
+			className: ''
 		}
 	},
 
 	render() {
 		return (
-			<div className={`pos ${this.props.class}`}>
+			<div className={`pos ${this.props.className}`}>
 				<p>{this.props.content}</p>
 			</div>
 		);

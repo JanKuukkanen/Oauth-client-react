@@ -7,6 +7,7 @@ import Dropdown 	from '../dropdown';
 /**
  *
  */
+
 export default React.createClass({
 	mixins: [ Carousel.ControllerMixin ],
 	getInitialState(){
@@ -24,13 +25,11 @@ export default React.createClass({
 	},
 
 	componentDidUpdate(){
-		this.el.className =
-		`info-view-active slide-${this.state.carousels.carousel.state
-			.currentSlide}`;
+		this.el.className = 
+			`info-view-active slide-${this.state.carousels.carousel.state.currentSlide}`;
 	},
 
 	render() {
-
 		let dropitems = [
 			{ icon: 'user',     content: 'Profile'  },
 			{ icon: 'language', content: 'Localization'  },
@@ -38,57 +37,62 @@ export default React.createClass({
 			{ icon: 'sign-out', content: 'Logout'  }
 		];
 
+		/*
+		Second layer arrays represent the slides. First one of the 
+		third layer arrays contain anything other than textbox-components
+		while the second ones contain the textboxes' props.
+		*/
 		let objects = [
 			[
-				[ <Dropdown class='infodrop' show={true} items={dropitems} /> ],
+				[ <Dropdown className='infodrop' show={true} items={dropitems} /> ],
 				[
-					{ content: 'Return to workspace', class: 'pos-back' },
-					{ content: 'Edit board', class:'pos-edit' },
-					{ content: 'Share board', class:'pos-share' },
-					{ content: 'Export board', class:'pos-export' },
-					{ content: 'Make tickets snap to grid', class:'pos-magnet' },
-					{ content: 'Toggle board overview and navigate', class:'pos-minimap' },
-					{ content: 'Edit your profile', class:'pos-profile' },
-					{ content: 'Change operating language', class:'pos-localization' },
-					{ content: 'Send feedback to developers', class:'pos-feedback' },
-					{ content: 'Logout', class:'pos-logout' }
+					{ content: 'Return to workspace', className: 'pos-back' },
+					{ content: 'Edit board', className:'pos-edit' },
+					{ content: 'Share board', className:'pos-share' },
+					{ content: 'Export board', className:'pos-export' },
+					{ content: 'Make tickets snap to grid', className:'pos-magnet' },
+					{ content: 'Toggle board overview and navigate', className:'pos-minimap' },
+					{ content: 'Edit your profile', className:'pos-profile' },
+					{ content: 'Change operating language', className:'pos-localization' },
+					{ content: 'Send feedback to developers', className:'pos-feedback' },
+					{ content: 'Logout', className:'pos-logout' }
 				]
 			],
 			[
 				[ <img draggable="false" className="ticket-img" src="/dist/assets/img/ticket.png"/>,
 				<img draggable="false" className="edit-ticket-img" src="/dist/assets/img/edit-ticket.png"/> ],
 				[
-					{ content: 'Double tap board to create a ticket.', class: 'pos-click' },
-					{ content: 'Double tap a ticket to edit it.', class:'pos-ticket' },
-					{ content: 'Select a color for your ticket.', class:'pos-color' },
-					{ content: 'Edit the contents of a ticket.', class:'pos-content' }
+					{ content: 'Double tap board to create a ticket.', className: 'pos-click' },
+					{ content: 'Double tap a ticket to edit it.', className:'pos-ticket' },
+					{ content: 'Select a color for your ticket.', className:'pos-color' },
+					{ content: 'Edit the contents of a ticket.', className:'pos-content' }
 				]
 			],
 			[
 				[ <img draggable="false" className="info-img" src="/dist/assets/img/edit-board.png"/> ],
 				[
-					{ content: 'Create or edit the name of this board.', class: 'pos-boardname' },
-					{ content: 'Board preview.', class:'pos-boardpreview' },
-					{ content: 'Edit the background appearance of this board.', class:'pos-boardbg' },
-					{ content: 'Change the size of this board.', class:'pos-boardmeasures' }
+					{ content: 'Create or edit the name of this board.', className: 'pos-boardname' },
+					{ content: 'Board preview.', className:'pos-boardpreview' },
+					{ content: 'Edit the background appearance of this board.', className:'pos-boardbg' },
+					{ content: 'Change the size of this board.', className:'pos-boardmeasures' }
 				]
 			],
 			[
 				[ <img draggable="false" className="info-img" src="/dist/assets/img/share-board.png"/> ],
 				[
-					{ content: 'Hit Share to get the URL of this board for sharing.', class: 'pos-format' }
+					{ content: 'Hit Share to get the URL of this board for sharing.', className: 'pos-format' }
 				]
 			],
 			[
 				[ <img draggable="false" className="info-img" src="/dist/assets/img/export-board.png"/> ],
 				[
-					{ content: 'Select an export format and hit Export to download the file.', class: 'pos-format' }
+					{ content: 'Select an export format and hit Export to download the file.', className: 'pos-format' }
 				]
 			]
 		];
 
 		return (
-			<Dialog className="info" info
+			<Dialog className="info" infoView={true}
 					onDismiss={this.props.onDismiss}>
 				<Carousel ref="carousel" className="infocarousel"
 					data={this.setCarouselData.bind(this, 'carousel')}>
@@ -103,6 +107,5 @@ export default React.createClass({
 				</Carousel>
 			</Dialog>
 		);
-
 	}
 });
