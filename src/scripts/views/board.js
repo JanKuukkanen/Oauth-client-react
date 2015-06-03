@@ -1,6 +1,5 @@
 import page  from 'page';
 import React from 'react/addons';
-import utf8  from 'utf8';
 import User  from '../models/user';
 import Board from '../models/board';
 
@@ -109,16 +108,10 @@ export default React.createClass({
                                     onDismiss={this.toggleShareBoardDialog} />
 		}
 
-		let name = this.state.board.name;
-
-		try {
-			name = utf8.decode(name);
-		} catch(err) {}
-
 		return (
 			<div className="view view-board">
 				<Broadcaster />
-				<Navigation title={name} />
+				<Navigation title={this.state.board.name} />
 				<div className="content">
 					<Scrollable board={this.state.board}
 							minimap={this.state.showMinimap}>
