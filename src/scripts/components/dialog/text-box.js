@@ -22,32 +22,25 @@ const SingleBox = React.createClass({
 			</div>
 		);
 	}
-
 });
 
 export default React.createClass({
 	propTypes: {
 		items: React.PropTypes.array,
 		objects: React.PropTypes.array
-
 	},
 
 	getDefaultProps() {
-		return { items: [ ], objects: [ ]}
+		return { items: [ ], objects: [ ] }
 	},
 
 	render() {
-		
-
 		return (
-
 			<div className="infospace">
 				{this.props.objects}
 				{this.props.items.map((item, index) => {
 					return <SingleBox key={index} {...item} />;
 				})}
-
-
 			</div>
 		);
 	}

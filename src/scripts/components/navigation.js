@@ -14,12 +14,12 @@ import InfoView  from  './dialog/view-info';
  */
 export default React.createClass({
 	propTypes: {
-		title: React.PropTypes.string.isRequired,	
+		title: React.PropTypes.string.isRequired,
 		showhelp: React.PropTypes.bool
 	},
 
 	getInitialState() {
-		return { dropdown: false, feedback: false}
+		return { dropdown: false, feedback: false }
 	},
 
 	showWorkspace() {
@@ -33,29 +33,32 @@ export default React.createClass({
 		this.setState({ infoactive: !this.state.infoactive });
 	},
 
-
 	render: function() {
 
-		let infoDialog=null;
-		let activeclick=null;
-		let infoicon=null;
+		let infoDialog = null;
+		let activeclick = null;
+		let infoicon = null;
 
-		!this.state.infoactive ? 
-		(infoicon='info', infoDialog = null, activeclick = this.toggleDropdown)
-		 : (infoicon='times', infoDialog = <InfoView onDismiss={this.toggleInfoView} />
-		 	, activeclick = () =>{});
-		 console.dir(activeclick);
+		if(!this.state.infoactive){
+			infoicon = 'info';
+			infoDialog = null;
+			activeclick = this.toggleDropdown;
+		}else {
+			infoicon = 'times';
+			infoDialog = <InfoView onDismiss = { this.toggleInfoView} />;
+			activeclick = () => {};
+		}
 
 		let ibuttonClass = React.addons.classSet({
 			infobutton: true,
-			active:  this.state.infoactive
+			active: this.state.infoactive
 		});
 		let ubuttonClass = React.addons.classSet({
 			avatar: true,
-			active:  this.state.dropdown
+			active: this.state.dropdown
 		});
 
-		let showinfo = this.props.showhelp ? 
+		let showinfo = this.props.showhelp ?
 			<div onClick={this.toggleInfoView} className={ibuttonClass}>
 				<span className={`fa fa-fw fa-${infoicon}`}></span>
 			</div> : null;
@@ -87,7 +90,7 @@ export default React.createClass({
 		];
 		return (
 			<nav id="nav" className="nav">
-				
+
 				<img className="logo" src="/dist/assets/img/logo.svg"
 					onClick={this.showWorkspace} />
 				<h1 className="title">{this.props.title}</h1>
