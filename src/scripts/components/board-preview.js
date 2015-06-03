@@ -1,6 +1,7 @@
 import page      from 'page';
 import React     from 'react';
 import immutable from 'immutable';
+import utf8      from 'utf8';
 
 import Board        from '../models/board';
 import BoardStore   from '../stores/board';
@@ -66,13 +67,19 @@ export default React.createClass({
 				onDismiss={this.showDialog.bind(this, 'RemoveBoardDialog')} />
 		);
 
+		let name = board.name;
+
+		try {
+			name = utf8.decode(name);
+		} catch(err) {}
+
 		return (
 			<div className="board-preview">
 				<div className="minimap-container" onClick={this.showBoard}>
 					<Minimap board={board} />
 				</div>
 				<div className="name" onClick={this.showBoard}>
-					{board.name}
+					{name}
 				</div>
 				{editBoardDialog}
 				{removeBoardDialog}
