@@ -25,7 +25,7 @@ export default React.createClass({
 	},
 
 	componentDidUpdate(){
-		this.el.className = 
+		this.el.className =
 			`info-view-active slide-${this.state.carousels.carousel.state.currentSlide}`;
 	},
 
@@ -38,7 +38,7 @@ export default React.createClass({
 		];
 
 		/*
-		Second layer arrays represent the slides. First one of the 
+		Second layer arrays represent the slides. First one of the
 		third layer arrays contain anything other than textbox-components
 		while the second ones contain the textboxes' props.
 		*/
@@ -59,8 +59,8 @@ export default React.createClass({
 				]
 			],
 			[
-				[ <img draggable="false" className="ticket-img" src="/dist/assets/img/ticket.png"/>,
-				<img draggable="false" className="edit-ticket-img" src="/dist/assets/img/edit-ticket.png"/> ],
+				[ <img draggable="false" className="imgTicket" src="/dist/assets/img/ticket.png"/>,
+				<img draggable="false" className="imgEditTicket" src="/dist/assets/img/edit-ticket.png"/> ],
 				[
 					{ content: 'Double tap board to create a ticket.', className: 'pos-click' },
 					{ content: 'Double tap a ticket to edit it.', className:'pos-ticket' },
@@ -69,7 +69,7 @@ export default React.createClass({
 				]
 			],
 			[
-				[ <img draggable="false" className="info-img" src="/dist/assets/img/edit-board.png"/> ],
+				[ <img draggable="false" className="imgInfo" src="/dist/assets/img/edit-board.png"/> ],
 				[
 					{ content: 'Create or edit the name of this board.', className: 'pos-boardname' },
 					{ content: 'Board preview.', className:'pos-boardpreview' },
@@ -78,13 +78,13 @@ export default React.createClass({
 				]
 			],
 			[
-				[ <img draggable="false" className="info-img" src="/dist/assets/img/share-board.png"/> ],
+				[ <img draggable="false" className="imgInfo" src="/dist/assets/img/share-board.png"/> ],
 				[
 					{ content: 'Hit Share to get the URL of this board for sharing.', className: 'pos-format' }
 				]
 			],
 			[
-				[ <img draggable="false" className="info-img" src="/dist/assets/img/export-board.png"/> ],
+				[ <img draggable="false" className="imgInfo" src="/dist/assets/img/export-board.png"/> ],
 				[
 					{ content: 'Select an export format and hit Export to download the file.', className: 'pos-format' }
 				]

@@ -3,7 +3,7 @@ import React from 'react';
 /**
  *
  */
- 
+
 const SingleBox = React.createClass({
 	propTypes: {
 		content: React.PropTypes.string,
