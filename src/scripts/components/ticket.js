@@ -148,6 +148,11 @@ export default React.createClass({
 
 		let markupContent =markdown.markdown.toHTML(this.props.ticket.content);
 
+		// Add target="_blank" attribute to links
+		if (markupContent.includes('<a href=')) {
+			markupContent = markupContent.replace(/<a href="/g, '<a target="_blank" href="');
+		}
+
 		return (
 			<div className="ticket" style={style.ticket}>
 				<div className="color" style={style.color} />
