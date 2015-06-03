@@ -141,6 +141,7 @@ const PayloadHandler = {
 	[Event.Board.Update](payload) {
 		let board = Object.assign({ id: payload.board },
 			payload.data.newAttributes);
+		board.name = utf8.decode(board.name);
 		return BoardAction.edit(board);
 	},
 	[Event.Ticket.Create](payload) {

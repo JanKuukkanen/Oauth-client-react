@@ -1,6 +1,5 @@
 import page  from 'page';
 import React from 'react/addons';
-
 import User  from '../models/user';
 import Board from '../models/board';
 
