@@ -62,7 +62,7 @@ export default React.createClass({
 		let showInfo = !this.props.showHelp ? null : (
 			<div onClick={this.toggleInfoView} className={infoButtonClass}>
 				<span className={`fa fa-fw fa-${infoIcon}`}></span>
-			</div> 
+			</div>
 			);
 
 		let items = [

@@ -3,7 +3,7 @@ import React from 'react';
 /**
  *
  */
-
+// This is the textbox used in the infolayer.
 const SingleBox = React.createClass({
 	propTypes: {
 		content: React.PropTypes.string,
@@ -26,6 +26,8 @@ const SingleBox = React.createClass({
 	}
 });
 
+// The objects other than textboxes to be shown in the infolayer and
+// the instances of SingleBoxes are passed here as props and mapped
 export default React.createClass({
 	propTypes: {
 		items: React.PropTypes.array,
