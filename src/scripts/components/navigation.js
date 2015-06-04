@@ -52,11 +52,11 @@ export default React.createClass({
 		let infoButtonClass =
 			React.addons.classSet({
 				infobutton: true,
-				pulsate: localStorage.getItem('infovisited') === null 
+				pulsate: localStorage.getItem('infovisited') === null
 					? true : false,
 				active: this.state.infoActive
 			});
-	
+
 		let userButtonClass =
 			React.addons.classSet({
 				avatar: true,
@@ -64,7 +64,7 @@ export default React.createClass({
 			});
 
 		let showInfo = !this.props.showHelp ? null : (
-			<div id='info' onClick={this.toggleInfoView} className={infoButtonClass}>
+			<div id="info" onClick={this.toggleInfoView} className={infoButtonClass}>
 				<span className={`fa fa-fw fa-${infoIcon}`}></span>
 			</div>
 			);
