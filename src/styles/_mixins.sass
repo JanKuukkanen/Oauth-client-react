@@ -12,7 +12,8 @@
 			.controls
 				z-index: 10000
 				.#{$icon}
-					transition-duration: 	0.5s;
+					border-radius: 			2px
+					transition-duration: 	0.5s
 					color: 					$neptune
 					background-color: 		$patina
 					box-shadow: 			0px 0px 8px 1px $white
@@ -63,11 +64,10 @@
 	from
 		background-color: $affair
 		transform: scale(1)
-		opacity: 1;
-
+		opacity: 1
 	to
 		transform: scale(1.5)
-		opacity: 0;
+		opacity: 0
 
 @mixin pulsate
 	@include animate(pulsate, 0.9s, infinite, normal)
