@@ -5,7 +5,6 @@
 	height:           64px
 	background-color: $bastille
 
-	@include layer(1000)
 	@include display(flex)
 	@include flex-direction(row)
 
@@ -64,6 +63,11 @@
 			border-color:     $affair
 			background-color: $voodoo
 
+		&.active
+			color:            $white
+			border-color:     $affair
+			background-color: $voodoo
+
 	.dropdown
 		&::before
 			content: ""
@@ -78,3 +82,34 @@
 			border-bottom: 8px solid $bastille
 
 		@include position(absolute, 80px 4px null null)
+
+	.infobutton
+		@include flex-grow(0)
+		@include flex-shrink(0)
+
+		@include transition(all, 0.2s)
+
+		width:  30px
+		height: 30px
+		margin: 16px 16px
+
+		color:  $gallery
+		cursor: pointer
+
+		border:        1px solid $voodoo
+		border-radius: 2px
+
+		span
+			width:       30px
+			line-height: 30px
+
+		&:hover
+			color:            $white
+			border-color:     $affair
+			background-color: $voodoo
+
+		&.active
+			z-index: 9002	!important
+			color:            $white
+			border-color:     $affair
+			background-color: $voodoo

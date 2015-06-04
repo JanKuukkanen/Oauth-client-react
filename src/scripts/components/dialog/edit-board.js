@@ -41,9 +41,8 @@ export default React.createClass({
 			id: this.props.board.id,
 			name: this.state.name,
 			background: this.state.background,
-			customBackground: this.state.customBackground,
+			customBackground: this.state.customBackground
 		}
-
 
 		if (!isNaN(size.width) && !isNaN(size.height)) {
 			if (size.width < 1 || size.height < 1) {
@@ -121,11 +120,11 @@ export default React.createClass({
 						<section className="dialog-size">
 								<label htmlFor="board-width">Width</label>
 								<input name="board-width"
-                                       placeholder="Board Width"
-                                       valueLink={widthValueLink}
-                                       type="number"
-									   max="99"
-									   min="1" />
+									placeholder="Board Width"
+									valueLink={widthValueLink}
+									type="number"
+									max="99"
+									min="1" />
 						</section>
 
 						<section className="times-wrapper">
@@ -135,13 +134,13 @@ export default React.createClass({
 						<section className="dialog-size">
 							<label htmlFor="board-height">Height</label>
 								<input name="board-height"
-                                       placeholder="Board Height"
-                                       valueLink={heightValueLink}
-                                       type="number"
-									   max="99"
-									   min="1" />
+									placeholder="Board Height"
+									valueLink={heightValueLink}
+									type="number"
+									max="99"
+									min="1" />
 						</section>
-                </section>
+				</section>
 
 				</section>
 				<section className="dialog-footer">

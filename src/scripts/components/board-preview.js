@@ -50,7 +50,7 @@ export default React.createClass({
 
 	showDialog(dialog) {
 		if(!this.props.board.id.startsWith('dirty_')) {
-			this.setState({[`show${dialog}`]: !this.state[`show${dialog}`]});
+			this.setState({ [`show${dialog}`]: !this.state[`show${dialog}`] });
 		}
 	},
 

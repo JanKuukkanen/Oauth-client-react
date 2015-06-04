@@ -5,3 +5,21 @@
 @mixin layer($index)
 	z-index:    $index
 	box-shadow: 2px 2px 4px $dove-gray
+
+@mixin slide($index, $icon)
+	&.slide-#{$index}
+		.view-board
+			.controls
+				z-index: 10000
+				.#{$icon}
+					transition-duration: 	0.5s;
+					color: 					$neptune
+					background-color: 		$patina
+					box-shadow: 			0px 0px 8px 1px $white
+
+@mixin dialogImage($name, $left, $top)
+	.img#{$name}
+		display: block
+		position: absolute
+		left: $left
+		top: $top

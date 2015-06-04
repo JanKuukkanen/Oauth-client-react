@@ -1,0 +1,360 @@
+/**
+ *
+ */
+
+.info-view-active
+	.view-board
+		.controls
+			&::after
+				content: ''
+				height: 100%
+				width: 100%
+				@include position(absolute, 0px null null 0px)
+.info-view-active
+	.view-board
+		.controls
+			&::after
+				content: ''
+				height: 100%
+				width: 100%
+				@include position(absolute, 0px null null 0px)
+
+	&.slide-0
+		.controls
+			@include layer(10000)
+		.avatar
+			z-index: 10000
+			background-color: $neptune
+
+	@include slide(2, "fa-pencil")
+	@include slide(3, "fa-share-alt")
+	@include slide(4, "fa-download")
+
+.infospace
+	height:100%
+	width:100%
+	position: relative
+
+	@include dialogImage("Info", 45%, 180px)
+	@include dialogImage("Ticket", 54%, 147px)
+	@include dialogImage("EditTicket", 45%, 350px)
+
+//Tooltip postioning
+
+.pos
+	border-radius: 2px
+	border: 2px  solid $affair
+	display: block
+	position: absolute
+	background-color: $affair
+
+	p
+		margin: 8px
+
+	&.pos-back
+		top: 75px
+		left: 120px
+		&:before
+			border-top: 2px solid $affair
+			content: ' '
+			display: block
+			position: relative
+			width: 53px
+			right: 54px
+			top: 26px
+			transform: rotate(-6deg)
+
+	&.pos-edit
+		top: 134px
+		left: 136px
+		&:before
+			border-top: 2px solid $affair
+			content: ' '
+			display: block
+			position: relative
+			width: 70px
+			right: 71px
+			top: 20px
+			transform: rotate(-3deg)
+
+	&.pos-share
+		top: 189px
+		left: 150px
+		&:before
+			border-top: 2px solid $affair
+			content: ' '
+			display: block
+			position: relative
+			width: 84px
+			right: 85px
+			top: 12px
+			transform: rotate(1deg)
+
+	&.pos-export
+		top: 241px
+		left: 150px
+		&:before
+			border-top: 2px solid $affair
+			content: ' '
+			display: block
+			position: relative
+			width: 85px
+			right: 86px
+			top: 10px
+			transform: rotate(5deg)
+
+	&.pos-magnet
+		top: 301px
+		left: 125px
+		&:before
+			border-top: 2px solid $affair
+			content: ' '
+			display: block
+			position: relative
+			width: 58px
+			right: 59px
+			top: 10px
+			transform: rotate(16deg)
+
+	&.pos-minimap
+		top: 355px
+		left: 115px
+		&:before
+			border-top: 2px solid $affair
+			content: ' '
+			display: block
+			position: relative
+			width: 56px
+			right: 54px
+			top: 2px
+			transform: rotate(30deg)
+
+	&.pos-profile
+		right: 266px
+		top: 72px
+		position: absolute
+		&:after
+			border-top: 2px solid $affair
+			content: ' '
+			display: block
+			position: relative
+			float: right
+			right: -85px
+			width: 84px
+			top: -11px
+			transform: rotate(10deg)
+
+	&.pos-localization
+		top: 128px
+		position: absolute
+		right: 251px
+		&:after
+			border-top: 2px solid $affair
+			content: ' '
+			display: block
+			position: relative
+			float: right
+			right: -70px;
+			width: 69px;
+			top: -7px;
+			transform: rotate(4deg);
+
+	&.pos-feedback
+		top: 187px
+		position: absolute
+		right: 242px
+		&:after
+			border-top: 2px solid $affair
+			content: ' '
+			display: block
+			position: relative
+			float: right
+			right: -61px
+			width: 59px
+			top: -23px
+			transform: rotate(-7deg)
+
+	&.pos-logout
+		position: absolute
+		top: 249px
+		right: 267px
+		&:after
+			border-top: 2px solid $affair
+			content: ' '
+			display: block
+			position: relative
+			float: right
+			right: -85px
+			width: 86px
+			top: -34px
+			transform: rotate(-9deg)
+
+	&.pos-boardname
+		position: 	absolute
+		top: 		234px
+		right: 		58%
+		&:after
+			border-top: 2px solid $affair
+			content: ' '
+			display: block
+			position: relative
+			float: right
+			right: -85px
+			width: 86px
+			top: -7px
+			transform: rotate(13deg)
+
+	&.pos-boardpreview
+		position: 	absolute
+		top: 		330px
+		right: 		58%
+		&:after
+			border-top: 2px solid $affair
+			content: ' '
+			display: block
+			position: relative
+			float: right
+			right: -170px
+			width: 170px
+			top: -7px
+			transform: rotate(10deg)
+
+	&.pos-boardbg
+		position: 	absolute
+		top: 		448px
+		right:  	58%
+		&:after
+			border-top: 2px solid $affair
+			content: ' '
+			display: block
+			position: relative
+			float: right
+			right: -88px
+			width: 89px
+			top: -7px
+			transform: rotate(13deg)
+
+	&.pos-boardmeasures
+		position: 	absolute
+		top: 		520px
+		right:  	58%
+		&:after
+			border-top: 2px solid $affair
+			content: ' '
+			display: block
+			position: relative
+			float: right
+			right: -88px
+			width: 89px
+			top: -7px
+			transform: rotate(13deg)
+
+	&.pos-format
+		position: 	absolute
+		top: 		205px
+		right:  	58%
+		max-width: 	254px
+		&:after
+			border-top: 2px solid $affair
+			content: ' '
+			display: block
+			position: relative
+			float: right
+			right: -88px
+			width: 89px
+			top: -7px
+			transform: rotate(13deg)
+	&.pos-click
+		position: 	absolute
+		top: 		122px
+		right:  	58%
+		max-width: 	254px
+		background-color: $neptune
+		border: 2px  solid $neptune
+		&:after
+			border-top: 2px solid $neptune
+			content: ' '
+			display: block
+			position: relative
+			float: right
+			right: 177px
+			width: 60px
+			top: 27px
+			transform: rotate(61deg)
+	&.pos-ticket
+		position: 	absolute
+		top: 		247px
+		right:  	48%
+		max-width: 	254px
+		&:after
+			border-top: 2px solid $affair
+			content: ' '
+			display: block
+			position: relative
+			float: right
+			right: -87px
+			width: 89px
+			top: -43px
+			transform: rotate(-20deg)
+	&.pos-color
+		position: 	absolute
+		top: 		350px
+		right:  	57%
+		max-width: 	254px
+		&:after
+			border-top: 2px solid $affair
+			content: ' '
+			display: block
+			position: relative
+			float: right
+			right: -88px
+			width: 89px
+			top: -7px
+			transform: rotate(13deg)
+	&.pos-content
+		position: 	absolute
+		top: 		450px
+		right:  	58%
+		max-width: 	254px
+		&:after
+			border-top: 2px solid $affair
+			content: ' '
+			display: block
+			position: relative
+			float: right
+			right: -159px
+			width: 159px
+			top: -27px
+			transform: rotate(-8deg)
+
+// Carousel styling
+.info
+	width:      100%
+	height:     100%
+	max-width:  100%
+	margin-top: 0px
+	color: 		$white
+
+	.infocarousel
+		position:static !important
+		width:      100%
+		height:     100%
+
+		// Decorator 0 & 1 are side arrows
+		.slider-decorator-0
+			visibility: hidden
+
+		.slider-decorator-1
+			visibility: hidden
+
+		// Carousel slider buttons
+		.slider-decorator-2
+			button
+				color: 		$white 				!important
+				font-size: 	70px				!important
+				padding: 	0px 5px 0px 5px		!important
+
+.infodrop
+	float:right;
+	margin-top: 80px
+	margin-right: 4px
