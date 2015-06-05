@@ -130,13 +130,15 @@ a, button, input[type="submit"]
 		background-color: $white
 
 	.caret
-		margin: 0px !important
-		color:  $silver-chalice
+		margin:         0px !important
+		color:          $silver-chalice
 		@include position(absolute, 10px 14px null null)
+		pointer-events: none
 
 	&:hover
 		.caret
 			color: $dove-gray
+			pointer-events: none
 
 /**
  *
