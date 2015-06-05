@@ -35,9 +35,9 @@
 	width:100%
 	position: relative
 
-	@include dialogImage("Info", 45%, 180px)
-	@include dialogImage("Ticket", 54%, 147px)
-	@include dialogImage("EditTicket", 45%, 350px)
+	@include dialogImage("Info", 45%, 90px)
+	@include dialogImage("Ticket", 54%, 90px)
+	@include dialogImage("EditTicket", 45%, 260px)
 
 //Tooltip postioning
 
@@ -191,8 +191,8 @@
 
 	&.pos-boardname
 		position: 	absolute
-		top: 		234px
-		right: 		58%
+		top: 		144px
+		right: 		57%
 		&:after
 			border-top: 2px solid $affair
 			content: ' '
@@ -206,8 +206,8 @@
 
 	&.pos-boardpreview
 		position: 	absolute
-		top: 		330px
-		right: 		58%
+		top: 		240px
+		right: 		57%
 		&:after
 			border-top: 2px solid $affair
 			content: ' '
@@ -220,9 +220,10 @@
 			transform: rotate(10deg)
 
 	&.pos-boardbg
+		max-width: 	270px
 		position: 	absolute
-		top: 		448px
-		right:  	58%
+		top: 		340px
+		right:  	57%
 		&:after
 			border-top: 2px solid $affair
 			content: ' '
@@ -236,8 +237,8 @@
 
 	&.pos-boardmeasures
 		position: 	absolute
-		top: 		520px
-		right:  	58%
+		top: 		430px
+		right:  	57%
 		&:after
 			border-top: 2px solid $affair
 			content: ' '
@@ -251,8 +252,8 @@
 
 	&.pos-format
 		position: 	absolute
-		top: 		205px
-		right:  	58%
+		top: 		115px
+		right:  	57%
 		max-width: 	254px
 		&:after
 			border-top: 2px solid $affair
@@ -266,7 +267,7 @@
 			transform: rotate(13deg)
 	&.pos-click
 		position: 	absolute
-		top: 		122px
+		top: 		100px
 		right:  	58%
 		max-width: 	254px
 		background-color: $neptune
@@ -283,7 +284,7 @@
 			transform: rotate(61deg)
 	&.pos-ticket
 		position: 	absolute
-		top: 		247px
+		top: 		200px
 		right:  	48%
 		max-width: 	254px
 		&:after
@@ -298,7 +299,7 @@
 			transform: rotate(-20deg)
 	&.pos-color
 		position: 	absolute
-		top: 		350px
+		top: 		290px
 		right:  	57%
 		max-width: 	254px
 		&:after
@@ -309,8 +310,8 @@
 			float: right
 			right: -88px
 			width: 89px
-			top: -7px
-			transform: rotate(13deg)
+			top: -27px
+			transform: rotate(-13deg)
 	&.pos-content
 		position: 	absolute
 		top: 		450px
