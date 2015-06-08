@@ -55,7 +55,7 @@ export default React.createClass({
 		}
 	},
 
-	submitSecondary(currentForm, event) {
+	submitSecondary(currentForm) {
 		return (event) => {
 			currentForm.secondary.submit(this.state);
 			return event.preventDefault();
