@@ -4,7 +4,7 @@ import React from 'react';
 import Action     from '../../actions';
 import UserAction from '../../actions/user';
 
-import FormView from '../../views/form';
+import FormView from '../../views/form/formtemplate';
 
 const formOptions = {
 	fields: [
