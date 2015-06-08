@@ -1,9 +1,6 @@
 import page  from 'page';
 import React from 'react';
 
-import Action          from '../../actions';
-import UserAction      from '../../actions/user';
-import BroadcastAction from '../../actions/broadcast';
 import Broadcaster from '../../components/broadcaster';
 import FormData from '../../views/form/form-map';
 
@@ -13,7 +10,7 @@ import FormData from '../../views/form/form-map';
 
 export default React.createClass({
 	mixins: [ React.addons.LinkedStateMixin ],
-	propTypes: {formProfile: React.PropTypes.string.isRequired},
+	propTypes: { formProfile: React.PropTypes.string.isRequired },
 
 	getInitialState() {
 		return FormData.registerForm.fields.reduce((state, field) => {
@@ -23,10 +20,10 @@ export default React.createClass({
 	},
 
 	checkPasswords(){
-		if(this.props.formProfile==='register' && this.state.passwordagain!== '') {
+		if(this.props.formProfile === 'registerForm' && this.state.passwordagain !== '') {
 			return this.state.passwordagain !== this.state.password ?
 				<span className="fa fa-times">Passwords entered do not match!</span>
-				: <span className="fa fa-check">Passwords entered are a match!</span>;
+				: <span className="fa fa-check">Passwords entered match!</span>;
 		}
 	},
 
@@ -94,9 +91,8 @@ export default React.createClass({
 			</div>
 		);
 	},
-	
+
 	render() {
-		console.log(FormData);
 		return this.renderForm(FormData[this.props.formProfile]);
 	}
 });
