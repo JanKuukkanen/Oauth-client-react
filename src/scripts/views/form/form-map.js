@@ -18,7 +18,7 @@ export default
 					required: true
 				},
 				{
-					name:     'password',
+					name:     'passwordRegister',
 					type:     'password',
 					label:    'Password',
 					title:    'Minimum of 8 characters required.',
@@ -26,9 +26,9 @@ export default
 					required: true
 				},
 				{
-					name:     'passwordagain',
+					name:     'passwordAgain',
 					type:     'password',
-					label:    'Retype your password',
+					label:    'Confirm password',
 					title:    'Minimum of 8 characters required.',
 					pattern:  '.{8,}',
 					required: true

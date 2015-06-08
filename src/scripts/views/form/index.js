@@ -21,8 +21,8 @@ export default React.createClass({
 	},
 
 	checkPasswords(){
-		if(this.props.formProfile === 'registerForm' && this.state.passwordagain !== '') {
-			return this.state.passwordagain !== this.state.password ?
+		if(this.props.formProfile === 'registerForm' && this.state.passwordAgain !== '') {
+			return this.state.passwordAgain !== this.state.password ?
 				<span className="fa fa-times">Password mismatch!</span>
 				: <span className="fa fa-check">Passwords match!</span>;
 		}
@@ -48,7 +48,7 @@ export default React.createClass({
 
 	submitPrimary(currentForm) {
 		if(this.props.formProfile !== 'registerForm' ||
-			this.state.passwordagain === this.state.password) {
+			this.state.passwordAgain === this.state.password) {
 			return (event) => {
 				currentForm.submit(this.state);
 				return event.preventDefault();
