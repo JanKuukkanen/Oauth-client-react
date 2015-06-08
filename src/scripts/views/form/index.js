@@ -1,8 +1,9 @@
 import page  from 'page';
 import React from 'react';
 
-import Broadcaster from '../../components/broadcaster';
-import FormData from '../../views/form/form-map';
+import Broadcaster     from '../../components/broadcaster';
+import FormData        from '../../views/form/form-map';
+import BroadcastAction from '../../actions/broadcast';
 
 /**
  *
@@ -22,8 +23,8 @@ export default React.createClass({
 	checkPasswords(){
 		if(this.props.formProfile === 'registerForm' && this.state.passwordagain !== '') {
 			return this.state.passwordagain !== this.state.password ?
-				<span className="fa fa-times">Passwords entered do not match!</span>
-				: <span className="fa fa-check">Passwords entered match!</span>;
+				<span className="fa fa-times">Password mismatch!</span>
+				: <span className="fa fa-check">Passwords match!</span>;
 		}
 	},
 
@@ -46,8 +47,18 @@ export default React.createClass({
 	},
 
 	submitPrimary(currentForm) {
-		return (event) => {
-			currentForm.submit(this.state);
+		if(this.props.formProfile !== 'registerForm' ||
+			this.state.passwordagain === this.state.password) {
+			return (event) => {
+				currentForm.submit(this.state);
+				return event.preventDefault();
+			}
+		}
+		else return (event) => {
+			BroadcastAction.add({
+				type:    'Error',
+				content: 'Passwords entered do not match!'
+			});
 			return event.preventDefault();
 		}
 	},
