@@ -21,10 +21,11 @@ export default React.createClass({
 	},
 
 	checkPasswords(){
-		if(this.props.formProfile === 'registerForm' && this.state.passwordAgain !== '') {
-			return this.state.passwordAgain !== this.state.password ?
-				<span className="fa fa-times">Password mismatch!</span>
-				: <span className="fa fa-check">Passwords match!</span>;
+		if(this.props.formProfile === 'registerForm'
+				&& this.state.passwordAgain !== '') {
+			return this.state.passwordAgain !== this.state.passwordRegister ?
+				<span className="fa fa-times mismatch">Password mismatch!</span>
+				: <span className="fa fa-check match">Passwords match!</span>;
 		}
 	},
 
@@ -48,7 +49,9 @@ export default React.createClass({
 
 	submitPrimary(currentForm) {
 		if(this.props.formProfile !== 'registerForm' ||
-			this.state.passwordAgain === this.state.password) {
+			this.state.passwordAgain === this.state.passwordRegister) {
+			if(this.props.formProfile === 'registerForm')
+				this.state.password = this.state.passwordRegister;
 			return (event) => {
 				currentForm.submit(this.state);
 				return event.preventDefault();
@@ -84,7 +87,8 @@ export default React.createClass({
 			<div className="view view-form">
 				<Broadcaster />
 				<div className="content">
-					<form className="form" onSubmit={this.submitPrimary(formType)}>
+					<form className="form"
+						onSubmit={this.submitPrimary(formType)}>
 						<div className="logo">
 							<img src="/dist/assets/img/logo.svg" />
 							<h1>Contriboard</h1>
