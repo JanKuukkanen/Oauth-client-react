@@ -11,7 +11,11 @@ import BroadcastAction from '../../actions/broadcast';
 
 export default React.createClass({
 	mixins: [ React.addons.LinkedStateMixin ],
-	propTypes: { formProfile: React.PropTypes.string.isRequired },
+	propTypes: {
+		formProfile: React.PropTypes.string.isRequired,
+		boardID: React.PropTypes.string,
+		accessCode: React.PropTypes.string
+	},
 
 	getInitialState() {
 		return FormData.registerForm.fields.reduce((state, field) => {
@@ -21,8 +25,7 @@ export default React.createClass({
 	},
 
 	checkPasswords(){
-		if(this.props.formProfile === 'registerForm'
-				&& this.state.passwordAgain !== '') {
+		if(this.props.formProfile === 'registerForm' && this.state.passwordAgain !== '') {
 			return this.state.passwordAgain !== this.state.passwordRegister ?
 				<span className="fa fa-times mismatch">Password mismatch!</span>
 				: <span className="fa fa-check match">Passwords match!</span>;
@@ -46,13 +49,14 @@ export default React.createClass({
 			);
 		});
 	},
-
+	//submit will execute in all cases other than when
+	//passwords given in registration do not match
 	submitPrimary(currentForm) {
 		if(this.props.formProfile !== 'registerForm' ||
 			this.state.passwordAgain === this.state.passwordRegister) {
-			if(this.props.formProfile === 'registerForm')
-				this.state.password = this.state.passwordRegister;
 			return (event) => {
+				if(this.props.formProfile === 'registerForm')
+					this.state.password = this.state.passwordRegister;
 				currentForm.submit(this.state);
 				return event.preventDefault();
 			}
@@ -73,6 +77,13 @@ export default React.createClass({
 		}
 	},
 
+	submitGuest(currentForm, accessCode, boardID){
+		return (event) => {
+			currentForm.submit(this.state, boardID, accessCode);
+			return event.preventDefault();
+		}
+	},
+
 	renderForm(formType) {
 		let secondaryContent = !formType.secondary ? null : (
 			<section className="secondary">
@@ -83,12 +94,15 @@ export default React.createClass({
 				</button>
 			</section>
 		);
+		let primarySubmit = this.props.formProfile !== 'guestLoginForm' ?
+			this.submitPrimary(formType) :
+			this.submitGuest(formType, this.props.accessCode, this.props.boardID)
 		return (
 			<div className="view view-form">
 				<Broadcaster />
 				<div className="content">
 					<form className="form"
-						onSubmit={this.submitPrimary(formType)}>
+						onSubmit={primarySubmit}>
 						<div className="logo">
 							<img src="/dist/assets/img/logo.svg" />
 							<h1>Contriboard</h1>

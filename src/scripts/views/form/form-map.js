@@ -83,5 +83,27 @@ export default
 				});
 			},
 			action: 'Login'
+		},
+		guestLoginForm: {
+			fields: [
+				{
+					name:     'username',
+					type:     'text',
+					label:    'Username',
+					title:    'Username must be at least 3 characters.',
+					pattern:  '.{3,}',
+					required: true
+				}
+			],
+			submit: (state, boardID, accessCode) => {
+				let credentials = Object.assign(state, {
+					boardID:    boardID,
+					accessCode: accessCode
+				});
+				return UserAction.login(credentials, true).then(() => {
+					return page.show(`/boards/${boardID}`);
+				});
+			},
+			action: 'Login as Guest'
 		}
 	}
