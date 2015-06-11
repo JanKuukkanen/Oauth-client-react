@@ -1,5 +1,6 @@
 import superagent from 'superagent/lib/client';
 import page       from 'page';
+import BroadcastAction from '../actions/broadcast';
 /**
  * Simple helper module to make HTTP requests.
  */
@@ -26,7 +27,6 @@ function request(to, options = {}) {
 		return request.end((err, res) => {
 			if(err) {
 				err.statusCode = err.status || res ? res.status : 0;
-				console.log(err.statusCode);
 
 				if (err.statusCode == 404) {
 				 // Insert custom 404 redirect here
