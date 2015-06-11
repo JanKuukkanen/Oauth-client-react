@@ -12,7 +12,7 @@ export default {
 		'email',
 		'passwordRegister',
 		'passwordAgain',
-		'password',
+		'password'
 	],
 	registerForm: {
 		fields: [

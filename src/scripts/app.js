@@ -114,16 +114,6 @@ page('/register',
 		);
 	});
 
-page('/profile',
-	middleware.user.is('user', 'guest'),
-	middleware.socket.connect,
-	() => {
-		return React.render(
-			<ProfileView formProfile="profileForm" />,
-			document.getElementById('application')
-		);
-	});
-
 page('/boards/:id/access/:code',
 	middleware.user.notGuest,
 	middleware.socket.disconnect,

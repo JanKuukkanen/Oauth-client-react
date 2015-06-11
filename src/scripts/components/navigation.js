@@ -70,12 +70,8 @@ export default React.createClass({
 			);
 
 		let items = [
-			{ icon: 'user',     content: 'Profile',
-			onClick: () => {
-				return page.show('/profile')
-			}
-			},
-			{ icon: 'language', content: 'Localization', disabled: true  },
+			{ icon: 'user', content: 'Profile', disabled: true },
+			{ icon: 'language', content: 'Localization', disabled: true },
 			{
 				content: (
 					<UserVoice>
