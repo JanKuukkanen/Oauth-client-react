@@ -1,5 +1,5 @@
 import superagent from 'superagent/lib/client';
-
+import page       from 'page';
 /**
  * Simple helper module to make HTTP requests.
  */
@@ -12,7 +12,7 @@ export default {
 
 /**
  * Simple helper function to make HTTP requests. Note that you don't call this
- * directly but instead use one of the pre-bound methods above.
+ * directly but instead use one of the pre-bound methods above.a
  */
 function request(to, options = {}) {
 	return new Promise((resolve, reject) => {
@@ -26,6 +26,16 @@ function request(to, options = {}) {
 		return request.end((err, res) => {
 			if(err) {
 				err.statusCode = err.status || res ? res.status : 0;
+				console.log(err.statusCode);
+
+				if (err.statusCode == 404) {
+				 // Insert custom 404 redirect here
+					page.redirect('/workspace');
+				}
+
+				else if (err.statusCode == 400) {
+					page.redirect('/workspace');
+				}
 				return reject(err);
 			}
 			return resolve({ body: res.body, headers: res.headers });
