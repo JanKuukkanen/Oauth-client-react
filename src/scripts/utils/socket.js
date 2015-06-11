@@ -51,7 +51,6 @@ function connect(opts = {}) {
 
 		// Don't log out if IO is down, simply spam error msgs...
 		socket.on('connect_error', (err) => {
-			console.log(Action.Socket.ConnectFail);
 			BroadcastAction.add(err, Action.Socket.ConnectFail);
 		});
 
