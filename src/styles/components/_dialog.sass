@@ -121,6 +121,16 @@
 				font-size:  130%
 				width:      10%
 
+		.deleteicon
+			@include transition(color, 0.2s)
+			padding:   10px 16px 16px 16px
+			color:     $dove-gray
+			font-size: 10pt
+			cursor:    hand
+			cursor:    pointer
+
+			&:hover
+				color: $stiletto
 
 		.dialog-footer
 			padding: 8px 16px 16px 16px
@@ -129,7 +139,7 @@
 			@include flex-direction(row)
 
 			button
-				@include flex(1)
+				@include flex(2)
 
 				margin: 0px 8px
 

@@ -50,7 +50,10 @@ export default React.createClass({
 		});
 		return this.props.onDismiss();
 	},
-
+	cancel(event) {
+	event.preventDefault();
+	return this.props.onDismiss();
+	},
 	toggleEdit(event) {
 		// This handler is a no-op if we are clicking on the text-area or text input.
 		if(event.target instanceof HTMLTextAreaElement || event.target instanceof HTMLInputElement || this.state.content == '')  {
@@ -65,7 +68,7 @@ export default React.createClass({
 		let editDialogContent  = null;
 		let editDialogHeader   = null;
 
-		if (!this.state.isEditing && this.state) {
+		if (!this.state.isEditing && this.state.content != '') {
 			let content = this.state.content;
 			let markupContent = markdown.markdown.toHTML(content);
 
@@ -102,15 +105,17 @@ export default React.createClass({
 							{editDialogContent}
 						</section>
 						<section className="dialog-footer">
-							<button className="btn-danger" onClick={this.remove}
+							<button className="btn-neutral" onClick={this.cancel}
 									tabIndex={3}>
-								Delete
+								Cancel
 							</button>
 							<button className="btn-primary" onClick={this.update}
 									tabIndex={2}>
-								Done
+								Save
 							</button>
 						</section>
+					<i className="deleteicon fa fa-trash-o" onClick={this.remove}> Delete</i>
+
 					</section>
 			</Dialog>
 		);
