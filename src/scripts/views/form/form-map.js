@@ -107,7 +107,7 @@ export default {
 			});
 			return UserAction.login(credentials, true).then(() => {
 				return page.show(`/boards/${boardID}`);
-			});
+			}, (err) => {});
 		},
 		action: 'Login as Guest'
 	}
