@@ -13,9 +13,6 @@ import TicketAction from '../actions/ticket';
 import DraggableMixin   from '../mixins/draggable';
 import EditTicketDialog from '../components/dialog/edit-ticket';
 
-
-
-
 /**
  *
  */
@@ -146,7 +143,7 @@ export default React.createClass({
 				onDismiss={this.toggleEditDialog} />
 		);
 
-		let markupContent =markdown.markdown.toHTML(this.props.ticket.content);
+		let markupContent = markdown.markdown.toHTML(this.props.ticket.content);
 
 		// Add target="_blank" attribute to links
 		if (markupContent.includes('<a href=')) {
