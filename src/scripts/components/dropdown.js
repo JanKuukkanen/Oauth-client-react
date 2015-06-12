@@ -38,7 +38,8 @@ const DropdownItem = React.createClass({
 export default React.createClass({
 	propTypes: {
 		show:  React.PropTypes.bool.isRequired,
-		items: React.PropTypes.array
+		items: React.PropTypes.array,
+		className: React.PropTypes.string
 	},
 
 	getDefaultProps() {
@@ -53,7 +54,7 @@ export default React.createClass({
 
 	render() {
 		return !this.props.show ? null : (
-			<ul className="dropdown">
+			<ul className={`dropdown ${this.props.className}`}>
 				{this.props.items.map((item, index) => {
 					return <DropdownItem key={index} {...item} />;
 				})}

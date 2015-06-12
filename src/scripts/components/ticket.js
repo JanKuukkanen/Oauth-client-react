@@ -83,11 +83,11 @@ export default React.createClass({
 				if (this.props.snap) {
 					this.tween(position, this.draggable.position, 100);
 				}
-				else this.setState({x: position.x, y: position.y});
+				else this.setState({ x: position.x, y: position.y });
 
-				TicketAction.update({id: this.props.board}, {
+				TicketAction.update({ id: this.props.board }, {
 					id: this.props.ticket.id,
-					position: {x: this.state.x, y: this.state.y}
+					position: { x: this.state.x, y: this.state.y }
 				});
 			}
 		});
@@ -112,7 +112,7 @@ export default React.createClass({
 
 	toggleEditDialog() {
 		if(!this.props.ticket.id.startsWith('dirty_')) {
-			this.setState({showEditDialog: !this.state.showEditDialog});
+			this.setState({ showEditDialog: !this.state.showEditDialog });
 		}
 	},
 
