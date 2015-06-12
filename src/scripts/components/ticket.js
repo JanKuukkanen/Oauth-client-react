@@ -153,6 +153,9 @@ export default React.createClass({
 		return (
 			<div className="ticket" style={style.ticket}>
 				<div className="color" style={style.color} />
+				<div className="heading">
+					{this.props.ticket.heading}
+				</div>
 				<div className="content">
 					<span dangerouslySetInnerHTML={{__html: markupContent}} />
 				</div>

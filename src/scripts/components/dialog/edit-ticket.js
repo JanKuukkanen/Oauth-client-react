@@ -27,6 +27,7 @@ export default React.createClass({
 		return {
 			color:   this.props.ticket.color,
 			content: this.props.ticket.content,
+			heading: this.props.ticket.heading,
 			isEditing: this.props.ticket.content === ''
 		}
 	},
@@ -44,14 +45,17 @@ export default React.createClass({
 		TicketAction.update({ id: this.props.board }, {
 			id:      this.props.ticket.id,
 			color:   this.state.color,
-			content: this.state.content
+			content: this.state.content,
+			heading: this.state.heading
 		});
 		return this.props.onDismiss();
 	},
 
 	toggleEdit(event) {
-		// This handler is a no-op if we are clicking on the text-area.
-		if(event.target instanceof HTMLTextAreaElement) return;
+		// This handler is a no-op if we are clicking on the text-area or text input.
+		if(event.target instanceof HTMLTextAreaElement || event.target instanceof HTMLInputElement || this.state.content == '')  {
+			return;
+		}
 
 		this.setState({ isEditing: !this.state.isEditing });
 		return event.stopPropagation();
@@ -59,8 +63,9 @@ export default React.createClass({
 
 	render() {
 		let editDialogContent  = null;
+		let editDialogHeader   = null;
 
-		if (!this.state.isEditing) {
+		if (!this.state.isEditing && this.state) {
 			let content = this.state.content;
 			let markupContent = markdown.markdown.toHTML(content);
 
@@ -70,11 +75,17 @@ export default React.createClass({
 			}
 			editDialogContent = <span dangerouslySetInnerHTML={{__html: markupContent}}
 									  onClick={this.toggleEdit} />
+
+			editDialogHeader = <span onClick={this.toggleEdit}>{this.state.heading}</span>
 		}
 
 		else if(this.state.isEditing) {
 			editDialogContent = <textarea valueLink={this.linkState('content')}
-													 tabIndex={1} autoFocus={true} />
+													 tabIndex={2}
+													placeholder={'Ticket content'}/>
+
+			editDialogHeader = <input valueLink={this.linkState('heading')}
+									  placeholder={'Ticket heading'} tabIndex={1}> </input>
 		}
 
 		return (
@@ -84,6 +95,9 @@ export default React.createClass({
 					<ColorSelect color={this.linkState('color')} />
 				</section>
 				<section onClick={this.state.isEditing ? this.toggleEdit : null}>
+				<section className="dialog-heading">
+					{editDialogHeader}
+				</section>
 						<section className="dialog-content">
 							{editDialogContent}
 						</section>

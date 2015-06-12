@@ -4,7 +4,7 @@
 .ticket
 	width:  192px
 	height: 108px
-
+	overflow: hidden
 	@include position(absolute)
 
 	&:hover
@@ -28,12 +28,19 @@
 		border-top-left-radius:  2px
 		border-top-right-radius: 2px
 
+	.heading
+		margin: 8px
+		overflow: hidden
+		white-space: pre-wrap
+		font-weight: bold
+
 	.content
 		height:      76px
 		margin:      8px
 		overflow:    hidden
 		white-space: pre-wrap
-
+		span
+			overflow: hidden
 		p
 			display: inline
 
@@ -41,6 +48,7 @@
 			display: inline
 
 		a
+			padding: 0
 			display: inline
 			color: $neptune
 			border-width: 0px
