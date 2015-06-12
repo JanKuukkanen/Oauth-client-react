@@ -27,15 +27,6 @@ function request(to, options = {}) {
 		return request.end((err, res) => {
 			if(err) {
 				err.statusCode = err.status || res ? res.status : 0;
-
-				if (err.statusCode == 404) {
-				 // Insert custom 404 redirect here
-					page.redirect('/workspace');
-				}
-
-				else if (err.statusCode == 400) {
-					page.redirect('/workspace');
-				}
 				return reject(err);
 			}
 			return resolve({ body: res.body, headers: res.headers });
