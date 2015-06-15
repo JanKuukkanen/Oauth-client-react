@@ -1,6 +1,6 @@
 import React     from 'react/addons';
 import immutable from 'immutable';
-
+import TextArea  from 'react-textarea-autosize';
 import Ticket       from '../../models/ticket';
 import TicketAction from '../../actions/ticket';
 
@@ -91,7 +91,8 @@ export default React.createClass({
 		}
 
 		else if(this.state.isEditing) {
-			editDialogContent = <textarea valueLink={this.linkState('content')}
+			editDialogContent = <TextArea valueLink={this.linkState('content')}
+										  maxRows={8}
 										  tabIndex={2}
 										  placeholder={'Ticket content'}/>
 
