@@ -37,23 +37,27 @@
 		.dialog-content
 			padding: 8px 16px
 			overflow: hidden
-
-			p
-				text-align: center
-
+			white-space: pre-wrap
 			input
 				margin-bottom: 8px
+
 			span
 				cursor:        pointer
 				cursor:        hand
 				overflow-wrap: break-word
+
 				p
 					display: inline
 
 				h1, h2, h3, h4
 					display: inline
+
 				img
 					display: block
+
+				code
+					display: block
+				  
 				a
 					font-size: 13pt
 					padding: 0
@@ -77,6 +81,7 @@
 					li
 						margin-left: 20px
 						list-style-type: decimal
+
 			@include display(flex)
 			@include flex-direction(column)
 
@@ -129,7 +134,7 @@
 			cursor:    pointer
 
 			&:hover
-				color: $stiletto
+				color: $burnt-sienna
 
 		.dialog-footer
 			padding: 8px 16px 16px 16px
