@@ -5,11 +5,6 @@ node_modules/
 npm-debug.log
 custom_env
 nohup.out
-<<<<<<< HEAD
-=======
-npm-debug.log
-
->>>>>>> master
 .DS_Store
 .tmp-storage
 
