@@ -1,13 +1,13 @@
 import React     from 'react/addons';
 import immutable from 'immutable';
 import TextArea  from 'react-textarea-autosize';
+import markdown  from 'markdown';
+
 import Ticket       from '../../models/ticket';
 import TicketAction from '../../actions/ticket';
 
 import Dialog      from '../../components/dialog';
 import ColorSelect from '../../components/color-select';
-
-import markdown   from 'markdown';
 
 /**
  *
@@ -25,9 +25,9 @@ export default React.createClass({
 
 	getInitialState() {
 		return {
-			color:   this.props.ticket.color,
-			content: this.props.ticket.content,
-			heading: this.props.ticket.heading,
+			color:     this.props.ticket.color,
+			content:   this.props.ticket.content,
+			heading:   this.props.ticket.heading,
 			isEditing: this.props.ticket.content === ''
 		}
 	},
@@ -58,7 +58,8 @@ export default React.createClass({
 
 	toggleEdit(event) {
 		// This handler is a no-op if we are clicking on the text-area or text input.
-		if( event.target instanceof HTMLTextAreaElement ||
+		// Also, don't exit editing mode if we click a link or if ticket has no content
+		if(     event.target instanceof HTMLTextAreaElement ||
 			event.target instanceof HTMLInputElement ||
 			event.target instanceof HTMLAnchorElement ||
 			this.state.content === '')  {
@@ -73,12 +74,9 @@ export default React.createClass({
 		let editDialogContent  = null;
 		let editDialogHeader   = null;
 
-		if (!this.state.isEditing && this.state.content !== '') {
+		if(!this.state.isEditing && this.state.content !== '') {
 			let content = this.state.content;
 			let markupContent = markdown.markdown.toHTML(content);
-
-			console.log(content);
-			console.log(markupContent);
 
 			// Add target="_blank" attribute to links so they open in a new tab
 			if (markupContent.includes('<a href=')) {
@@ -119,7 +117,7 @@ export default React.createClass({
 								Cancel
 							</button>
 							<button className="btn-primary" onClick={this.update}
-									tabIndex={2}>
+									tabIndex={4}>
 								Save
 							</button>
 						</section>
