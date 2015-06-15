@@ -50,10 +50,12 @@ export default React.createClass({
 		});
 		return this.props.onDismiss();
 	},
+
 	cancel(event) {
-	event.preventDefault();
-	return this.props.onDismiss();
+		event.preventDefault();
+		return this.props.onDismiss();
 	},
+
 	toggleEdit(event) {
 		// This handler is a no-op if we are clicking on the text-area or text input.
 		if( event.target instanceof HTMLTextAreaElement ||
@@ -90,11 +92,12 @@ export default React.createClass({
 
 		else if(this.state.isEditing) {
 			editDialogContent = <textarea valueLink={this.linkState('content')}
-													 tabIndex={2}
-													placeholder={'Ticket content'}/>
+										  tabIndex={2}
+										  placeholder={'Ticket content'}/>
 
 			editDialogHeader = <input valueLink={this.linkState('heading')}
-									  placeholder={'Ticket heading'} tabIndex={1}> </input>
+									  placeholder={'Ticket heading'}
+									  tabIndex={1}> </input>
 		}
 
 		return (
