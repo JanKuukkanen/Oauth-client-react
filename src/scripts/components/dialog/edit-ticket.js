@@ -61,7 +61,7 @@ export default React.createClass({
 		if( event.target instanceof HTMLTextAreaElement ||
 			event.target instanceof HTMLInputElement ||
 			event.target instanceof HTMLAnchorElement ||
-			this.state.content == '')  {
+			this.state.content === '')  {
 			return;
 		}
 
@@ -73,7 +73,7 @@ export default React.createClass({
 		let editDialogContent  = null;
 		let editDialogHeader   = null;
 
-		if (!this.state.isEditing && this.state.content != '') {
+		if (!this.state.isEditing && this.state.content !== '') {
 			let content = this.state.content;
 			let markupContent = markdown.markdown.toHTML(content);
 
@@ -85,19 +85,19 @@ export default React.createClass({
 				markupContent = markupContent.replace(/<a href="/g, '<a target="_blank" href="');
 			}
 			editDialogContent = <span dangerouslySetInnerHTML={{__html: markupContent}}
-									  onClick={this.toggleEdit} />
+                                      onClick={this.toggleEdit}/>
 
 			editDialogHeader = <span onClick={this.toggleEdit}>{this.state.heading}</span>
 		}
 
 		else if(this.state.isEditing) {
 			editDialogContent = <TextArea valueLink={this.linkState('content')}
-										  tabIndex={2}
-										  placeholder={'Ticket content'}/>
+                                          tabIndex={2}
+                                          placeholder={'Ticket content'}/>
 
 			editDialogHeader = <input valueLink={this.linkState('heading')}
-									  placeholder={'Ticket heading'}
-									  tabIndex={1}> </input>
+                                      placeholder={'Ticket heading'}
+                                      tabIndex={1}/>
 		}
 
 		return (
