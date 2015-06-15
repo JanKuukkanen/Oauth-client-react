@@ -118,8 +118,6 @@ export default React.createClass({
 			let tweeningOpts = {
 				duration:   duration || 500,
 				endValue:   to[axis],
-				duration: duration || 500,
-				endValue: to[axis],
 				beginValue: from ? from[axis] : null
 			}
 			return this.tweenState(axis, tweeningOpts);
