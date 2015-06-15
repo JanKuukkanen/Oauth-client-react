@@ -56,7 +56,10 @@ export default React.createClass({
 	},
 	toggleEdit(event) {
 		// This handler is a no-op if we are clicking on the text-area or text input.
-		if(event.target instanceof HTMLTextAreaElement || event.target instanceof HTMLInputElement || this.state.content == '')  {
+		if( event.target instanceof HTMLTextAreaElement ||
+			event.target instanceof HTMLInputElement ||
+			event.target instanceof HTMLAnchorElement ||
+			this.state.content == '')  {
 			return;
 		}
 
@@ -72,7 +75,10 @@ export default React.createClass({
 			let content = this.state.content;
 			let markupContent = markdown.markdown.toHTML(content);
 
-			// Add target="_blank" attribute to links
+			console.log(content);
+			console.log(markupContent);
+
+			// Add target="_blank" attribute to links so they open in a new tab
 			if (markupContent.includes('<a href=')) {
 				markupContent = markupContent.replace(/<a href="/g, '<a target="_blank" href="');
 			}
