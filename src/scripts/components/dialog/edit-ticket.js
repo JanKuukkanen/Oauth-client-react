@@ -92,7 +92,6 @@ export default React.createClass({
 
 		else if(this.state.isEditing) {
 			editDialogContent = <TextArea valueLink={this.linkState('content')}
-										  maxRows={8}
 										  tabIndex={2}
 										  placeholder={'Ticket content'}/>
 
