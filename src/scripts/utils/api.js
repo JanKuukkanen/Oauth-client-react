@@ -102,7 +102,7 @@ function getBoard(opts = {}) {
 		delete board.tickets;
 		return board;
 	}, (err) => {
-		if (err.statusCode == 404 || err.statusCode == 400 || err.statusCode == 500) {
+		if (err.statusCode === 404 || err.statusCode === 400 || err.statusCode === 500) {
 			page.redirect('/workspace');
 	}
 	});
