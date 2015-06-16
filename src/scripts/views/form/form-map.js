@@ -47,7 +47,6 @@ export default {
 			description: 'Already registered?'
 		},
 		submit: (state) => {
-						console.log(state)
 			return UserAction.register(state).then(() => {
 				return UserAction.login(state).then(() => {
 					BroadcastAction.add({
