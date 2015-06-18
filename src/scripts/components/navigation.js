@@ -20,7 +20,7 @@ export default React.createClass({
 
 	getInitialState() {
 		return { dropdown: false, feedback: false, infoActive: false }
-	},
+		},
 
 	showWorkspace() {
 		return page.show('/boards');
@@ -29,7 +29,6 @@ export default React.createClass({
 	toggleDropdown() {
 		this.setState({ dropdown: !this.state.dropdown });
 	},
-
 	toggleInfoView() {
 		this.setState({ infoActive: !this.state.infoActive });
 	},
@@ -52,11 +51,8 @@ export default React.createClass({
 		let infoButtonClass =
 			React.addons.classSet({
 				infobutton: true,
-				pulsate: localStorage.getItem('infovisited') === null
-					? true : false,
 				active: this.state.infoActive
 			});
-
 		let userButtonClass =
 			React.addons.classSet({
 				avatar: true,
@@ -64,14 +60,14 @@ export default React.createClass({
 			});
 
 		let showInfo = !this.props.showHelp ? null : (
-			<div id="info" onClick={this.toggleInfoView} className={infoButtonClass}>
+			<div onClick={this.toggleInfoView} className={infoButtonClass}>
 				<span className={`fa fa-fw fa-${infoIcon}`}></span>
 			</div>
 			);
 
 		let items = [
-			{ icon: 'user', content: 'Profile', disabled: true },
-			{ icon: 'language', content: 'Localization', disabled: true },
+			{ icon: 'user',     content: 'Profile',      disabled: true  },
+			{ icon: 'language', content: 'Localization', disabled: true  },
 			{
 				content: (
 					<UserVoice>
