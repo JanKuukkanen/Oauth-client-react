@@ -25,8 +25,7 @@ export default React.createClass({
 	},
 
 	checkPasswords(){
-		if(this.props.formProfile === 'registerForm' &&
-			this.state.passwordAgain.length > 7) {
+		if(this.props.formProfile === 'registerForm' && this.state.passwordAgain !== '') {
 			return this.state.passwordAgain !== this.state.passwordRegister
 				? <span className="fa fa-times mismatch">Password mismatch!</span>
 				: <span className="fa fa-check match">Passwords match!</span>;
